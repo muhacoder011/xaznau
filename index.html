@@ -1,747 +1,2580 @@
 <!DOCTYPE html>
 <html lang="uz">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>YO'LCHI — AI sayohat hamrohi</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-<style>
-  :root{
-    --bg:#f6f2e8;
-    --surface:#ffffff;
-    --surface-2:#eef3ea;
-    --ink:#16241d;
-    --ink-soft:#5c6c60;
-    --green:#1f6d4c;
-    --green-deep:#123a28;
-    --gold:#dda23a;
-    --gold-deep:#a86b1f;
-    --line: rgba(22,36,29,0.12);
-    --danger:#b1502e;
-    --radius:18px;
-  }
-  html[data-theme="dark"]{
-    --bg:#0f1912;
-    --surface:#16241d;
-    --surface-2:#1c2b22;
-    --ink:#eef2ea;
-    --ink-soft:#9fb0a6;
-    --green:#3fae7c;
-    --green-deep:#1f6d4c;
-    --gold:#e6b458;
-    --gold-deep:#c79236;
-    --line: rgba(238,242,234,0.14);
-  }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <title>YO'LCHI — AI sayohat hamrohi</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <style>
+        :root {
+            --bg: #f6f2e8;
+            --surface: #ffffff;
+            --surface-2: #eef3ea;
+            --ink: #16241d;
+            --ink-soft: #5c6c60;
+            --green: #1f6d4c;
+            --green-deep: #123a28;
+            --gold: #dda23a;
+            --gold-deep: #a86b1f;
+            --line: rgba(22, 36, 29, 0.12);
+            --danger: #b1502e;
+            --radius: 18px;
+        }
 
-  *{margin:0;padding:0;box-sizing:border-box;}
-  @media (prefers-reduced-motion: reduce){ *{animation-duration:0.01ms !important; transition-duration:0.01ms !important;} }
+        html[data-theme="dark"] {
+            --bg: #0f1912;
+            --surface: #16241d;
+            --surface-2: #1c2b22;
+            --ink: #eef2ea;
+            --ink-soft: #9fb0a6;
+            --green: #3fae7c;
+            --green-deep: #1f6d4c;
+            --gold: #e6b458;
+            --gold-deep: #c79236;
+            --line: rgba(238, 242, 234, 0.14);
+        }
 
-  body{
-    background:var(--bg); color:var(--ink);
-    font-family:'Inter',sans-serif;
-    display:flex; justify-content:center;
-    min-height:100vh;
-  }
-  h1,h2,h3{font-family:'Plus Jakarta Sans',sans-serif;}
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-  .app-shell{
-    width:100%; max-width:430px; min-height:100vh;
-    background:var(--bg); position:relative; overflow-x:hidden;
-    box-shadow:0 0 60px rgba(0,0,0,0.06);
-    display:flex; flex-direction:column;
-  }
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                animation-duration: 0.01ms !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
 
-  /* ---------- shared topbar ---------- */
-  .topbar{
-    display:flex; align-items:center; justify-content:space-between;
-    padding:18px 20px 14px; gap:10px;
-  }
-  .topbar-left{display:flex; align-items:center; gap:10px;}
-  .back-btn, .icon-btn{
-    width:36px;height:36px;border-radius:50%;background:var(--surface-2);
-    border:none; display:flex; align-items:center; justify-content:center;
-    cursor:pointer; color:var(--ink); font-size:16px; flex-shrink:0;
-  }
-  .brand{display:flex;align-items:center;gap:8px;font-weight:800;font-size:17px;}
-  .brand .mark{width:22px;height:22px;}
-  .topbar h2{font-size:17px;font-weight:700;}
+        body {
+            background: var(--bg);
+            color: var(--ink);
+            font-family: 'Inter', sans-serif;
+            display: flex;
+            justify-content: center;
+            min-height: 100vh;
+            min-height: -webkit-fill-available;
+            -webkit-tap-highlight-color: transparent;
+            touch-action: manipulation;
+            overscroll-behavior: none;
+            -webkit-font-smoothing: antialiased;
+        }
 
-  .screen{display:none; padding:0 20px 100px; flex:1;}
-  .screen.active{display:block; animation:fade-up 0.35s ease both;}
-  @keyframes fade-up{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
+        h1,
+        h2,
+        h3 {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
 
-  /* ---------- bottom nav ---------- */
-  .bottom-nav{
-    position:sticky; bottom:0; left:0; right:0;
-    background:var(--surface); border-top:1px solid var(--line);
-    display:flex; padding:10px 6px 14px;
-  }
-  .bottom-nav button{
-    flex:1; background:none; border:none; display:flex; flex-direction:column;
-    align-items:center; gap:3px; font-family:'Inter',sans-serif; font-size:11px;
-    color:var(--ink-soft); cursor:pointer; padding:6px 2px; font-weight:600;
-  }
-  .bottom-nav button.active{color:var(--green);}
-  .bottom-nav button .ic{font-size:19px;}
+        .app-shell {
+            width: 100%;
+            max-width: 430px;
+            min-height: 100vh;
+            background: var(--bg);
+            position: relative;
+            overflow-x: hidden;
+            box-shadow: 0 0 60px rgba(0, 0, 0, 0.06);
+            display: flex;
+            flex-direction: column;
+        }
 
-  /* ---------- home ---------- */
-  .greet{font-size:13px;color:var(--ink-soft);margin-bottom:2px;}
-  .hero-title{font-size:26px;font-weight:800;line-height:1.2;margin-bottom:16px;}
-  .hero-title span{color:var(--green);}
+        /* ---------- shared topbar ---------- */
+        .topbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 18px 20px 14px;
+            gap: 10px;
+        }
 
-  .search-box{
-    background:var(--surface); border:1px solid var(--line); border-radius:16px;
-    padding:14px 16px; display:flex; align-items:center; gap:10px; margin-bottom:16px;
-    cursor:pointer;
-  }
-  .search-box .ph{color:var(--ink-soft); font-size:13.5px; flex:1;}
-  .ai-pill{
-    background:var(--green); color:#fff; border-radius:20px; padding:6px 12px;
-    font-size:12px; font-weight:700; display:flex; align-items:center; gap:4px;
-  }
+        .topbar-left {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
 
-  .chip-row{display:flex; gap:8px; overflow-x:auto; padding-bottom:6px; margin-bottom:20px; scrollbar-width:none;}
-  .chip-row::-webkit-scrollbar{display:none;}
-  .chip{
-    flex-shrink:0; background:var(--surface); border:1px solid var(--line); border-radius:20px;
-    padding:8px 14px; font-size:13px; font-weight:600; color:var(--ink-soft); cursor:pointer;
-    display:flex; align-items:center; gap:6px; transition:all .15s ease;
-  }
-  .chip.active{background:var(--green); color:#fff; border-color:var(--green);}
+        .back-btn,
+        .icon-btn {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: var(--surface-2);
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: var(--ink);
+            font-size: 16px;
+            flex-shrink: 0;
+        }
 
-  .sec-title{font-size:16px;font-weight:800;margin:22px 0 12px;}
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 800;
+            font-size: 17px;
+        }
 
-  .city-grid{display:grid; grid-template-columns:1fr 1fr; gap:12px;}
-  .city-card{
-    border-radius:16px; overflow:hidden; cursor:pointer; position:relative;
-    height:118px; display:flex; align-items:flex-end; padding:12px;
-    color:#fff; border:1px solid var(--line);
-  }
-  .city-card .cname{font-weight:800; font-size:15px;}
-  .city-card .ccount{font-size:11.5px; opacity:0.9;}
+        .brand .mark {
+            width: 22px;
+            height: 22px;
+        }
 
-  .stats-card{
-    background:var(--surface-2); border-radius:16px; padding:16px; margin-top:20px;
-    display:grid; grid-template-columns:repeat(3,1fr); gap:10px;
-  }
-  .stats-card .stat{text-align:center;}
-  .stats-card .stat .num{font-size:19px;font-weight:800;color:var(--green);}
-  .stats-card .stat .lbl{font-size:11px;color:var(--ink-soft);}
+        .topbar h2 {
+            font-size: 17px;
+            font-weight: 700;
+        }
 
-  .why-grid{display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-top:12px;}
-  .why-card{background:var(--surface); border:1px solid var(--line); border-radius:14px; padding:14px;}
-  .why-card .ic{font-size:20px;margin-bottom:8px;}
-  .why-card h4{font-size:13.5px;font-weight:700;margin-bottom:3px;}
-  .why-card p{font-size:11.5px;color:var(--ink-soft);}
+        .screen {
+            display: none;
+            padding: 0 20px 100px;
+            flex: 1;
+        }
 
-  .cta-btn{
-    width:100%; background:var(--green); color:#fff; border:none; border-radius:14px;
-    padding:16px; font-size:15px; font-weight:700; cursor:pointer; margin-top:22px;
-    display:flex; align-items:center; justify-content:center; gap:8px;
-    transition:transform .15s ease;
-  }
-  .cta-btn:hover{transform:translateY(-1px);}
-  .cta-btn.ghost{background:var(--surface-2); color:var(--ink);}
+        .screen.active {
+            display: block;
+            animation: fade-up 0.35s ease both;
+        }
 
-  /* ---------- chat ---------- */
-  .chat-body{display:flex; flex-direction:column; gap:12px; padding-top:6px;}
-  .bubble-row{display:flex; gap:8px; align-items:flex-end;}
-  .bubble-row.user{justify-content:flex-end;}
-  .avatar-mini{
-    width:26px;height:26px;border-radius:50%;background:var(--surface-2);
-    border:1px solid var(--green); display:flex; align-items:center; justify-content:center;
-    font-size:11px; flex-shrink:0;
-  }
-  .bubble{
-    max-width:78%; padding:11px 15px; border-radius:16px; font-size:13.5px; line-height:1.5;
-  }
-  .bubble.ai{background:var(--surface); border:1px solid var(--line); border-bottom-left-radius:4px;}
-  .bubble.user{background:var(--green); color:#fff; border-bottom-right-radius:4px;}
-  .typing{display:flex; gap:3px; padding:4px 2px;}
-  .typing span{width:5px;height:5px;border-radius:50%;background:var(--ink-soft); animation:blink 1.2s infinite ease-in-out;}
-  .typing span:nth-child(2){animation-delay:.2s;} .typing span:nth-child(3){animation-delay:.4s;}
-  @keyframes blink{0%,80%,100%{opacity:.25;}40%{opacity:1;}}
+        @keyframes fade-up {
+            from {
+                opacity: 0;
+                transform: translateY(8px);
+            }
 
-  .option-wrap{display:flex; flex-wrap:wrap; gap:8px; margin-top:4px;}
-  .option-chip{
-    background:var(--surface); border:1px solid var(--green); color:var(--green-deep);
-    padding:9px 14px; border-radius:20px; font-size:13px; font-weight:600; cursor:pointer;
-    transition:all .15s ease;
-  }
-  .option-chip:hover{background:var(--green); color:#fff;}
-  .option-chip.selected{background:var(--green); color:#fff;}
-  .confirm-btn{
-    background:var(--gold); color:#3a2708; border:none; padding:9px 18px; border-radius:20px;
-    font-size:13px; font-weight:700; cursor:pointer; margin-top:2px;
-  }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
 
-  /* ---------- itinerary (plan) ---------- */
-  .cover{
-    height:170px; border-radius:18px; position:relative; overflow:hidden;
-    display:flex; flex-direction:column; justify-content:flex-end; padding:16px;
-    color:#fff; margin-bottom:14px;
-  }
-  .cover .meta-row{display:flex; gap:8px; flex-wrap:wrap; margin-top:8px;}
-  .cover .meta-tag{
-    background:rgba(0,0,0,0.35); backdrop-filter:blur(3px); padding:4px 10px;
-    border-radius:20px; font-size:11.5px; display:flex; align-items:center; gap:4px;
-  }
-  .tag-row{display:flex; gap:8px; margin-bottom:16px;}
-  .tag-soft{background:var(--surface-2); color:var(--ink-soft); font-size:11.5px; font-weight:600; padding:6px 12px; border-radius:20px;}
+        /* ---------- bottom nav ---------- */
+        .bottom-nav {
+            position: sticky;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: var(--surface);
+            border-top: 1px solid var(--line);
+            display: flex;
+            padding: 10px 6px 14px;
+        }
 
-  .tabs2{display:flex; background:var(--surface-2); border-radius:14px; padding:4px; margin-bottom:16px;}
-  .tabs2 button{
-    flex:1; border:none; background:transparent; padding:10px; border-radius:11px;
-    font-size:13px; font-weight:700; color:var(--ink-soft); cursor:pointer;
-  }
-  .tabs2 button.active{background:var(--surface); color:var(--ink); box-shadow:0 1px 3px rgba(0,0,0,0.06);}
+        .bottom-nav button {
+            flex: 1;
+            background: none;
+            border: none;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 3px;
+            font-family: 'Inter', sans-serif;
+            font-size: 11px;
+            color: var(--ink-soft);
+            cursor: pointer;
+            padding: 6px 2px;
+            font-weight: 600;
+        }
 
-  .timeline{position:relative; padding-left:18px;}
-  .timeline::before{content:"";position:absolute;left:5px;top:8px;bottom:8px;width:1px;background:var(--line);}
-  .tl-item{position:relative; margin-bottom:14px;}
-  .tl-dot{
-    position:absolute; left:-18px; top:2px; width:22px;height:22px;border-radius:50%;
-    background:var(--surface); border:1px solid var(--line); display:flex; align-items:center;
-    justify-content:center; font-size:11px; font-weight:700; color:var(--ink-soft);
-  }
-  .tl-travel{font-size:11.5px; color:var(--ink-soft); margin:2px 0 10px 4px; display:flex; gap:6px;}
-  .tl-card{background:var(--surface); border:1px solid var(--line); border-radius:14px; overflow:hidden;}
-  .tl-photo{height:90px;}
-  .tl-body{padding:12px 14px;}
-  .tl-body h4{font-size:14.5px;font-weight:700;margin-bottom:3px;}
-  .tl-time{font-size:11.5px;color:var(--ink-soft);margin-bottom:6px;}
-  .tl-desc{font-size:12.5px;color:var(--ink-soft);line-height:1.5;margin-bottom:8px;}
-  .tl-link{font-size:12px;font-weight:700;color:var(--green);cursor:pointer;}
+        .bottom-nav button.active {
+            color: var(--green);
+        }
 
-  /* ---------- live trip ---------- */
-  .progress-wrap{margin-bottom:16px;}
-  .progress-top{display:flex; justify-content:space-between; font-size:12.5px; font-weight:700; margin-bottom:6px;}
-  .progress-top .pct{color:var(--green);}
-  .progress-bar{height:7px; background:var(--surface-2); border-radius:20px; overflow:hidden;}
-  .progress-fill{height:100%; background:var(--green); border-radius:20px; transition:width .4s ease;}
+        .bottom-nav button .ic {
+            font-size: 19px;
+        }
 
-  .map-card{
-    background:var(--surface-2); border-radius:16px; padding:14px; margin-bottom:16px;
-    min-height:100px; display:flex; flex-direction:column; justify-content:space-between;
-  }
-  .map-pin{
-    align-self:flex-start; background:var(--surface); padding:5px 10px; border-radius:20px;
-    font-size:12px; font-weight:700; color:var(--danger); display:flex; align-items:center; gap:4px;
-  }
-  .map-caption{font-size:11.5px; color:var(--ink-soft);}
+        /* ---------- home ---------- */
+        .greet {
+            font-size: 13px;
+            color: var(--ink-soft);
+            margin-bottom: 2px;
+        }
 
-  .eyebrow-lbl{font-size:11px; font-weight:700; color:var(--ink-soft); text-transform:uppercase; letter-spacing:0.05em; margin-bottom:8px;}
+        .hero-title {
+            font-size: 26px;
+            font-weight: 800;
+            line-height: 1.2;
+            margin-bottom: 16px;
+        }
 
-  .current-card{border:2px solid var(--gold); border-radius:16px; overflow:hidden; margin-bottom:18px;}
-  .current-photo{height:150px; position:relative;}
-  .badge-now{
-    position:absolute; top:10px; left:10px; background:var(--gold); color:#3a2708;
-    font-size:11.5px; font-weight:800; padding:4px 10px; border-radius:20px;
-  }
-  .current-info{position:absolute; left:14px; bottom:10px; color:#fff;}
-  .current-info h3{font-size:17px;font-weight:800;}
-  .current-info p{font-size:12px;opacity:0.9;}
-  .current-body{padding:14px;}
-  .current-body p{font-size:13px; color:var(--ink-soft); line-height:1.5; margin-bottom:12px;}
-  .action-row{display:flex; gap:10px;}
-  .action-row button{
-    flex:1; padding:12px; border-radius:12px; font-size:13.5px; font-weight:700; cursor:pointer; border:none;
-  }
-  .action-ghost{background:var(--surface-2); color:var(--ink);}
-  .action-solid{background:var(--green); color:#fff;}
+        .hero-title span {
+            color: var(--green);
+        }
 
-  .next-card{
-    background:var(--surface); border:1px solid var(--line); border-radius:14px; padding:12px;
-    display:flex; align-items:center; gap:12px; margin-bottom:18px; cursor:pointer;
-  }
-  .next-thumb{width:44px;height:44px;border-radius:10px;flex-shrink:0;}
-  .next-card h4{font-size:13.5px;font-weight:700;}
-  .next-card p{font-size:11.5px;color:var(--ink-soft);}
+        .search-box {
+            background: var(--surface);
+            border: 1px solid var(--line);
+            border-radius: 16px;
+            padding: 14px 16px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 16px;
+            cursor: pointer;
+        }
 
-  .stop-row{
-    display:flex; align-items:center; gap:12px; padding:12px; border-radius:12px; margin-bottom:8px;
-  }
-  .stop-row.done{background:var(--surface-2);}
-  .stop-num{
-    width:26px;height:26px;border-radius:50%; display:flex; align-items:center; justify-content:center;
-    font-size:12px; font-weight:800; flex-shrink:0;
-  }
-  .stop-num.done{background:var(--green); color:#fff;}
-  .stop-num.current{background:var(--gold); color:#3a2708;}
-  .stop-num.upcoming{background:var(--surface-2); color:var(--ink-soft); border:1px solid var(--line);}
-  .stop-row h4{font-size:13.5px; font-weight:600;}
-  .stop-row.done h4{text-decoration:line-through; color:var(--ink-soft);}
-  .stop-row p{font-size:11.5px;color:var(--ink-soft);}
-  .stop-key{font-size:11px; color:var(--gold-deep); font-weight:700; margin-left:auto; display:flex; align-items:center; gap:2px;}
+        .search-box .ph {
+            color: var(--ink-soft);
+            font-size: 13.5px;
+            flex: 1;
+        }
 
-  .toast{
-    position:fixed; left:50%; top:40%; transform:translate(-50%,-50%) scale(0.8); z-index:2000;
-    background:linear-gradient(135deg,var(--gold),var(--gold-deep)); color:#3a2708; padding:26px 30px;
-    border-radius:20px; text-align:center; font-weight:800; font-size:16px; opacity:0; pointer-events:none;
-    transition:all .3s cubic-bezier(.2,1.4,.4,1); box-shadow:0 20px 40px rgba(0,0,0,0.25);
-  }
-  .toast.show{opacity:1; transform:translate(-50%,-50%) scale(1); pointer-events:auto;}
-  .toast .tic{font-size:34px; display:block; margin-bottom:6px;}
+        .ai-pill {
+            background: var(--green);
+            color: #fff;
+            border-radius: 20px;
+            padding: 6px 12px;
+            font-size: 12px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
 
-  .complete-card{
-    background:linear-gradient(135deg,var(--green),var(--green-deep)); color:#fff; border-radius:18px;
-    padding:26px 20px; text-align:center; margin-bottom:18px;
-  }
-  .complete-card .em{font-size:34px;margin-bottom:8px;}
-  .complete-card h3{font-size:18px;margin-bottom:6px;}
-  .complete-card p{font-size:13px;opacity:0.9;}
+        .chip-row {
+            display: flex;
+            gap: 8px;
+            overflow-x: auto;
+            padding-bottom: 6px;
+            margin-bottom: 20px;
+            scrollbar-width: none;
+        }
 
-  /* ---------- profile ---------- */
-  .profile-hero{
-    background:linear-gradient(135deg,var(--green),var(--green-deep)); border-radius:20px;
-    padding:22px 18px; color:#fff; margin-bottom:18px;
-  }
-  .profile-top{display:flex; align-items:center; gap:12px; margin-bottom:16px;}
-  .avatar{
-    width:50px;height:50px;border-radius:14px;background:rgba(255,255,255,0.2);
-    display:flex;align-items:center;justify-content:center;font-weight:800;font-size:17px;flex-shrink:0;
-  }
-  .profile-top h3{font-size:16px;font-weight:800;}
-  .profile-top p{font-size:12px;opacity:0.85;}
-  .loc-tag{
-    display:inline-block; background:rgba(255,255,255,0.2); font-size:11px; padding:3px 9px;
-    border-radius:20px; margin-top:4px;
-  }
-  .profile-stats{display:grid; grid-template-columns:repeat(3,1fr); gap:8px;}
-  .profile-stats .st{background:rgba(255,255,255,0.14); border-radius:12px; padding:10px 6px; text-align:center;}
-  .profile-stats .st .n{font-size:17px;font-weight:800;}
-  .profile-stats .st .l{font-size:10.5px;opacity:0.85;}
+        .chip-row::-webkit-scrollbar {
+            display: none;
+        }
 
-  .ach-row{display:flex; gap:10px; overflow-x:auto; padding-bottom:8px; scrollbar-width:none;}
-  .ach-row::-webkit-scrollbar{display:none;}
-  .ach-card{
-    flex-shrink:0; width:82px; text-align:center; background:var(--surface); border:1px solid var(--line);
-    border-radius:14px; padding:12px 8px;
-  }
-  .ach-card.locked{opacity:0.45;}
-  .ach-card.unlocked{border-color:var(--gold); background:var(--surface-2);}
-  .ach-card .aic{font-size:22px;margin-bottom:6px;}
-  .ach-card .al{font-size:10.5px;font-weight:600;line-height:1.3;}
+        .chip {
+            flex-shrink: 0;
+            background: var(--surface);
+            border: 1px solid var(--line);
+            border-radius: 20px;
+            padding: 8px 14px;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--ink-soft);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all .15s ease;
+        }
 
-  .list-row{
-    display:flex; align-items:center; gap:12px; background:var(--surface); border:1px solid var(--line);
-    border-radius:14px; padding:14px; margin-bottom:10px; cursor:pointer;
-  }
-  .list-row .lic{width:34px;height:34px;border-radius:9px;background:var(--surface-2);display:flex;align-items:center;justify-content:center;font-size:15px;}
-  .list-row span.name{flex:1;font-size:13.5px;font-weight:600;}
-  .list-row .count{background:var(--green); color:#fff; font-size:11px; font-weight:700; padding:2px 8px; border-radius:20px;}
-  .list-row .chev{color:var(--ink-soft);}
+        .chip.active {
+            background: var(--green);
+            color: #fff;
+            border-color: var(--green);
+        }
 
-  .settings-label{font-size:11.5px; font-weight:700; color:var(--ink-soft); text-transform:uppercase; letter-spacing:0.05em; margin:20px 0 10px;}
-  .lang-item{
-    display:flex; align-items:center; gap:10px; padding:12px 14px; border-radius:12px; cursor:pointer;
-    background:var(--surface); border:1px solid var(--line); margin-bottom:8px; font-size:13.5px; font-weight:600;
-  }
-  .lang-item.selected{background:var(--surface-2); border-color:var(--green);}
-  .lang-item .chk{margin-left:auto; color:var(--green); font-weight:800;}
-  .toggle-row{
-    display:flex; align-items:center; justify-content:space-between; background:var(--surface);
-    border:1px solid var(--line); border-radius:14px; padding:14px; margin-bottom:10px;
-  }
-  .switch{width:42px;height:24px;border-radius:20px;background:var(--surface-2);position:relative;cursor:pointer; border:1px solid var(--line);}
-  .switch.on{background:var(--green); border-color:var(--green);}
-  .switch .knob{position:absolute; top:2px; left:2px; width:18px;height:18px;border-radius:50%;background:#fff; transition:transform .2s ease;}
-  .switch.on .knob{transform:translateX(18px);}
+        .sec-title {
+            font-size: 16px;
+            font-weight: 800;
+            margin: 22px 0 12px;
+        }
 
-  .empty-state{text-align:center; padding:50px 20px;}
-  .empty-state .eic{font-size:38px;margin-bottom:10px;}
-  .empty-state h3{font-size:16px;margin-bottom:6px;}
-  .empty-state p{font-size:13px; color:var(--ink-soft); margin-bottom:18px;}
+        .city-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
 
-  .trip-item{
-    background:var(--surface); border:1px solid var(--line); border-radius:16px; padding:14px;
-    display:flex; align-items:center; gap:12px; margin-bottom:10px; cursor:pointer;
-  }
-  .trip-item .tphoto{width:52px;height:52px;border-radius:12px;flex-shrink:0;}
-  .trip-item h4{font-size:14px;font-weight:700;}
-  .trip-item p{font-size:11.5px;color:var(--ink-soft);}
-  .trip-badge{font-size:10.5px; font-weight:700; padding:3px 9px; border-radius:20px;}
-  .trip-badge.progress{background:var(--surface-2); color:var(--ink-soft);}
-  .trip-badge.done{background:var(--green); color:#fff;}
+        .city-card {
+            border-radius: 16px;
+            overflow: hidden;
+            cursor: pointer;
+            position: relative;
+            height: 130px;
+            display: flex;
+            align-items: flex-end;
+            padding: 14px;
+            color: #fff;
+            border: 1px solid var(--line);
+            transition: transform .2s ease, box-shadow .2s ease;
+        }
 
-  a:focus-visible, button:focus-visible, input:focus-visible{outline:2px solid var(--gold); outline-offset:2px;}
-</style>
+        .city-card:hover {
+            transform: scale(1.02);
+        }
+
+        .city-card:active {
+            transform: scale(0.97);
+        }
+
+        .city-card .cname {
+            font-weight: 800;
+            font-size: 16px;
+            text-shadow: 0 1px 4px rgba(0,0,0,0.4);
+        }
+
+        .city-card .ccount {
+            font-size: 11.5px;
+            opacity: 0.95;
+            text-shadow: 0 1px 3px rgba(0,0,0,0.3);
+        }
+
+        .stats-card {
+            background: var(--surface-2);
+            border-radius: 16px;
+            padding: 16px;
+            margin-top: 20px;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+        }
+
+        .stats-card .stat {
+            text-align: center;
+        }
+
+        .stats-card .stat .num {
+            font-size: 19px;
+            font-weight: 800;
+            color: var(--green);
+        }
+
+        .stats-card .stat .lbl {
+            font-size: 11px;
+            color: var(--ink-soft);
+        }
+
+        .why-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-top: 12px;
+        }
+
+        .why-card {
+            background: var(--surface);
+            border: 1px solid var(--line);
+            border-radius: 14px;
+            padding: 14px;
+        }
+
+        .why-card .ic {
+            font-size: 20px;
+            margin-bottom: 8px;
+        }
+
+        .why-card h4 {
+            font-size: 13.5px;
+            font-weight: 700;
+            margin-bottom: 3px;
+        }
+
+        .why-card p {
+            font-size: 11.5px;
+            color: var(--ink-soft);
+        }
+
+        .cta-btn {
+            width: 100%;
+            background: var(--green);
+            color: #fff;
+            border: none;
+            border-radius: 14px;
+            padding: 16px;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            margin-top: 22px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: transform .15s ease;
+        }
+
+        .cta-btn:hover {
+            transform: translateY(-1px);
+        }
+
+        .cta-btn.ghost {
+            background: var(--surface-2);
+            color: var(--ink);
+        }
+
+        /* ---------- chat ---------- */
+        .chat-body {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            padding-top: 6px;
+        }
+
+        .bubble-row {
+            display: flex;
+            gap: 8px;
+            align-items: flex-end;
+        }
+
+        .bubble-row.user {
+            justify-content: flex-end;
+        }
+
+        .avatar-mini {
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            background: var(--surface-2);
+            border: 1px solid var(--green);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            flex-shrink: 0;
+        }
+
+        .bubble {
+            max-width: 78%;
+            padding: 11px 15px;
+            border-radius: 16px;
+            font-size: 13.5px;
+            line-height: 1.5;
+        }
+
+        .bubble.ai {
+            background: var(--surface);
+            border: 1px solid var(--line);
+            border-bottom-left-radius: 4px;
+        }
+
+        .bubble.user {
+            background: var(--green);
+            color: #fff;
+            border-bottom-right-radius: 4px;
+        }
+
+        .typing {
+            display: flex;
+            gap: 3px;
+            padding: 4px 2px;
+        }
+
+        .typing span {
+            width: 5px;
+            height: 5px;
+            border-radius: 50%;
+            background: var(--ink-soft);
+            animation: blink 1.2s infinite ease-in-out;
+        }
+
+        .typing span:nth-child(2) {
+            animation-delay: .2s;
+        }
+
+        .typing span:nth-child(3) {
+            animation-delay: .4s;
+        }
+
+        @keyframes blink {
+
+            0%,
+            80%,
+            100% {
+                opacity: .25;
+            }
+
+            40% {
+                opacity: 1;
+            }
+        }
+
+        .option-wrap {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 4px;
+        }
+
+        .option-chip {
+            background: var(--surface);
+            border: 1px solid var(--green);
+            color: var(--green-deep);
+            padding: 9px 14px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all .15s ease;
+        }
+
+        .option-chip:hover {
+            background: var(--green);
+            color: #fff;
+        }
+
+        .option-chip.selected {
+            background: var(--green);
+            color: #fff;
+        }
+
+        .confirm-btn {
+            background: var(--gold);
+            color: #3a2708;
+            border: none;
+            padding: 9px 18px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
+            margin-top: 2px;
+        }
+
+        /* ---------- itinerary (plan) ---------- */
+        .cover {
+            height: 170px;
+            border-radius: 18px;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            padding: 16px;
+            color: #fff;
+            margin-bottom: 14px;
+        }
+
+        .cover .meta-row {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-top: 8px;
+        }
+
+        .cover .meta-tag {
+            background: rgba(0, 0, 0, 0.35);
+            backdrop-filter: blur(3px);
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 11.5px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .tag-row {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+
+        .tag-soft {
+            background: var(--surface-2);
+            color: var(--ink-soft);
+            font-size: 11.5px;
+            font-weight: 600;
+            padding: 6px 12px;
+            border-radius: 20px;
+        }
+
+        .tabs2 {
+            display: flex;
+            background: var(--surface-2);
+            border-radius: 14px;
+            padding: 4px;
+            margin-bottom: 16px;
+        }
+
+        .tabs2 button {
+            flex: 1;
+            border: none;
+            background: transparent;
+            padding: 10px;
+            border-radius: 11px;
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--ink-soft);
+            cursor: pointer;
+        }
+
+        .tabs2 button.active {
+            background: var(--surface);
+            color: var(--ink);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+        }
+
+        .timeline {
+            position: relative;
+            padding-left: 18px;
+        }
+
+        .timeline::before {
+            content: "";
+            position: absolute;
+            left: 5px;
+            top: 8px;
+            bottom: 8px;
+            width: 1px;
+            background: var(--line);
+        }
+
+        .tl-item {
+            position: relative;
+            margin-bottom: 14px;
+        }
+
+        .tl-dot {
+            position: absolute;
+            left: -18px;
+            top: 2px;
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            background: var(--surface);
+            border: 1px solid var(--line);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--ink-soft);
+        }
+
+        .tl-travel {
+            font-size: 11.5px;
+            color: var(--ink-soft);
+            margin: 2px 0 10px 4px;
+            display: flex;
+            gap: 6px;
+        }
+
+        .tl-card {
+            background: var(--surface);
+            border: 1px solid var(--line);
+            border-radius: 14px;
+            overflow: hidden;
+        }
+
+        .tl-photo {
+            height: 90px;
+        }
+
+        .tl-body {
+            padding: 12px 14px;
+        }
+
+        .tl-body h4 {
+            font-size: 14.5px;
+            font-weight: 700;
+            margin-bottom: 3px;
+        }
+
+        .tl-time {
+            font-size: 11.5px;
+            color: var(--ink-soft);
+            margin-bottom: 6px;
+        }
+
+        .tl-desc {
+            font-size: 12.5px;
+            color: var(--ink-soft);
+            line-height: 1.5;
+            margin-bottom: 8px;
+        }
+
+        .tl-link {
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--green);
+            cursor: pointer;
+        }
+
+        /* ---------- live trip ---------- */
+        .progress-wrap {
+            margin-bottom: 16px;
+        }
+
+        .progress-top {
+            display: flex;
+            justify-content: space-between;
+            font-size: 12.5px;
+            font-weight: 700;
+            margin-bottom: 6px;
+        }
+
+        .progress-top .pct {
+            color: var(--green);
+        }
+
+        .progress-bar {
+            height: 7px;
+            background: var(--surface-2);
+            border-radius: 20px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--green);
+            border-radius: 20px;
+            transition: width .4s ease;
+        }
+
+        .map-card {
+            background: var(--surface-2);
+            border-radius: 16px;
+            padding: 14px;
+            margin-bottom: 16px;
+            min-height: 100px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .map-pin {
+            align-self: flex-start;
+            background: var(--surface);
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--danger);
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .map-caption {
+            font-size: 11.5px;
+            color: var(--ink-soft);
+        }
+
+        .eyebrow-lbl {
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--ink-soft);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 8px;
+        }
+
+        .current-card {
+            border: 2px solid var(--gold);
+            border-radius: 16px;
+            overflow: hidden;
+            margin-bottom: 18px;
+        }
+
+        .current-photo {
+            height: 150px;
+            position: relative;
+        }
+
+        .badge-now {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background: var(--gold);
+            color: #3a2708;
+            font-size: 11.5px;
+            font-weight: 800;
+            padding: 4px 10px;
+            border-radius: 20px;
+        }
+
+        .current-info {
+            position: absolute;
+            left: 14px;
+            bottom: 10px;
+            color: #fff;
+        }
+
+        .current-info h3 {
+            font-size: 17px;
+            font-weight: 800;
+        }
+
+        .current-info p {
+            font-size: 12px;
+            opacity: 0.9;
+        }
+
+        .current-body {
+            padding: 14px;
+        }
+
+        .current-body p {
+            font-size: 13px;
+            color: var(--ink-soft);
+            line-height: 1.5;
+            margin-bottom: 12px;
+        }
+
+        .action-row {
+            display: flex;
+            gap: 10px;
+        }
+
+        .action-row button {
+            flex: 1;
+            padding: 12px;
+            border-radius: 12px;
+            font-size: 13.5px;
+            font-weight: 700;
+            cursor: pointer;
+            border: none;
+        }
+
+        .action-ghost {
+            background: var(--surface-2);
+            color: var(--ink);
+        }
+
+        .action-solid {
+            background: var(--green);
+            color: #fff;
+        }
+
+        .next-card {
+            background: var(--surface);
+            border: 1px solid var(--line);
+            border-radius: 14px;
+            padding: 12px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 18px;
+            cursor: pointer;
+        }
+
+        .next-thumb {
+            width: 44px;
+            height: 44px;
+            border-radius: 10px;
+            flex-shrink: 0;
+        }
+
+        .next-card h4 {
+            font-size: 13.5px;
+            font-weight: 700;
+        }
+
+        .next-card p {
+            font-size: 11.5px;
+            color: var(--ink-soft);
+        }
+
+        .stop-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px;
+            border-radius: 12px;
+            margin-bottom: 8px;
+        }
+
+        .stop-row.done {
+            background: var(--surface-2);
+        }
+
+        .stop-num {
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 800;
+            flex-shrink: 0;
+        }
+
+        .stop-num.done {
+            background: var(--green);
+            color: #fff;
+        }
+
+        .stop-num.current {
+            background: var(--gold);
+            color: #3a2708;
+        }
+
+        .stop-num.upcoming {
+            background: var(--surface-2);
+            color: var(--ink-soft);
+            border: 1px solid var(--line);
+        }
+
+        .stop-row h4 {
+            font-size: 13.5px;
+            font-weight: 600;
+        }
+
+        .stop-row.done h4 {
+            text-decoration: line-through;
+            color: var(--ink-soft);
+        }
+
+        .stop-row p {
+            font-size: 11.5px;
+            color: var(--ink-soft);
+        }
+
+        .stop-key {
+            font-size: 11px;
+            color: var(--gold-deep);
+            font-weight: 700;
+            margin-left: auto;
+            display: flex;
+            align-items: center;
+            gap: 2px;
+        }
+
+        .toast {
+            position: fixed;
+            left: 50%;
+            top: 40%;
+            transform: translate(-50%, -50%) scale(0.8);
+            z-index: 2000;
+            background: linear-gradient(135deg, var(--gold), var(--gold-deep));
+            color: #3a2708;
+            padding: 26px 30px;
+            border-radius: 20px;
+            text-align: center;
+            font-weight: 800;
+            font-size: 16px;
+            opacity: 0;
+            pointer-events: none;
+            transition: all .3s cubic-bezier(.2, 1.4, .4, 1);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25);
+        }
+
+        .toast.show {
+            opacity: 1;
+            transform: translate(-50%, -50%) scale(1);
+            pointer-events: auto;
+        }
+
+        .toast .tic {
+            font-size: 34px;
+            display: block;
+            margin-bottom: 6px;
+        }
+
+        .complete-card {
+            background: linear-gradient(135deg, var(--green), var(--green-deep));
+            color: #fff;
+            border-radius: 18px;
+            padding: 26px 20px;
+            text-align: center;
+            margin-bottom: 18px;
+        }
+
+        .complete-card .em {
+            font-size: 34px;
+            margin-bottom: 8px;
+        }
+
+        .complete-card h3 {
+            font-size: 18px;
+            margin-bottom: 6px;
+        }
+
+        .complete-card p {
+            font-size: 13px;
+            opacity: 0.9;
+        }
+
+        /* ---------- profile ---------- */
+        .profile-hero {
+            background: linear-gradient(135deg, var(--green), var(--green-deep));
+            border-radius: 20px;
+            padding: 22px 18px;
+            color: #fff;
+            margin-bottom: 18px;
+        }
+
+        .profile-top {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 14px;
+            background: rgba(255, 255, 255, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 17px;
+            flex-shrink: 0;
+        }
+
+        .profile-top h3 {
+            font-size: 16px;
+            font-weight: 800;
+        }
+
+        .profile-top p {
+            font-size: 12px;
+            opacity: 0.85;
+        }
+
+        .loc-tag {
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.2);
+            font-size: 11px;
+            padding: 3px 9px;
+            border-radius: 20px;
+            margin-top: 4px;
+        }
+
+        .profile-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+        }
+
+        .profile-stats .st {
+            background: rgba(255, 255, 255, 0.14);
+            border-radius: 12px;
+            padding: 10px 6px;
+            text-align: center;
+        }
+
+        .profile-stats .st .n {
+            font-size: 17px;
+            font-weight: 800;
+        }
+
+        .profile-stats .st .l {
+            font-size: 10.5px;
+            opacity: 0.85;
+        }
+
+        .ach-row {
+            display: flex;
+            gap: 10px;
+            overflow-x: auto;
+            padding-bottom: 8px;
+            scrollbar-width: none;
+        }
+
+        .ach-row::-webkit-scrollbar {
+            display: none;
+        }
+
+        .ach-card {
+            flex-shrink: 0;
+            width: 82px;
+            text-align: center;
+            background: var(--surface);
+            border: 1px solid var(--line);
+            border-radius: 14px;
+            padding: 12px 8px;
+        }
+
+        .ach-card.locked {
+            opacity: 0.45;
+        }
+
+        .ach-card.unlocked {
+            border-color: var(--gold);
+            background: var(--surface-2);
+        }
+
+        .ach-card .aic {
+            font-size: 22px;
+            margin-bottom: 6px;
+        }
+
+        .ach-card .al {
+            font-size: 10.5px;
+            font-weight: 600;
+            line-height: 1.3;
+        }
+
+        .list-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: var(--surface);
+            border: 1px solid var(--line);
+            border-radius: 14px;
+            padding: 14px;
+            margin-bottom: 10px;
+            cursor: pointer;
+        }
+
+        .list-row .lic {
+            width: 34px;
+            height: 34px;
+            border-radius: 9px;
+            background: var(--surface-2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 15px;
+        }
+
+        .list-row span.name {
+            flex: 1;
+            font-size: 13.5px;
+            font-weight: 600;
+        }
+
+        .list-row .count {
+            background: var(--green);
+            color: #fff;
+            font-size: 11px;
+            font-weight: 700;
+            padding: 2px 8px;
+            border-radius: 20px;
+        }
+
+        .list-row .chev {
+            color: var(--ink-soft);
+        }
+
+        .settings-label {
+            font-size: 11.5px;
+            font-weight: 700;
+            color: var(--ink-soft);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin: 20px 0 10px;
+        }
+
+        .lang-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 14px;
+            border-radius: 12px;
+            cursor: pointer;
+            background: var(--surface);
+            border: 1px solid var(--line);
+            margin-bottom: 8px;
+            font-size: 13.5px;
+            font-weight: 600;
+        }
+
+        .lang-item.selected {
+            background: var(--surface-2);
+            border-color: var(--green);
+        }
+
+        .lang-item .chk {
+            margin-left: auto;
+            color: var(--green);
+            font-weight: 800;
+        }
+
+        .toggle-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: var(--surface);
+            border: 1px solid var(--line);
+            border-radius: 14px;
+            padding: 14px;
+            margin-bottom: 10px;
+        }
+
+        .switch {
+            width: 42px;
+            height: 24px;
+            border-radius: 20px;
+            background: var(--surface-2);
+            position: relative;
+            cursor: pointer;
+            border: 1px solid var(--line);
+        }
+
+        .switch.on {
+            background: var(--green);
+            border-color: var(--green);
+        }
+
+        .switch .knob {
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: #fff;
+            transition: transform .2s ease;
+        }
+
+        .switch.on .knob {
+            transform: translateX(18px);
+        }
+
+        /* ---------- shop / do'kon ---------- */
+        .shop-grid {
+            display: grid;
+            gap: 14px;
+        }
+        .shop-card {
+            background: var(--surface);
+            border: 1px solid var(--line);
+            border-radius: 16px;
+            padding: 18px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+        .shop-card .sicon {
+            width: 48px;
+            height: 48px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            flex-shrink: 0;
+        }
+        .shop-card .sinfo {
+            flex: 1;
+        }
+        .shop-card .sinfo h4 {
+            font-size: 14.5px;
+            font-weight: 700;
+        }
+        .shop-card .sinfo p {
+            font-size: 12px;
+            color: var(--ink-soft);
+            margin: 2px 0;
+        }
+        .shop-card .sprice {
+            font-size: 13px;
+            font-weight: 800;
+            color: var(--gold);
+            white-space: nowrap;
+        }
+        .shop-card .sbadge {
+            font-size: 10.5px;
+            font-weight: 700;
+            padding: 3px 9px;
+            border-radius: 20px;
+            background: var(--green);
+            color: #fff;
+            margin-top: 4px;
+            display: inline-block;
+        }
+        .shop-card .sbadge.owned {
+            background: var(--surface-2);
+            color: var(--ink-soft);
+        }
+        .shop-card button {
+            padding: 8px 16px;
+            border-radius: 12px;
+            border: none;
+            font-size: 12.5px;
+            font-weight: 700;
+            cursor: pointer;
+            background: var(--gold);
+            color: #3a2708;
+            white-space: nowrap;
+        }
+        .shop-card button:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+        .shop-card button.bought {
+            background: var(--surface-2);
+            color: var(--ink-soft);
+        }
+        .sub-banner {
+            background: linear-gradient(135deg, var(--gold), var(--gold-deep));
+            border-radius: 16px;
+            padding: 16px;
+            margin-bottom: 16px;
+            color: #3a2708;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .sub-banner .sbicon {
+            font-size: 28px;
+        }
+        .sub-banner h4 {
+            font-size: 15px;
+            font-weight: 800;
+        }
+        .sub-banner p {
+            font-size: 12px;
+            opacity: 0.85;
+        }
+        .star-balance {
+            text-align: center;
+            padding: 20px;
+            background: var(--surface-2);
+            border-radius: 16px;
+            margin-bottom: 16px;
+        }
+        .star-balance .big {
+            font-size: 36px;
+            font-weight: 800;
+            color: var(--gold);
+        }
+        .star-balance .lbl {
+            font-size: 13px;
+            color: var(--ink-soft);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 50px 20px;
+        }
+
+        .empty-state .eic {
+            font-size: 38px;
+            margin-bottom: 10px;
+        }
+
+        .empty-state h3 {
+            font-size: 16px;
+            margin-bottom: 6px;
+        }
+
+        .empty-state p {
+            font-size: 13px;
+            color: var(--ink-soft);
+            margin-bottom: 18px;
+        }
+
+        .trip-item {
+            background: var(--surface);
+            border: 1px solid var(--line);
+            border-radius: 16px;
+            padding: 14px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 10px;
+            cursor: pointer;
+        }
+
+        .trip-item .tphoto {
+            width: 52px;
+            height: 52px;
+            border-radius: 12px;
+            flex-shrink: 0;
+        }
+
+        .trip-item h4 {
+            font-size: 14px;
+            font-weight: 700;
+        }
+
+        .trip-item p {
+            font-size: 11.5px;
+            color: var(--ink-soft);
+        }
+
+        .trip-badge {
+            font-size: 10.5px;
+            font-weight: 700;
+            padding: 3px 9px;
+            border-radius: 20px;
+        }
+
+        .trip-badge.progress {
+            background: var(--surface-2);
+            color: var(--ink-soft);
+        }
+
+        .trip-badge.done {
+            background: var(--green);
+            color: #fff;
+        }
+
+        a:focus-visible,
+        button:focus-visible,
+        input:focus-visible {
+            outline: 2px solid var(--gold);
+            outline-offset: 2px;
+        }
+
+        /* ---------- mobile touch improvements ---------- */
+        button, .city-card, .option-chip, .chip, .list-row, .lang-item, .trip-item {
+            min-height: 44px;
+        }
+        .bottom-nav button {
+            min-height: 48px;
+            padding: 8px 2px;
+        }
+        .bottom-nav button .ic {
+            font-size: 22px;
+        }
+        input, select, textarea {
+            font-size: 16px !important; /* prevents iOS zoom on focus */
+        }
+        .app-shell {
+            padding-bottom: env(safe-area-inset-bottom, 0px);
+        }
+        .bottom-nav {
+            padding-bottom: max(14px, env(safe-area-inset-bottom));
+        }
+
+        @media (max-width: 380px) {
+            .city-grid {
+                gap: 8px;
+            }
+            .city-card {
+                height: 100px;
+                padding: 10px;
+            }
+            .hero-title {
+                font-size: 22px;
+            }
+            .topbar {
+                padding: 14px 16px 12px;
+            }
+            .screen {
+                padding: 0 16px 100px;
+            }
+            .why-grid {
+                grid-template-columns: 1fr 1fr;
+                gap: 8px;
+            }
+        }
+
+        @media (max-width: 360px) {
+            .hero-title {
+                font-size: 20px;
+            }
+            .profile-stats, .stats-card {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 6px;
+            }
+        }
+    </style>
 </head>
+
 <body>
 
-<div class="app-shell" id="appShell">
+    <div class="app-shell" id="appShell">
 
-  <!-- ============ HOME ============ -->
-  <section class="screen active" data-screen="home">
-    <div class="topbar">
-      <div class="brand">
-        <svg class="mark" viewBox="0 0 24 24"><path d="M12 2 L15 9 L22 9 L16 14 L18 21 L12 17 L6 21 L8 14 L2 9 L9 9 Z" fill="none" stroke="#dda23a" stroke-width="1.6"/></svg>
-        YO'LCHI
-      </div>
-      <button class="icon-btn" onclick="toggleDark()">🌙</button>
-    </div>
-    <div style="padding-top:6px;">
-      <div class="greet">Xush kelibsiz 👋</div>
-      <div class="hero-title">O'zbekistonni <span>AI bilan</span> kashf eting</div>
+        <!-- ============ HOME ============ -->
+        <section class="screen active" data-screen="home">
+            <div class="topbar">
+                <div class="brand">
+                    <svg class="mark" viewBox="0 0 24 24">
+                        <path d="M12 2 L15 9 L22 9 L16 14 L18 21 L12 17 L6 21 L8 14 L2 9 L9 9 Z" fill="none"
+                            stroke="#dda23a" stroke-width="1.6" />
+                    </svg>
+                    YO'LCHI
+                </div>
+                <button class="icon-btn" onclick="toggleDark()">🌙</button>
+            </div>
+            <div style="padding-top:6px;">
+                <div class="greet" data-tr="welcome">Xush kelibsiz 👋</div>
+                <div class="hero-title" data-tr="hero">O'zbekistonni <span>AI bilan</span> kashf eting</div>
 
-      <div class="search-box" onclick="startChat()">
-        <span>🔍</span>
-        <span class="ph">Ideal kuningizni tasvirlab bering...</span>
-        <span class="ai-pill">✨ AI</span>
-      </div>
+                <div class="search-box" onclick="startChat()">
+                    <span>🔍</span>
+                    <span class="ph" data-tr="search_ph">Ideal kuningizni tasvirlab bering...</span>
+                    <span class="ai-pill">✨ AI</span>
+                </div>
 
-      <div class="chip-row" id="chipRow">
-        <div class="chip active" data-chip="tarixiy">🏛️ Tarixiy joylar</div>
-        <div class="chip" data-chip="tabiat">🌿 Tabiat</div>
-        <div class="chip" data-chip="oilaviy">👨‍👩‍👧 Oilaviy</div>
-        <div class="chip" data-chip="taom">🍲 Taom</div>
-        <div class="chip" data-chip="xarid">🛍️ Xarid</div>
-      </div>
+                <div class="chip-row" id="chipRow">
+                    <div class="chip active" data-chip="all" data-tr="filter_all">🌟 Hammasi</div>
+                    <div class="chip" data-chip="tarixiy" data-tr="filter_tarixiy">🏛️ Tarixiy joylar</div>
+                    <div class="chip" data-chip="tabiat" data-tr="filter_tabiat">🌿 Tabiat</div>
+                    <div class="chip" data-chip="oilaviy" data-tr="filter_oilaviy">👨‍👩‍👧 Oilaviy</div>
+                    <div class="chip" data-chip="taom" data-tr="filter_taom">🍲 Taom</div>
+                    <div class="chip" data-chip="xarid" data-tr="filter_xarid">🛍️ Xarid</div>
+                </div>
 
-      <div class="sec-title">Mashhur shaharlar</div>
-      <div class="city-grid" id="cityGridHome"></div>
+                <div class="sec-title" data-tr="sec_cities">Mashhur shaharlar</div>
+                <div class="city-grid" id="cityGridHome"></div>
 
-      <div class="stats-card" id="statsCardHome"></div>
+                <div class="stats-card" id="statsCardHome"></div>
 
-      <div class="sec-title">Nega YO'LCHI?</div>
-      <div class="why-grid">
-        <div class="why-card"><div class="ic">🤖</div><h4>AI reja tuzish</h4><p>15 soniyada shaxsiy marshrut</p></div>
-        <div class="why-card"><div class="ic">🗺️</div><h4>Yo'l ko'rsatish</h4><p>Optimallashtirilgan tartib</p></div>
-        <div class="why-card"><div class="ic">🔑</div><h4>Kalit yig'ish</h4><p>Har bir joydan sovg'a ol</p></div>
-        <div class="why-card"><div class="ic">📤</div><h4>Ulashish</h4><p>Rejani do'stlaringga yubor</p></div>
-      </div>
+                <div class="sec-title" data-tr="sec_why">Nega YO'LCHI?</div>
+                <div class="why-grid">
+                    <div class="why-card">
+                        <div class="ic">🤖</div>
+                        <h4 data-tr="why_ai_title">AI reja tuzish</h4>
+                        <p data-tr="why_ai_desc">15 soniyada shaxsiy marshrut</p>
+                    </div>
+                    <div class="why-card">
+                        <div class="ic">🗺️</div>
+                        <h4 data-tr="why_map_title">Yo'l ko'rsatish</h4>
+                        <p data-tr="why_map_desc">Optimallashtirilgan tartib</p>
+                    </div>
+                    <div class="why-card">
+                        <div class="ic">🔑</div>
+                        <h4 data-tr="why_key_title">Kalit yig'ish</h4>
+                        <p data-tr="why_key_desc">Har bir joydan sovg'a ol</p>
+                    </div>
+                    <div class="why-card">
+                        <div class="ic">📤</div>
+                        <h4 data-tr="why_share_title">Ulashish</h4>
+                        <p data-tr="why_share_desc">Rejani do'stlaringga yubor</p>
+                    </div>
+                </div>
 
-      <button class="cta-btn" onclick="startChat()">⚡ AI bilan boshlash →</button>
-    </div>
-  </section>
+                <button class="cta-btn" onclick="startChat()" data-tr="cta_start">⚡ AI bilan boshlash →</button>
+            </div>
+        </section>
 
-  <!-- ============ DISCOVER ============ -->
-  <section class="screen" data-screen="discover">
-    <div class="topbar"><h2>Kashfiyot</h2><button class="icon-btn" onclick="toggleDark()">🌙</button></div>
-    <div class="chip-row">
-      <div class="chip active">🏛️ Tarixiy joylar</div>
-      <div class="chip">🌿 Tabiat</div>
-      <div class="chip">👨‍👩‍👧 Oilaviy</div>
-      <div class="chip">🍲 Taom</div>
-    </div>
-    <div class="sec-title" style="margin-top:8px;">Barcha shaharlar</div>
-    <div class="city-grid" id="cityGridDiscover"></div>
-  </section>
+        <!-- ============ DISCOVER ============ -->
+        <section class="screen" data-screen="discover">
+            <div class="topbar">
+                <h2 data-tr="discover_title">Kashfiyot</h2><button class="icon-btn" onclick="toggleDark()">🌙</button>
+            </div>
+            <div class="chip-row">
+                <div class="chip active" data-chip="all" data-tr="discover_all">🏛️ Tarixiy joylar</div>
+                <div class="chip" data-chip="tabiat" data-tr="filter_tabiat">🌿 Tabiat</div>
+                <div class="chip" data-chip="oilaviy" data-tr="filter_oilaviy">👨‍👩‍👧 Oilaviy</div>
+                <div class="chip" data-chip="taom" data-tr="filter_taom">🍲 Taom</div>
+            </div>
+            <div class="sec-title" style="margin-top:8px;" data-tr="discover_sec">Barcha shaharlar</div>
+            <div class="city-grid" id="cityGridDiscover"></div>
+        </section>
 
-  <!-- ============ TRIPS ============ -->
-  <section class="screen" data-screen="trips">
-    <div class="topbar"><h2>Sayohatlarim</h2><button class="icon-btn" onclick="toggleDark()">🌙</button></div>
-    <div id="tripsList"></div>
-  </section>
+        <!-- ============ TRIPS ============ -->
+        <section class="screen" data-screen="trips">
+            <div class="topbar">
+                <h2 data-tr="trips_title">Sayohatlarim</h2><button class="icon-btn" onclick="toggleDark()">🌙</button>
+            </div>
+            <div id="tripsList"></div>
+        </section>
 
-  <!-- ============ PROFILE ============ -->
-  <section class="screen" data-screen="profile">
-    <div class="topbar"><h2>Profil</h2><button class="icon-btn" onclick="toggleDark()">🌙</button></div>
-    <div class="profile-hero">
-      <div class="profile-top">
-        <div class="avatar">ME</div>
-        <div>
-          <h3>Mehmon</h3>
-          <p>mehmon@yolchi.uz</p>
-          <span class="loc-tag" id="profileCity">📍 Toshkent</span>
+        <!-- ============ PROFILE ============ -->
+        <section class="screen" data-screen="profile">
+            <div class="topbar">
+                <h2 data-tr="profile_title">Profil</h2><button class="icon-btn" onclick="toggleDark()">🌙</button>
+            </div>
+            <div class="profile-hero">
+                <div class="profile-top">
+                    <div class="avatar">ME</div>
+                    <div>
+                        <h3 data-tr="profile_guest">Mehmon</h3>
+                        <p data-tr="profile_guest_mail">mehmon@yolchi.uz</p>
+                        <span class="loc-tag" id="profileCity">📍 Toshkent</span>
+                        <span class="loc-tag" id="profileSub" style="background:var(--gold);color:#3a2708;margin-left:4px;">⭐ Basic</span>
+                    </div>
+                </div>
+                <div class="profile-stats" id="profileStats"></div>
+            </div>
+
+            <div class="sec-title" style="margin-top:6px;" data-tr="profile_ach">🏆 Yutuqlar</div>
+            <div class="ach-row" id="achRow"></div>
+
+            <div style="margin-top:20px;">
+                <div class="list-row">
+                    <div class="lic">📑</div><span class="name" data-tr="profile_saved">Saqlangan sayohatlar</span><span class="chev">›</span>
+                </div>
+                <div class="list-row">
+                    <div class="lic">❤️</div><span class="name" data-tr="profile_fav">Sevimlilar</span><span class="chev">›</span>
+                </div>
+                <div class="list-row">
+                    <div class="lic">🏆</div><span class="name" data-tr="profile_ach2">Yutuqlar</span><span class="count"
+                        id="achCount">0</span>
+                </div>
+            </div>
+
+            <div class="settings-label" data-tr="profile_settings">Sozlamalar</div>
+            <div id="langList"></div>
+            <div class="toggle-row">
+                <span style="font-size:13.5px;font-weight:600;" data-tr="profile_night">Tungi rejim</span>
+                <div class="switch" id="darkSwitch" onclick="toggleDark()">
+                    <div class="knob"></div>
+                </div>
+            </div>
+            <button class="cta-btn ghost" style="margin-top:6px;" data-tr="profile_share">📤 YO'LCHI'ni do'stlarga ulashish</button>
+            <button class="cta-btn" style="margin-top:10px;" onclick="openScanner()" data-tr="profile_scanner">📷 QR Skanner</button>
+            <button class="cta-btn ghost" style="margin-top:10px;" onclick="goTab('shop')" data-tr="profile_shop">⭐ Do'kon</button>
+        </section>
+
+        <!-- ============ CHAT ============ -->
+        <section class="screen" data-screen="chat">
+            <div class="topbar">
+                <div class="topbar-left"><button class="back-btn" onclick="goHome()">←</button>
+                    <h2 data-tr="chat_greeting">AI Sayohat Yordamchisi</h2>
+                </div>
+                <button class="icon-btn" onclick="toggleDark()">🌙</button>
+            </div>
+            <div class="chat-body" id="chatBody"></div>
+        </section>
+
+        <!-- ============ ITINERARY (PLAN) ============ -->
+        <section class="screen" data-screen="itinerary">
+            <div class="topbar">
+                <div class="topbar-left"><button class="back-btn" onclick="goHome()">←</button>
+                    <h2 data-tr="nav_trips">Sayohat Rejasi</h2>
+                </div>
+                <button class="icon-btn" onclick="toggleDark()">🌙</button>
+            </div>
+            <div id="itineraryBody"></div>
+        </section>
+
+        <!-- ============ LIVE TRIP ============ -->
+        <section class="screen" data-screen="livetrip">
+            <div class="topbar">
+                <div class="topbar-left"><button class="back-btn" onclick="goHome()">←</button>
+                    <h2 data-tr="live_current">Jonli Sayohat</h2>
+                </div>
+                <button class="icon-btn" onclick="toggleDark()">🌙</button>
+            </div>
+            <div id="liveBody"></div>
+        </section>
+
+        <!-- ============ DO'KON (SHOP) ============ -->
+        <section class="screen" data-screen="shop">
+            <div class="topbar">
+                <div class="topbar-left"><button class="back-btn" onclick="goHome()">←</button>
+                    <h2 data-tr="shop_title">⭐ Do'kon</h2>
+                </div>
+                <button class="icon-btn" onclick="toggleDark()">🌙</button>
+            </div>
+            <div id="shopBody"></div>
+        </section>
+
+        <!-- ============ ADMIN PANEL ============ -->
+        <section class="screen" data-screen="admin">
+            <div class="topbar">
+                <h2 data-tr="admin_title">🛠 Admin Panel</h2>
+                <button class="icon-btn" onclick="goHome()">🏠</button>
+            </div>
+
+            <div id="adminLogin">
+                <input id="adminUser" placeholder="Login" data-tr="admin_login"
+                    style="width:100%;padding:15px;margin-bottom:15px;border-radius:12px;">
+                <input id="adminPass" type="password" placeholder="Parol" data-tr="admin_pass"
+                    style="width:100%;padding:15px;margin-bottom:15px;border-radius:12px;">
+                <button class="cta-btn" onclick="adminLogin()" data-tr="admin_enter">
+                    Kirish
+                </button>
+            </div>
+
+            <div id="adminDashboard" style="display:none;">
+                <h3 data-tr="admin_add_city">📍 Shahar qo'shish</h3>
+                <input id="cityName" placeholder="Shahar nomi" data-tr="admin_city_name" style="width:100%;padding:12px;margin:10px 0;">
+                <input id="cityEmoji" placeholder="Emoji (masalan 🏙️)" data-tr="admin_city_emoji" style="width:100%;padding:12px;margin:10px 0;">
+                <button class="cta-btn" onclick="addCity()" data-tr="admin_add_city_btn">
+                    Shahar qo'shish
+                </button>
+                <div id="adminCities" style="margin:10px 0;"></div>
+
+                <hr style="margin:20px 0;">
+
+                <h3 data-tr="admin_add_place">🏛 Joy qo'shish</h3>
+                <select id="placeCity" style="width:100%;padding:12px;margin:10px 0;border-radius:12px;border:1px solid var(--line);background:var(--surface);font-size:13.5px;">
+                    <option value="" data-tr="admin_select_city">Shaharni tanlang</option>
+                </select>
+                <input id="placeName" placeholder="Joy nomi" data-tr="admin_place_name" style="width:100%;padding:12px;margin:10px 0;">
+                <input id="placeImage" placeholder="Rasm URL" data-tr="admin_image_url" style="width:100%;padding:12px;margin:10px 0;">
+                <textarea id="placeDesc" placeholder="Tavsif" data-tr="admin_desc" style="width:100%;padding:12px;height:120px;"></textarea>
+                <div style="display:flex;align-items:center;gap:10px;margin:10px 0;">
+                    <span style="font-weight:600;" data-tr="admin_stars">⭐ Yulduz miqdori:</span>
+                    <input id="placeStars" type="number" value="3" min="1" max="20" style="width:80px;padding:10px;border-radius:10px;border:1px solid var(--line);text-align:center;">
+                </div>
+                <button class="cta-btn" onclick="addPlace()" data-tr="admin_add_place_btn">
+                    Joy qo'shish
+                </button>
+                <hr style="margin:20px 0;">
+                <div id="adminPlaces"></div>
+            </div>
+        </section>
+
+        <!-- ============ BOTTOM NAV ============ -->
+        <div class="bottom-nav" id="bottomNav">
+            <button data-tab="home" class="active" onclick="goTab('home')" data-tr="nav_home"><span class="ic">🏠</span>Bosh sahifa</button>
+            <button data-tab="discover" onclick="goTab('discover')" data-tr="nav_discover"><span class="ic">🧭</span>Kashfiyot</button>
+            <button data-tab="shop" onclick="goTab('shop')" data-tr="nav_shop"><span class="ic">⭐</span>Do'kon</button>
+            <button data-tab="trips" onclick="goTab('trips')" data-tr="nav_trips"><span class="ic">📑</span>Sayohatlar</button>
+            <button data-tab="profile" onclick="goTab('profile')" data-tr="nav_profile"><span class="ic">👤</span>Profil</button>
         </div>
-      </div>
-      <div class="profile-stats" id="profileStats"></div>
+
+        <div class="toast" id="toast"><span class="tic">🔑</span><span id="toastText">Kalit topildi! +1</span></div>
     </div>
 
-    <div class="sec-title" style="margin-top:6px;">🏆 Yutuqlar</div>
-    <div class="ach-row" id="achRow"></div>
-
-    <div style="margin-top:20px;">
-      <div class="list-row"><div class="lic">📑</div><span class="name">Saqlangan sayohatlar</span><span class="chev">›</span></div>
-      <div class="list-row"><div class="lic">❤️</div><span class="name">Sevimlilar</span><span class="chev">›</span></div>
-      <div class="list-row"><div class="lic">🏆</div><span class="name">Yutuqlar</span><span class="count" id="achCount">0</span></div>
+    <div id="scannerOverlay" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.85);z-index:999;justify-content:center;align-items:center;flex-direction:column;">
+        <div style="background:#fff;border-radius:20px;padding:20px;width:90%;max-width:400px;text-align:center;">
+            <h3 style="margin-bottom:5px;">📷 QR Skanner</h3>
+            <p id="scannerContext" style="font-size:12px;color:var(--ink-soft);margin-bottom:15px;">Joyni tasdiqlash uchun QR kodni skan qiling</p>
+            <div id="reader" style="width:100%;margin:auto;"></div>
+            <button class="cta-btn ghost" onclick="closeScannerOverlay()" style="margin-top:15px;">✕ Yopish</button>
+        </div>
     </div>
 
-    <div class="settings-label">Sozlamalar</div>
-    <div id="langList"></div>
-    <div class="toggle-row">
-      <span style="font-size:13.5px;font-weight:600;">Tungi rejim</span>
-      <div class="switch" id="darkSwitch" onclick="toggleDark()"><div class="knob"></div></div>
-    </div>
-    <button class="cta-btn ghost" style="margin-top:6px;">📤 YO'LCHI'ni do'stlarga ulashish</button>
-  </section>
+    <script>
+        /* ================= DATA ================= */
+        const GRADIENTS = [
+            'linear-gradient(135deg,#1f6d4c,#123a28)',
+            'linear-gradient(135deg,#dda23a,#a86b1f)',
+            'linear-gradient(135deg,#2f8f6a,#1f6d4c)',
+            'linear-gradient(135deg,#c96b3e,#8a3f22)',
+            'linear-gradient(135deg,#3a7d94,#1f4b5c)'
+        ];
 
-  <!-- ============ CHAT ============ -->
-  <section class="screen" data-screen="chat">
-    <div class="topbar">
-      <div class="topbar-left"><button class="back-btn" onclick="goHome()">←</button><h2>AI Sayohat Yordamchisi</h2></div>
-      <button class="icon-btn" onclick="toggleDark()">🌙</button>
-    </div>
-    <div class="chat-body" id="chatBody"></div>
-  </section>
+        const CITIES = [
+            { name: "Toshkent", emoji: "🏙️", count: 6, categories: ['tarixiy', 'xarid', 'taom'], image: 'https://upload.wikimedia.org/wikipedia/en/thumb/f/f6/Nest_One_Tashkent.jpg/500px-Nest_One_Tashkent.jpg' },
+            { name: "Samarqand", emoji: "🕌", count: 5, categories: ['tarixiy', 'taom'], image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8c/RegistanSquare_Samarkand.jpg/500px-RegistanSquare_Samarkand.jpg' },
+            { name: "Buxoro", emoji: "🏰", count: 5, categories: ['tarixiy', 'xarid'], image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d0/2012_Bukhara_7515821196_cropped.jpg/500px-2012_Bukhara_7515821196_cropped.jpg' },
+            { name: "Xiva", emoji: "🏯", count: 5, categories: ['tarixiy'], image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/dc/View_from_the_city_walls%2C_Khiva_%284934484894%29.jpg/500px-View_from_the_city_walls%2C_Khiva_%284934484894%29.jpg' },
+            { name: "Namangan", emoji: "⛰️", count: 5, categories: ['tabiat', 'taom'], image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f0/Mulla_Qirg%CA%BBiz_madrasasi_04.jpg/500px-Mulla_Qirg%CA%BBiz_madrasasi_04.jpg' }
+        ];
 
-  <!-- ============ ITINERARY (PLAN) ============ -->
-  <section class="screen" data-screen="itinerary">
-    <div class="topbar">
-      <div class="topbar-left"><button class="back-btn" onclick="goHome()">←</button><h2>Sayohat Rejasi</h2></div>
-      <button class="icon-btn" onclick="toggleDark()">🌙</button>
-    </div>
-    <div id="itineraryBody"></div>
-  </section>
+        // Real city images for display
+        const CITY_IMAGES = {
+            "Toshkent": "https://upload.wikimedia.org/wikipedia/en/thumb/f/f6/Nest_One_Tashkent.jpg/500px-Nest_One_Tashkent.jpg",
+            "Samarqand": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8c/RegistanSquare_Samarkand.jpg/500px-RegistanSquare_Samarkand.jpg",
+            "Buxoro": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d0/2012_Bukhara_7515821196_cropped.jpg/500px-2012_Bukhara_7515821196_cropped.jpg",
+            "Xiva": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/dc/View_from_the_city_walls%2C_Khiva_%284934484894%29.jpg/500px-View_from_the_city_walls%2C_Khiva_%284934484894%29.jpg",
+            "Namangan": "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f0/Mulla_Qirg%CA%BBiz_madrasasi_04.jpg/500px-Mulla_Qirg%CA%BBiz_madrasasi_04.jpg",
+            "Farg'ona": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3e/Ferghana0234-Urinboev.jpg/500px-Ferghana0234-Urinboev.jpg"
+        };
 
-  <!-- ============ LIVE TRIP ============ -->
-  <section class="screen" data-screen="livetrip">
-    <div class="topbar">
-      <div class="topbar-left"><button class="back-btn" onclick="goHome()">←</button><h2>Jonli Sayohat</h2></div>
-      <button class="icon-btn" onclick="toggleDark()">🌙</button>
-    </div>
-    <div id="liveBody"></div>
-  </section>
+        const ITINERARIES = {
+            "Toshkent": [
+                { name: "Chorsu bozori", time: "09:00", dur: 60, desc: "Shahar markazidagi eng qadimiy bozor — ziravorlar, mevalar va milliy mahsulotlar bilan to'la.", emoji: "🧺", image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/47/Chorsu_Market_general_view.jpg/500px-Chorsu_Market_general_view.jpg' },
+                { name: "Xast Imom majmuasi", time: "10:15", dur: 45, desc: "Mintaqadagi muhim diniy majmua, qadimiy qo'lyozmalar saqlanadigan joy.", emoji: "🕌", travel: { min: 8, km: 1.2 }, image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/34/Barakhan_Madrasah_Tashkent.jpg/500px-Barakhan_Madrasah_Tashkent.jpg' },
+                { name: "Amir Temur maydoni", time: "11:15", dur: 30, desc: "Shahar markazidagi bosh maydon, haykal va bog' bilan mashhur.", emoji: "🌳", travel: { min: 8, km: 2.4 } },
+                { name: "O'zbekiston tarixi muzeyi", time: "12:00", dur: 90, desc: "Mamlakat tarixi va madaniyatini o'rganish uchun mingdan ortiq eksponat.", emoji: "🏛️", travel: { min: 8, km: 2.7 } },
+                { name: "Milliy choyxona", time: "13:45", dur: 45, desc: "An'anaviy choyxonada ko'k choy va milliy taomlar bilan dam olish.", emoji: "🍵", travel: { min: 8, km: 1.7 } },
+                { name: "Bo'zsuv bo'yi", time: "14:45", dur: 40, desc: "Kanal bo'yidagi piyodalar hududi, kechki sayr uchun qulay.", emoji: "🚶", travel: { min: 10, km: 2.1 } }
+            ],
+            "Samarqand": [
+                { name: "Registon maydoni", time: "09:00", dur: 75, desc: "Shahar qalbi — uchta ulug'vor madrasa bir maydonda jamlangan.", emoji: "🕌", image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/00/Registan_square_Samarkand.jpg/500px-Registan_square_Samarkand.jpg' },
+                { name: "Shohi Zinda", time: "10:30", dur: 50, desc: "Ko'k kafel bilan bezatilgan qadimiy maqbaralar majmuasi.", emoji: "🏛️", travel: { min: 7, km: 1.5 }, image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/94/Shah-i-Zinda%2C_Samarkand_%28Shohi-Zinda_majmuasi%2C_Samarqand%2C_%D0%A8%D0%B0%D1%85%D0%B8_%D0%97%D0%B8%D0%BD%D0%B4%D0%B0%29.jpg/500px-Shah-i-Zinda%2C_Samarkand_%28Shohi-Zinda_majmuasi%2C_Samarqand%2C_%D0%A8%D0%B0%D1%85%D0%B8_%D0%97%D0%B8%D0%BD%D0%B4%D0%B0%29.jpg' },
+                { name: "Bibixonim masjidi", time: "11:35", dur: 40, desc: "Mintaqadagi eng yirik masjidlardan biri, ulkan gumbazlari bilan.", emoji: "🕌", travel: { min: 6, km: 1.1 }, image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/dd/%D0%9C%D0%B5%D1%87%D0%B5%D1%82%D1%8C_%D0%91%D0%B8%D0%B1%D0%B8_%D0%A5%D0%B0%D0%BD%D1%83%D0%BC._%D0%A1%D0%B0%D0%BC%D0%B0%D1%80%D0%BA%D0%B0%D0%BD%D0%B4.jpg/500px-%D0%9C%D0%B5%D1%87%D0%B5%D1%82%D1%8C_%D0%91%D0%B8%D0%B1%D0%B8_%D0%A5%D0%B0%D0%BD%D1%83%D0%BC._%D0%A1%D0%B0%D0%BC%D0%B0%D1%80%D0%BA%D0%B0%D0%BD%D0%B4.jpg' },
+                { name: "Siyob bozori", time: "12:30", dur: 45, desc: "Mahalliy mevalar, quritilgan mevalar va non turlari sotiladigan bozor.", emoji: "🍈", travel: { min: 4, km: 0.4 } },
+                { name: "Ulug'bek observatoriyasi", time: "13:45", dur: 50, desc: "O'rta asr astronomiyasi durdonasi, ilmiy asboblar qoldiqlari bilan.", emoji: "🔭", travel: { min: 12, km: 3.2 }, image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f5/A_model_of_Ulug_Beg_obsrvatory_in_the_Uzbek_National_Muzeum.jpg/500px-A_model_of_Ulug_Beg_obsrvatory_in_the_Uzbek_National_Muzeum.jpg' }
+            ],
+            "Buxoro": [
+                { name: "Labi Hovuz", time: "09:00", dur: 45, desc: "Hovuz atrofidagi tarixiy maydon, choyxonalar bilan o'ralgan.", emoji: "💧" },
+                { name: "Ark qal'asi", time: "10:00", dur: 60, desc: "Shahar hukmdorlarining qadimiy qarorgohi bo'lgan qal'a.", emoji: "🏯", travel: { min: 9, km: 1.4 }, image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6f/Ark_of_Bukhara_2023.9.jpg/500px-Ark_of_Bukhara_2023.9.jpg' },
+                { name: "Kalon minorasi", time: "11:15", dur: 40, desc: "Shaharning eng baland va mashhur minorasi.", emoji: "🗼", travel: { min: 6, km: 0.9 }, image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/92/Poi_Kalon.jpg/500px-Poi_Kalon.jpg' },
+                { name: "Toqi Zargaron", time: "12:00", dur: 35, desc: "Qadimiy savdo gumbazi, hozirda hunarmandchilik do'konlari joylashgan.", emoji: "🛍️", travel: { min: 4, km: 0.5 } },
+                { name: "Milliy hunarmandchilik markazi", time: "12:45", dur: 40, desc: "Mahalliy ustalarning naqsh va gilam ishlarini ko'rish mumkin.", emoji: "🧵", travel: { min: 5, km: 0.6 } }
+            ],
+            "Xiva": [
+                { name: "Ichon-Qal'a darvozasi", time: "09:00", dur: 30, desc: "Qadimiy shaharga kiraverishdagi asosiy darvoza.", emoji: "🚪", image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c3/Islam_Khodja_Madrasa_01.jpg/500px-Islam_Khodja_Madrasa_01.jpg' },
+                { name: "Kalta minor", time: "09:40", dur: 35, desc: "Rangdor kafel bilan qoplangan, tugallanmagan mashhur minora.", emoji: "🗼", travel: { min: 5, km: 0.4 } },
+                { name: "Tosh hovli saroyi", time: "10:25", dur: 45, desc: "Xon saroyi — hashamatli ichki hovlilari bilan mashhur.", emoji: "🏰", travel: { min: 6, km: 0.5 }, image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b2/Room_in_Tach_Khaouli.jpg/500px-Room_in_Tach_Khaouli.jpg' },
+                { name: "Islom Xo'ja minorasi", time: "11:20", dur: 35, desc: "Shahardagi eng baland minora, tepasidan shahar manzarasi ochiladi.", emoji: "🏔️", travel: { min: 5, km: 0.4 } },
+                { name: "Mahalliy bozor", time: "12:05", dur: 40, desc: "Mahalliy hunarmandchilik va milliy taomlar sotiladigan kichik bozor.", emoji: "🧺", travel: { min: 4, km: 0.3 } }
+            ],
+            "Namangan": [
+                { name: "Uychi masjidi", time: "09:00", dur: 40, desc: "Hududdagi qadimiy va faol masjidlardan biri.", emoji: "🕌" },
+                { name: "Xon saroyi", time: "10:00", dur: 75, desc: "Qo'qon xonligiga oid tarixiy saroy, viloyat tarixi va me'morchiligi haqida ma'lumotlar.", emoji: "🏯", travel: { min: 12, km: 2.0 } },
+                { name: "Namangan o'lkashunoslik muzeyi", time: "11:30", dur: 60, desc: "Viloyat tabiati, tarixi va madaniyatiga bag'ishlangan eksponatlar.", emoji: "🏛️", travel: { min: 15, km: 2.6 }, image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a4/NamDU_binosi.png/500px-NamDU_binosi.png' },
+                { name: "Namangan oshxonasi", time: "12:45", dur: 50, desc: "Mahalliy taomlar bilan tanishish uchun mashhur oshxona.", emoji: "🍛", travel: { min: 8, km: 1.3 } },
+                { name: "Namangan bozori", time: "13:45", dur: 60, desc: "Mahalliy mahsulotlar va hunarmandchilik buyumlari sotiladigan bozor.", emoji: "🧺", travel: { min: 6, km: 0.8 } }
+            ]
+        };
 
-  <!-- ============ BOTTOM NAV ============ -->
-  <div class="bottom-nav" id="bottomNav">
-    <button data-tab="home" class="active" onclick="goTab('home')"><span class="ic">🏠</span>Bosh sahifa</button>
-    <button data-tab="discover" onclick="goTab('discover')"><span class="ic">🧭</span>Kashfiyot</button>
-    <button data-tab="trips" onclick="goTab('trips')"><span class="ic">📑</span>Sayohatlar</button>
-    <button data-tab="profile" onclick="goTab('profile')"><span class="ic">👤</span>Profil</button>
-  </div>
+        const CHAT_STEPS = [
+            { ai: 'chat_greeting', field: null, type: 'single', options: ['chat_greeting_btn'] },
+            { ai: 'chat_city_q', field: 'city', type: 'single', options: [] }, // filled dynamically in askStep
+            { ai: 'chat_hours_q', field: 'hours', type: 'single', options: ['chat_hours_3', 'chat_hours_6', 'chat_hours_full'] },
+            { ai: 'chat_budget_q', field: 'budget', type: 'single', options: ['chat_budget_low', 'chat_budget_mid', 'chat_budget_high'] },
+            { ai: 'chat_transport_q', field: 'transport', type: 'single', options: ['chat_transport_walk', 'chat_transport_car', 'chat_transport_bus'] },
+            { ai: 'chat_prayer_q', field: 'prayer', type: 'single', options: ['chat_prayer_yes', 'chat_prayer_no'] },
+            { ai: 'chat_food_q', field: 'food', type: 'multi', options: ['chat_food_national', 'chat_food_veg', 'chat_food_fast', 'chat_food_any'] }
+        ];
+        function getChatStep(i) {
+            const step = CHAT_STEPS[i];
+            return {
+                ai: t(step.ai),
+                field: step.field,
+                type: step.type,
+                options: step.field === 'city' 
+                    ? getAllCities().map(c => ({ label: (c.emoji || '🏙️') + ' ' + c.name, value: c.name }))
+                    : step.options.map(o => ({ label: t(o), value: t(o) }))
+            };
+        }
 
-  <div class="toast" id="toast"><span class="tic">🔑</span><span id="toastText">Kalit topildi! +1</span></div>
-</div>
+        /* ================= STATE ================= */
+        const state = {
+            stars: parseInt(localStorage.getItem('yolchi_stars')) || 0,
+            subscription: localStorage.getItem('yolchi_sub') || 'none', // none, basic, premium, vip
+            subscriptionExpiry: localStorage.getItem('yolchi_sub_expiry') || null,
+            ownedItems: JSON.parse(localStorage.getItem('yolchi_items')) || [],
+            usedPlaces: JSON.parse(localStorage.getItem('yolchi_used')) || [],
+            trips: [],   // {id, city, stops:[{...,status}], currentIndex, completed}
+            activeTripId: null,
+            pendingVerification: null, // {tripId, stopIndex, placeId, placeName}
+            chatStep: 0,
+            chatAnswers: {},
+            history: ['home'],
+            lang: localStorage.getItem('yolchi_lang') || 'uz'
+        };
 
-<script>
-/* ================= DATA ================= */
-const GRADIENTS = [
-  'linear-gradient(135deg,#1f6d4c,#123a28)',
-  'linear-gradient(135deg,#dda23a,#a86b1f)',
-  'linear-gradient(135deg,#2f8f6a,#1f6d4c)',
-  'linear-gradient(135deg,#c96b3e,#8a3f22)',
-  'linear-gradient(135deg,#3a7d94,#1f4b5c)'
-];
+        function saveStars() { localStorage.setItem('yolchi_stars', state.stars); }
+        function saveSub() { localStorage.setItem('yolchi_sub', state.subscription); localStorage.setItem('yolchi_sub_expiry', state.subscriptionExpiry); }
+        function saveItems() { localStorage.setItem('yolchi_items', JSON.stringify(state.ownedItems)); }
+        function saveUsed() { localStorage.setItem('yolchi_used', JSON.stringify(state.usedPlaces)); }
 
-const CITIES = [
-  {name:"Toshkent", emoji:"🏙️", count:6},
-  {name:"Samarqand", emoji:"🕌", count:5},
-  {name:"Buxoro", emoji:"🏰", count:5},
-  {name:"Xiva", emoji:"🏯", count:5},
-  {name:"Namangan", emoji:"⛰️", count:5}
-];
+        /* Check and clean up expired subscriptions, boosts, etc. */
+        function cleanExpired() {
+            // Check subscription expiry
+            if (state.subscription !== 'none' && state.subscriptionExpiry) {
+                const expiry = new Date(state.subscriptionExpiry);
+                if (expiry < new Date()) {
+                    state.subscription = 'none';
+                    state.subscriptionExpiry = null;
+                    saveSub();
+                }
+            }
+            // Check boost expiry (stored as item with timestamp)
+            const boostIdx = state.ownedItems.indexOf('boost');
+            if (boostIdx !== -1) {
+                const boostTime = localStorage.getItem('yolchi_boost_time');
+                if (boostTime) {
+                    const elapsed = Date.now() - parseInt(boostTime);
+                    const sevenDays = 7 * 24 * 60 * 60 * 1000;
+                    if (elapsed > sevenDays) {
+                        state.ownedItems.splice(boostIdx, 1);
+                        localStorage.removeItem('yolchi_boost_time');
+                        saveItems();
+                    }
+                }
+            }
+            // Check subscription item expiry (if user bought sub again after upgrading)
+            SHOP_ITEMS.forEach(item => {
+                if (item.type === 'subscription' && state.ownedItems.includes(item.id)) {
+                    // If the current subscription is different from this item, remove from owned
+                    if (state.subscription !== item.value) {
+                        state.ownedItems = state.ownedItems.filter(id => id !== item.id);
+                        saveItems();
+                    }
+                }
+            });
+        }
+        // cleanExpired() is called later after SHOP_ITEMS is defined
 
-const ITINERARIES = {
-  "Toshkent":[
-    {name:"Chorsu bozori", time:"09:00", dur:60, desc:"Shahar markazidagi eng qadimiy bozor — ziravorlar, mevalar va milliy mahsulotlar bilan to'la.", emoji:"🧺"},
-    {name:"Xast Imom majmuasi", time:"10:15", dur:45, desc:"Mintaqadagi muhim diniy majmua, qadimiy qo'lyozmalar saqlanadigan joy.", emoji:"🕌", travel:{min:8,km:1.2}},
-    {name:"Amir Temur maydoni", time:"11:15", dur:30, desc:"Shahar markazidagi bosh maydon, haykal va bog' bilan mashhur.", emoji:"🌳", travel:{min:8,km:2.4}},
-    {name:"O'zbekiston tarixi muzeyi", time:"12:00", dur:90, desc:"Mamlakat tarixi va madaniyatini o'rganish uchun mingdan ortiq eksponat.", emoji:"🏛️", travel:{min:8,km:2.7}},
-    {name:"Milliy choyxona", time:"13:45", dur:45, desc:"An'anaviy choyxonada ko'k choy va milliy taomlar bilan dam olish.", emoji:"🍵", travel:{min:8,km:1.7}},
-    {name:"Bo'zsuv bo'yi", time:"14:45", dur:40, desc:"Kanal bo'yidagi piyodalar hududi, kechki sayr uchun qulay.", emoji:"🚶", travel:{min:10,km:2.1}}
-  ],
-  "Samarqand":[
-    {name:"Registon maydoni", time:"09:00", dur:75, desc:"Shahar qalbi — uchta ulug'vor madrasa bir maydonda jamlangan.", emoji:"🕌"},
-    {name:"Shohi Zinda", time:"10:30", dur:50, desc:"Ko'k kafel bilan bezatilgan qadimiy maqbaralar majmuasi.", emoji:"🏛️", travel:{min:7,km:1.5}},
-    {name:"Bibixonim masjidi", time:"11:35", dur:40, desc:"Mintaqadagi eng yirik masjidlardan biri, ulkan gumbazlari bilan.", emoji:"🕌", travel:{min:6,km:1.1}},
-    {name:"Siyob bozori", time:"12:30", dur:45, desc:"Mahalliy mevalar, quritilgan mevalar va non turlari sotiladigan bozor.", emoji:"🍈", travel:{min:4,km:0.4}},
-    {name:"Ulug'bek observatoriyasi", time:"13:45", dur:50, desc:"O'rta asr astronomiyasi durdonasi, ilmiy asboblar qoldiqlari bilan.", emoji:"🔭", travel:{min:12,km:3.2}}
-  ],
-  "Buxoro":[
-    {name:"Labi Hovuz", time:"09:00", dur:45, desc:"Hovuz atrofidagi tarixiy maydon, choyxonalar bilan o'ralgan.", emoji:"💧"},
-    {name:"Ark qal'asi", time:"10:00", dur:60, desc:"Shahar hukmdorlarining qadimiy qarorgohi bo'lgan qal'a.", emoji:"🏯", travel:{min:9,km:1.4}},
-    {name:"Kalon minorasi", time:"11:15", dur:40, desc:"Shaharning eng baland va mashhur minorasi.", emoji:"🗼", travel:{min:6,km:0.9}},
-    {name:"Toqi Zargaron", time:"12:00", dur:35, desc:"Qadimiy savdo gumbazi, hozirda hunarmandchilik do'konlari joylashgan.", emoji:"🛍️", travel:{min:4,km:0.5}},
-    {name:"Milliy hunarmandchilik markazi", time:"12:45", dur:40, desc:"Mahalliy ustalarning naqsh va gilam ishlarini ko'rish mumkin.", emoji:"🧵", travel:{min:5,km:0.6}}
-  ],
-  "Xiva":[
-    {name:"Ichon-Qal'a darvozasi", time:"09:00", dur:30, desc:"Qadimiy shaharga kiraverishdagi asosiy darvoza.", emoji:"🚪"},
-    {name:"Kalta minor", time:"09:40", dur:35, desc:"Rangdor kafel bilan qoplangan, tugallanmagan mashhur minora.", emoji:"🗼", travel:{min:5,km:0.4}},
-    {name:"Tosh hovli saroyi", time:"10:25", dur:45, desc:"Xon saroyi — hashamatli ichki hovlilari bilan mashhur.", emoji:"🏰", travel:{min:6,km:0.5}},
-    {name:"Islom Xo'ja minorasi", time:"11:20", dur:35, desc:"Shahardagi eng baland minora, tepasidan shahar manzarasi ochiladi.", emoji:"🏔️", travel:{min:5,km:0.4}},
-    {name:"Mahalliy bozor", time:"12:05", dur:40, desc:"Mahalliy hunarmandchilik va milliy taomlar sotiladigan kichik bozor.", emoji:"🧺", travel:{min:4,km:0.3}}
-  ],
-  "Namangan":[
-    {name:"Uychi masjidi", time:"09:00", dur:40, desc:"Hududdagi qadimiy va faol masjidlardan biri.", emoji:"🕌"},
-    {name:"Xon saroyi", time:"10:00", dur:75, desc:"Qo'qon xonligiga oid tarixiy saroy, viloyat tarixi va me'morchiligi haqida ma'lumotlar.", emoji:"🏯", travel:{min:12,km:2.0}},
-    {name:"Namangan o'lkashunoslik muzeyi", time:"11:30", dur:60, desc:"Viloyat tabiati, tarixi va madaniyatiga bag'ishlangan eksponatlar.", emoji:"🏛️", travel:{min:15,km:2.6}},
-    {name:"Namangan oshxonasi", time:"12:45", dur:50, desc:"Mahalliy taomlar bilan tanishish uchun mashhur oshxona.", emoji:"🍛", travel:{min:8,km:1.3}},
-    {name:"Namangan bozori", time:"13:45", dur:60, desc:"Mahalliy mahsulotlar va hunarmandchilik buyumlari sotiladigan bozor.", emoji:"🧺", travel:{min:6,km:0.8}}
-  ]
-};
+        /* ================= HELPERS ================= */
+        function grad(i) { return GRADIENTS[i % GRADIENTS.length]; }
+        function uid() { return 'id-' + Date.now() + '-' + Math.random().toString(36).slice(2, 7); }
 
-const CHAT_STEPS = [
-  {ai:"Assalomu alaykum! 👋 Men sizning shaxsiy AI sayohat yordamchingizman. Sizga mos marshrut tuzib beraman. Boshlaymizmi?", field:null, type:'single', options:[{label:"Salom",value:"Salom"}]},
-  {ai:"Qaysi shaharda sayohat qilmoqchisiz? 🗺️", field:'city', type:'single', options: CITIES.map(c=>({label:c.emoji+" "+c.name, value:c.name}))},
-  {ai:"Ajoyib! Sayohat uchun necha soatingiz bor? ⏰", field:'hours', type:'single', options:[{label:"3 soat",value:"3 soat"},{label:"6 soat",value:"6 soat"},{label:"Butun kun",value:"Butun kun"}]},
-  {ai:"Byudjet qanday? 💰", field:'budget', type:'single', options:[{label:"Tejamkor",value:"Tejamkor"},{label:"O'rtacha",value:"O'rtacha"},{label:"Premium",value:"Premium"}]},
-  {ai:"Qanday harakat qilasiz? 🚶", field:'transport', type:'single', options:[{label:"Piyoda",value:"Piyoda"},{label:"Avtomobil",value:"Avtomobil"},{label:"Jamoat transporti",value:"Jamoat transporti"}]},
-  {ai:"Namoz vaqtlarini hisobga olishim kerakmi? 🕌", field:'prayer', type:'single', options:[{label:"Ha, kerak",value:"Ha, kerak"},{label:"Kerak emas",value:"Kerak emas"}]},
-  {ai:"Oziq-ovqat afzalliklaringiz? 🍽️ (bir nechtasini tanlashingiz mumkin)", field:'food', type:'multi', options:[{label:"Milliy taom",value:"Milliy taom"},{label:"Vegetarian",value:"Vegetarian"},{label:"Tez tayyor",value:"Tez tayyor"},{label:"Farqi yo'q",value:"Farqi yo'q"}]}
-];
+        function locationPhotoHTML(emoji, idx, extraStyle = '', imageUrl = null) {
+            if (imageUrl) {
+                return `<div style="background:linear-gradient(rgba(0,0,0,0.2),rgba(0,0,0,0.5)),url('${imageUrl}') center/cover;display:flex;align-items:flex-end;padding:12px;font-size:28px;color:#fff;${extraStyle}"><span style="background:rgba(0,0,0,0.3);padding:4px 10px;border-radius:20px;">${emoji}</span></div>`;
+            }
+            return `<div style="background:${grad(idx)};display:flex;align-items:center;justify-content:center;font-size:32px;${extraStyle}">${emoji}</div>`;
+        }
 
-/* ================= STATE ================= */
-const state = {
-  keys: 0,
-  trips: [],   // {id, city, stops:[{...,status}], currentIndex, completed}
-  activeTripId: null,
-  chatStep: 0,
-  chatAnswers: {},
-  history: ['home']
-};
+        /* ================= TRANSLATION SYSTEM ================= */
+        const LANG = {
+            uz: {
+                welcome: "Xush kelibsiz 👋",
+                hero: "O'zbekistonni <span>AI bilan</span> kashf eting",
+                search_ph: "Ideal kuningizni tasvirlab bering...",
+                filter_all: "🌟 Hammasi",
+                filter_tarixiy: "🏛️ Tarixiy joylar",
+                filter_tabiat: "🌿 Tabiat",
+                filter_oilaviy: "👨‍👩‍👧 Oilaviy",
+                filter_taom: "🍲 Taom",
+                filter_xarid: "🛍️ Xarid",
+                sec_cities: "Mashhur shaharlar",
+                sec_why: "Nega YO'LCHI?",
+                why_ai_title: "AI reja tuzish",
+                why_ai_desc: "15 soniyada shaxsiy marshrut",
+                why_map_title: "Yo'l ko'rsatish",
+                why_map_desc: "Optimallashtirilgan tartib",
+                why_key_title: "Kalit yig'ish",
+                why_key_desc: "Har bir joydan sovg'a ol",
+                why_share_title: "Ulashish",
+                why_share_desc: "Rejani do'stlaringga yubor",
+                cta_start: "⚡ AI bilan boshlash →",
+                discover_title: "Kashfiyot",
+                discover_all: "🏛️ Tarixiy joylar",
+                discover_sec: "Barcha shaharlar",
+                trips_title: "Sayohatlarim",
+                trips_empty_h: "Hali sayohatlaringiz yo'q",
+                trips_empty_p: "Bosh sahifadan yangi sayohat rejalashtiring.",
+                trips_empty_btn: "Yangi sayohat boshlash",
+                trips_stops: "to'xtash",
+                trips_hours: "soat",
+                trips_badge_done: "Yakunlandi",
+                profile_title: "Profil",
+                profile_guest: "Mehmon",
+                profile_guest_mail: "mehmon@yolchi.uz",
+                profile_stats_trips: "Sayohatlar",
+                profile_stats_stars: "⭐ Yulduzlar",
+                profile_stats_cities: "Shaharlar",
+                profile_ach: "🏆 Yutuqlar",
+                profile_saved: "Saqlangan sayohatlar",
+                profile_fav: "Sevimlilar",
+                profile_ach2: "Yutuqlar",
+                profile_settings: "Sozlamalar",
+                profile_night: "Tungi rejim",
+                profile_share: "📤 YO'LCHI'ni do'stlarga ulashish",
+                profile_scanner: "📷 QR Skanner",
+                profile_shop: "⭐ Do'kon",
+                sub_none: "Obuna yo'q",
+                sub_basic: "⭐ Basic",
+                sub_premium: "💎 Premium",
+                sub_vip: "👑 VIP",
+                lang_uz: "O'zbekcha",
+                lang_en: "English",
+                lang_ru: "Русский",
+                nav_home: "Bosh sahifa",
+                nav_discover: "Kashfiyot",
+                nav_shop: "Do'kon",
+                nav_trips: "Sayohatlar",
+                nav_profile: "Profil",
+                shop_title: "⭐ Do'kon",
+                shop_balance: "Sizning yulduzlaringiz",
+                shop_admin: "Admin panel",
+                shop_buy: "Sotib olish",
+                shop_owned: "Ega",
+                shop_boost_left: "kun qoldi",
+                shop_sub_active: "Obuna faol",
+                ach_first: "Birinchi qadam",
+                ach_city1: "Tadqiqotchi",
+                ach_stars5: "5 yulduz",
+                ach_stars20: "20 yulduz",
+                ach_done1: "Birinchi yakun",
+                ach_stars50: "Yulduzlar ustasi",
+                ach_sub: "Obuna egasi",
+                ach_vip: "VIP a'zo",
+                itinerary_hours: "soatlik sayohat",
+                itinerary_stops: "to'xtash",
+                itinerary_timeline: "🕐 Timeline",
+                itinerary_map: "📍 Xarita",
+                itinerary_map_view: "xaritani ko'rish uchun yoriting",
+                itinerary_start: "🚀 Jonli sayohatni boshlash",
+                itinerary_see_map: "📍 Xaritada ko'rish ›",
+                live_progress: "joy",
+                live_current: "Hozirgi joy",
+                live_badge_now: "⭐ Hozirgi joy",
+                live_navigate: "🧭 Yo'l ko'rish",
+                live_borildi: "✅ Borildi!",
+                live_next: "Keyingi joy",
+                live_all_stops: "Barcha to'xtashlar",
+                live_complete_title: "Barcha kalitlar yig'ildi!",
+                live_complete_desc: "bo'yicha {n} ta joyni muvaffaqiyatli ziyorat qildingiz.",
+                live_back_home: "Bosh sahifaga qaytish",
+                verify_qr_prompt: "Joydagi QR kodni skan qiling",
+                verify_qr_context: '📍 "{name}" joyidagi QR kodni skan qiling',
+                admin_title: "🛠 Admin Panel",
+                admin_login: "Login",
+                admin_pass: "Parol",
+                admin_enter: "Kirish",
+                admin_add_city: "📍 Shahar qo'shish",
+                admin_city_name: "Shahar nomi",
+                admin_city_emoji: "Emoji (masalan 🏙️)",
+                admin_add_city_btn: "Shahar qo'shish",
+                admin_add_place: "🏛 Joy qo'shish",
+                admin_select_city: "Shaharni tanlang",
+                admin_place_name: "Joy nomi",
+                admin_image_url: "Rasm URL",
+                admin_desc: "Tavsif",
+                admin_stars: "⭐ Yulduz miqdori:",
+                admin_add_place_btn: "Joy qo'shish",
+                admin_dl_qr: "📥 QR yuklab olish",
+                admin_delete: "🗑 O'chirish",
+                admin_logout: "Chiqish",
+                admin_no_cities: "Hali shaharlar yo'q",
+                admin_no_places: "Hali joylar yo'q",
+                shop_found_none: "Bu kategoriyada shaharlar topilmadi",
+                // Chat
+                chat_greeting: "Assalomu alaykum! 👋 Men sizning shaxsiy AI sayohat yordamchingizman. Sizga mos marshrut tuzib beraman. Boshlaymizmi?",
+                chat_greeting_btn: "Salom",
+                chat_city_q: "Qaysi shaharda sayohat qilmoqchisiz? 🗺️",
+                chat_hours_q: "Ajoyib! Sayohat uchun necha soatingiz bor? ⏰",
+                chat_hours_3: "3 soat",
+                chat_hours_6: "6 soat",
+                chat_hours_full: "Butun kun",
+                chat_budget_q: "Byudjet qanday? 💰",
+                chat_budget_low: "Tejamkor",
+                chat_budget_mid: "O'rtacha",
+                chat_budget_high: "Premium",
+                chat_transport_q: "Qanday harakat qilasiz? 🚶",
+                chat_transport_walk: "Piyoda",
+                chat_transport_car: "Avtomobil",
+                chat_transport_bus: "Jamoat transporti",
+                chat_prayer_q: "Namoz vaqtlarini hisobga olishim kerakmi? 🕌",
+                chat_prayer_yes: "Ha, kerak",
+                chat_prayer_no: "Kerak emas",
+                chat_food_q: "Oziq-ovqat afzalliklaringiz? 🍽️ (bir nechtasini tanlashingiz mumkin)",
+                chat_food_national: "Milliy taom",
+                chat_food_veg: "Vegetarian",
+                chat_food_fast: "Tez tayyor",
+                chat_food_any: "Farqi yo'q",
+                chat_finish: 'Zo\'r! {city} bo\'yicha {hours} sayohatingizni tayyorladim ✨',
+                chat_confirm: "Davom etish",
+                map_open: "📍 Xaritada ko'rish",
+                toast_key: "Kalit topildi! +1"
+            },
+            en: {
+                welcome: "Welcome 👋",
+                hero: "Explore <span>Uzbekistan with</span> AI",
+                search_ph: "Describe your ideal day...",
+                filter_all: "🌟 All",
+                filter_tarixiy: "🏛️ Historical",
+                filter_tabiat: "🌿 Nature",
+                filter_oilaviy: "👨‍👩‍👧 Family",
+                filter_taom: "🍲 Food",
+                filter_xarid: "🛍️ Shopping",
+                sec_cities: "Popular cities",
+                sec_why: "Why YO'LCHI?",
+                why_ai_title: "AI Planning",
+                why_ai_desc: "Personal route in 15 seconds",
+                why_map_title: "Navigation",
+                why_map_desc: "Optimized order",
+                why_key_title: "Collect keys",
+                why_key_desc: "Get a gift from every place",
+                why_share_title: "Share",
+                why_share_desc: "Send plan to friends",
+                cta_start: "⚡ Start with AI →",
+                discover_title: "Discover",
+                discover_all: "🏛️ Historical sites",
+                discover_sec: "All cities",
+                trips_title: "My Trips",
+                trips_empty_h: "No trips yet",
+                trips_empty_p: "Plan a new trip from the home page.",
+                trips_empty_btn: "Start new trip",
+                trips_stops: "stops",
+                trips_hours: "hr",
+                trips_badge_done: "Completed",
+                profile_title: "Profile",
+                profile_guest: "Guest",
+                profile_guest_mail: "guest@yolchi.uz",
+                profile_stats_trips: "Trips",
+                profile_stats_stars: "⭐ Stars",
+                profile_stats_cities: "Cities",
+                profile_ach: "🏆 Achievements",
+                profile_saved: "Saved trips",
+                profile_fav: "Favorites",
+                profile_ach2: "Achievements",
+                profile_settings: "Settings",
+                profile_night: "Night mode",
+                profile_share: "📤 Share YO'LCHI with friends",
+                profile_scanner: "📷 QR Scanner",
+                profile_shop: "⭐ Shop",
+                sub_none: "No subscription",
+                sub_basic: "⭐ Basic",
+                sub_premium: "💎 Premium",
+                sub_vip: "👑 VIP",
+                lang_uz: "O'zbekcha",
+                lang_en: "English",
+                lang_ru: "Русский",
+                nav_home: "Home",
+                nav_discover: "Discover",
+                nav_shop: "Shop",
+                nav_trips: "Trips",
+                nav_profile: "Profile",
+                shop_title: "⭐ Shop",
+                shop_balance: "Your stars",
+                shop_admin: "Admin panel",
+                shop_buy: "Buy",
+                shop_owned: "Owned",
+                shop_boost_left: "days left",
+                shop_sub_active: "Subscription active",
+                ach_first: "First step",
+                ach_city1: "Explorer",
+                ach_stars5: "5 stars",
+                ach_stars20: "20 stars",
+                ach_done1: "First finish",
+                ach_stars50: "Star master",
+                ach_sub: "Subscriber",
+                ach_vip: "VIP member",
+                itinerary_hours: "hour trip",
+                itinerary_stops: "stops",
+                itinerary_timeline: "🕐 Timeline",
+                itinerary_map: "📍 Map",
+                itinerary_map_view: "tap to view map",
+                itinerary_start: "🚀 Start live trip",
+                itinerary_see_map: "📍 View on map ›",
+                live_progress: "places",
+                live_current: "Current stop",
+                live_badge_now: "⭐ Current",
+                live_navigate: "🧭 Navigate",
+                live_borildi: "✅ Visited!",
+                live_next: "Next stop",
+                live_all_stops: "All stops",
+                live_complete_title: "All keys collected!",
+                live_complete_desc: "Successfully visited {n} places in {city}.",
+                live_back_home: "Back to home",
+                verify_qr_prompt: "Scan the QR code at the location",
+                verify_qr_context: '📍 Scan QR at "{name}"',
+                admin_title: "🛠 Admin Panel",
+                admin_login: "Login",
+                admin_pass: "Password",
+                admin_enter: "Enter",
+                admin_add_city: "📍 Add city",
+                admin_city_name: "City name",
+                admin_city_emoji: "Emoji (e.g. 🏙️)",
+                admin_add_city_btn: "Add city",
+                admin_add_place: "🏛 Add place",
+                admin_select_city: "Select city",
+                admin_place_name: "Place name",
+                admin_image_url: "Image URL",
+                admin_desc: "Description",
+                admin_stars: "⭐ Stars:",
+                admin_add_place_btn: "Add place",
+                admin_dl_qr: "📥 Download QR",
+                admin_delete: "🗑 Delete",
+                admin_logout: "Logout",
+                admin_no_cities: "No cities yet",
+                admin_no_places: "No places yet",
+                shop_found_none: "No cities found in this category",
+                chat_greeting: "Hello! 👋 I'm your personal AI travel assistant. I'll create the perfect route for you. Shall we start?",
+                chat_greeting_btn: "Hello",
+                chat_city_q: "Which city would you like to visit? 🗺️",
+                chat_hours_q: "Great! How many hours do you have for the trip? ⏰",
+                chat_hours_3: "3 hours",
+                chat_hours_6: "6 hours",
+                chat_hours_full: "Full day",
+                chat_budget_q: "What's your budget? 💰",
+                chat_budget_low: "Budget",
+                chat_budget_mid: "Medium",
+                chat_budget_high: "Premium",
+                chat_transport_q: "How will you travel? 🚶",
+                chat_transport_walk: "Walking",
+                chat_transport_car: "Car",
+                chat_transport_bus: "Public transport",
+                chat_prayer_q: "Should I account for prayer times? 🕌",
+                chat_prayer_yes: "Yes, please",
+                chat_prayer_no: "No, thanks",
+                chat_food_q: "Food preferences? 🍽️ (you can select multiple)",
+                chat_food_national: "National cuisine",
+                chat_food_veg: "Vegetarian",
+                chat_food_fast: "Fast food",
+                chat_food_any: "No preference",
+                chat_finish: 'Great! I\'ve prepared your {hours} trip to {city} ✨',
+                chat_confirm: "Continue",
+                map_open: "📍 View on map",
+                toast_key: "Key found! +1"
+            },
+            ru: {
+                welcome: "Добро пожаловать 👋",
+                hero: "Откройте <span>Узбекистан с</span> AI",
+                search_ph: "Опишите свой идеальный день...",
+                filter_all: "🌟 Все",
+                filter_tarixiy: "🏛️ Исторические",
+                filter_tabiat: "🌿 Природа",
+                filter_oilaviy: "👨‍👩‍👧 Семейные",
+                filter_taom: "🍲 Еда",
+                filter_xarid: "🛍️ Покупки",
+                sec_cities: "Популярные города",
+                sec_why: "Почему YO'LCHI?",
+                why_ai_title: "AI планирование",
+                why_ai_desc: "Личный маршрут за 15 секунд",
+                why_map_title: "Навигация",
+                why_map_desc: "Оптимизированный порядок",
+                why_key_title: "Собирать ключи",
+                why_key_desc: "Получить подарок из каждого места",
+                why_share_title: "Поделиться",
+                why_share_desc: "Отправить план друзьям",
+                cta_start: "⚡ Начать с AI →",
+                discover_title: "Открытия",
+                discover_all: "🏛️ Исторические места",
+                discover_sec: "Все города",
+                trips_title: "Мои поездки",
+                trips_empty_h: "Поездок пока нет",
+                trips_empty_p: "Запланируйте новую поездку с главной страницы.",
+                trips_empty_btn: "Начать новую поездку",
+                trips_stops: "остановок",
+                trips_hours: "ч",
+                trips_badge_done: "Завершено",
+                profile_title: "Профиль",
+                profile_guest: "Гость",
+                profile_guest_mail: "guest@yolchi.uz",
+                profile_stats_trips: "Поездки",
+                profile_stats_stars: "⭐ Звёзды",
+                profile_stats_cities: "Города",
+                profile_ach: "🏆 Достижения",
+                profile_saved: "Сохранённые поездки",
+                profile_fav: "Избранное",
+                profile_ach2: "Достижения",
+                profile_settings: "Настройки",
+                profile_night: "Ночной режим",
+                profile_share: "📤 Поделиться YO'LCHI с друзьями",
+                profile_scanner: "📷 QR Сканер",
+                profile_shop: "⭐ Магазин",
+                sub_none: "Нет подписки",
+                sub_basic: "⭐ Базовая",
+                sub_premium: "💎 Премиум",
+                sub_vip: "👑 VIP",
+                lang_uz: "O'zbekcha",
+                lang_en: "English",
+                lang_ru: "Русский",
+                nav_home: "Главная",
+                nav_discover: "Открытия",
+                nav_shop: "Магазин",
+                nav_trips: "Поездки",
+                nav_profile: "Профиль",
+                shop_title: "⭐ Магазин",
+                shop_balance: "Ваши звёзды",
+                shop_admin: "Панель админа",
+                shop_buy: "Купить",
+                shop_owned: "Есть",
+                shop_boost_left: "дн. осталось",
+                shop_sub_active: "Подписка активна",
+                ach_first: "Первый шаг",
+                ach_city1: "Исследователь",
+                ach_stars5: "5 звёзд",
+                ach_stars20: "20 звёзд",
+                ach_done1: "Первый финиш",
+                ach_stars50: "Мастер звёзд",
+                ach_sub: "Подписчик",
+                ach_vip: "VIP участник",
+                itinerary_hours: "часовая поездка",
+                itinerary_stops: "остановок",
+                itinerary_timeline: "🕐 Таймлайн",
+                itinerary_map: "📍 Карта",
+                itinerary_map_view: "нажмите для просмотра карты",
+                itinerary_start: "🚀 Начать живую поездку",
+                itinerary_see_map: "📍 Смотреть на карте ›",
+                live_progress: "мест",
+                live_current: "Текущее место",
+                live_badge_now: "⭐ Сейчас",
+                live_navigate: "🧭 Навигация",
+                live_borildi: "✅ Посетил!",
+                live_next: "Следующее место",
+                live_all_stops: "Все остановки",
+                live_complete_title: "Все ключи собраны!",
+                live_complete_desc: "Успешно посетили {n} мест в {city}.",
+                live_back_home: "На главную",
+                verify_qr_prompt: "Отсканируйте QR-код в этом месте",
+                verify_qr_context: '📍 Сканируйте QR у "{name}"',
+                admin_title: "🛠 Панель админа",
+                admin_login: "Логин",
+                admin_pass: "Пароль",
+                admin_enter: "Войти",
+                admin_add_city: "📍 Добавить город",
+                admin_city_name: "Название города",
+                admin_city_emoji: "Эмодзи (например 🏙️)",
+                admin_add_city_btn: "Добавить город",
+                admin_add_place: "🏛 Добавить место",
+                admin_select_city: "Выберите город",
+                admin_place_name: "Название места",
+                admin_image_url: "URL изображения",
+                admin_desc: "Описание",
+                admin_stars: "⭐ Количество звёзд:",
+                admin_add_place_btn: "Добавить место",
+                admin_dl_qr: "📥 Скачать QR",
+                admin_delete: "🗑 Удалить",
+                admin_logout: "Выйти",
+                admin_no_cities: "Городов пока нет",
+                admin_no_places: "Мест пока нет",
+                shop_found_none: "В этой категории города не найдены",
+                chat_greeting: "Здравствуйте! 👋 Я ваш личный AI-помощник по путешествиям. Я составлю для вас идеальный маршрут. Начнём?",
+                chat_greeting_btn: "Здравствуйте",
+                chat_city_q: "В каком городе вы хотите путешествовать? 🗺️",
+                chat_hours_q: "Отлично! Сколько часов у вас есть на поездку? ⏰",
+                chat_hours_3: "3 часа",
+                chat_hours_6: "6 часов",
+                chat_hours_full: "Весь день",
+                chat_budget_q: "Какой бюджет? 💰",
+                chat_budget_low: "Экономный",
+                chat_budget_mid: "Средний",
+                chat_budget_high: "Премиум",
+                chat_transport_q: "Как вы будете передвигаться? 🚶",
+                chat_transport_walk: "Пешком",
+                chat_transport_car: "Автомобиль",
+                chat_transport_bus: "Общественный транспорт",
+                chat_prayer_q: "Нужно ли учитывать время намаза? 🕌",
+                chat_prayer_yes: "Да, нужно",
+                chat_prayer_no: "Не нужно",
+                chat_food_q: "Предпочтения в еде? 🍽️ (можно выбрать несколько)",
+                chat_food_national: "Национальная",
+                chat_food_veg: "Вегетарианская",
+                chat_food_fast: "Быстрая",
+                chat_food_any: "Без разницы",
+                chat_finish: 'Отлично! Я подготовил вашу {hours} поездку в {city} ✨',
+                chat_confirm: "Продолжить",
+                map_open: "📍 Смотреть на карте",
+                toast_key: "Ключ найден! +1"
+            }
+        };
+        function t(key) {
+            const lang = state.lang || 'uz';
+            return LANG[lang]?.[key] || LANG['uz'][key] || key;
+        }
+        function applyLang() {
+            // Apply translations to static elements with data-tr attribute
+            document.querySelectorAll('[data-tr]').forEach(el => {
+                const key = el.dataset.tr;
+                const translated = t(key);
+                if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') {
+                    el.placeholder = translated;
+                } else {
+                    el.innerHTML = translated;
+                }
+            });
+            // Update bottom nav — find the text node after the icon span
+            document.querySelectorAll('.bottom-nav button').forEach(btn => {
+                const key = btn.dataset.tr;
+                if (key) {
+                    const iconSpan = btn.querySelector('.ic');
+                    if (iconSpan && iconSpan.nextSibling) {
+                        iconSpan.nextSibling.textContent = t(key);
+                    }
+                }
+            });
+        }
 
-/* ================= HELPERS ================= */
-function grad(i){ return GRADIENTS[i % GRADIENTS.length]; }
-function uid(){ return 'id-'+Date.now()+'-'+Math.random().toString(36).slice(2,7); }
+        /* ================= DYNAMIC CITIES & ITINERARIES ================= */
+        // Merge default CITIES with admin-added cities (deduplicate by name)
+        function getAllCities() {
+            const merged = [...CITIES];
+            if (typeof adminCities !== 'undefined' && adminCities !== null) {
+                adminCities.forEach(c => {
+                    if (!merged.find(m => m.name === c.name)) {
+                        merged.push({ 
+                            name: c.name, 
+                            emoji: c.emoji || '🏙️', 
+                            count: c.count || 0,
+                            categories: c.categories || ['tarixiy'],
+                            image: c.image || null
+                        });
+                    }
+                });
+            }
+            return merged;
+        }
 
-function locationPhotoHTML(emoji, idx, extraStyle=''){
-  return `<div style="background:${grad(idx)};display:flex;align-items:center;justify-content:center;font-size:32px;${extraStyle}">${emoji}</div>`;
-}
+        // Get itinerary for a city — default ones from ITINERARIES or build from adminPlaces
+        function getCityItinerary(city) {
+            // Default cities have predefined itineraries
+            if (ITINERARIES[city]) {
+                return ITINERARIES[city].map((s, i) => ({ ...s, status: 'upcoming' }));
+            }
+            // Admin cities: build from adminPlaces filtered by city
+            if (typeof adminPlaces !== 'undefined' && adminPlaces !== null) {
+                const places = adminPlaces.filter(p => p.city === city);
+                if (places.length > 0) {
+                    return places.map((p, i) => ({
+                        name: p.name,
+                        time: '10:00',
+                        dur: 45,
+                        desc: p.desc,
+                        emoji: '📍',
+                        image: p.image || null,
+                        placeId: p.id,
+                        stars: p.stars || 3,
+                        status: 'upcoming'
+                    }));
+                }
+            }
+            // Fallback — return a single generic stop
+            return [{ name: city + ' markazi', time: '10:00', dur: 60, desc: city + ' shahri bo\'ylab sayohat', emoji: '📍', status: 'upcoming' }];
+        }
 
-/* ================= NAV ================= */
-function showScreen(name){
-  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
-  document.querySelector(`.screen[data-screen="${name}"]`).classList.add('active');
-  const tabScreens = ['home','discover','trips','profile'];
-  document.getElementById('bottomNav').style.display = tabScreens.includes(name) ? 'flex' : 'none';
-  if(tabScreens.includes(name)){
-    document.querySelectorAll('.bottom-nav button').forEach(b=>b.classList.toggle('active', b.dataset.tab===name));
-  }
-  window.scrollTo({top:0});
-}
-function goTab(name){ state.history=[name]; showScreen(name); renderAll(); }
-function goHome(){ state.history=['home']; showScreen('home'); renderAll(); }
-function goScreen(name){ state.history.push(name); showScreen(name); }
+        // Find city emoji from merged list
+        function getCityEmoji(city) {
+            const all = getAllCities();
+            const found = all.find(c => c.name === city);
+            return found ? found.emoji : '🏙️';
+        }
 
-/* ================= DARK MODE ================= */
-function toggleDark(){
-  const html = document.documentElement;
-  const isDark = html.getAttribute('data-theme') === 'dark';
-  html.setAttribute('data-theme', isDark ? 'light' : 'dark');
-  document.getElementById('darkSwitch').classList.toggle('on', !isDark);
-}
+        /* ================= NAV ================= */
+        function showScreen(name) {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            document.querySelector(`.screen[data-screen="${name}"]`).classList.add('active');
+            const tabScreens = ['home', 'discover', 'shop', 'trips', 'profile'];
+            document.getElementById('bottomNav').style.display = tabScreens.includes(name) ? 'flex' : 'none';
+            if (tabScreens.includes(name)) {
+                document.querySelectorAll('.bottom-nav button').forEach(b => b.classList.toggle('active', b.dataset.tab === name));
+            }
+            window.scrollTo({ top: 0 });
+        }
+        function goTab(name) { state.history = [name]; showScreen(name); renderAll(); }
+        function goHome() { 
+            closeScannerOverlay();
+            state.history = ['home']; 
+            showScreen('home'); 
+            renderAll(); 
+        }
+        function goScreen(name) { 
+            closeScannerOverlay();
+            state.history.push(name); 
+            showScreen(name); 
+        }
 
-/* ================= HOME / DISCOVER RENDER ================= */
-function renderCityGrid(containerId){
-  const el = document.getElementById(containerId);
-  el.innerHTML = CITIES.map((c,i)=>`
-    <div class="city-card" style="background:${grad(i)}" onclick="quickStartCity('${c.name}')">
-      <div><div class="cname">${c.name}</div><div class="ccount">📍 ${c.count} joy</div></div>
-    </div>`).join('');
-}
+        /* ================= DARK MODE ================= */
+        function toggleDark() {
+            const html = document.documentElement;
+            const isDark = html.getAttribute('data-theme') === 'dark';
+            html.setAttribute('data-theme', isDark ? 'light' : 'dark');
+            document.getElementById('darkSwitch').classList.toggle('on', !isDark);
+        }
 
-function renderStatsHome(){
-  const cities = new Set(state.trips.map(t=>t.city)).size;
-  document.getElementById('statsCardHome').innerHTML = `
+        /* ================= HOME / DISCOVER RENDER ================= */
+        let activeFilter = 'all';
+
+        function renderCityGrid(containerId) {
+            const el = document.getElementById(containerId);
+            const allCities = getAllCities();
+            const filtered = activeFilter === 'all' 
+                ? allCities 
+                : allCities.filter(c => c.categories && c.categories.includes(activeFilter));
+            
+            if (filtered.length === 0) {
+                el.innerHTML = `<div class="empty-state" style="grid-column:1/-1;padding:30px 10px;">
+                    <div class="eic">🔍</div>
+                    <p style="font-size:13px;color:var(--ink-soft);">${t('shop_found_none')}</p>
+                </div>`;
+                return;
+            }
+            
+            el.innerHTML = filtered.map((c, i) => {
+                const imgUrl = c.image || CITY_IMAGES[c.name] || null;
+                const bgStyle = imgUrl 
+                    ? `background:linear-gradient(rgba(0,0,0,0.1),rgba(0,0,0,0.65)),url('${imgUrl}') center/cover`
+                    : `background:${grad(i)}`;
+                return `
+    <div class="city-card" style="${bgStyle}" onclick="quickStartCity('${c.name}')">
+      <div><div class="cname">${c.name}</div><div class="ccount">📍 ${c.count || 0} joy</div></div>
+    </div>`;
+            }).join('');
+        }
+
+        /* Filter chips — home screen */
+        document.getElementById('chipRow').addEventListener('click', e => {
+            const chip = e.target.closest('.chip');
+            if (!chip) return;
+            document.querySelectorAll('#chipRow .chip').forEach(c => c.classList.remove('active'));
+            chip.classList.add('active');
+            activeFilter = chip.dataset.chip || 'all';
+            renderCityGrid('cityGridHome');
+        });
+
+        /* Filter chips — discover screen */
+        document.querySelector('#discover .chip-row')?.addEventListener('click', e => {
+            const chip = e.target.closest('.chip');
+            if (!chip) return;
+            document.querySelectorAll('#discover .chip-row .chip').forEach(c => c.classList.remove('active'));
+            chip.classList.add('active');
+            activeFilter = chip.dataset.chip || 'all';
+            renderCityGrid('cityGridDiscover');
+        });
+
+        function renderStatsHome() {
+            const cities = new Set(state.trips.map(t => t.city)).size;
+            document.getElementById('statsCardHome').innerHTML = `
     <div class="stat"><div class="num">${state.trips.length}</div><div class="lbl">Sayohatlar</div></div>
-    <div class="stat"><div class="num">${state.keys}</div><div class="lbl">Kalitlar</div></div>
+    <div class="stat"><div class="num">${state.stars}</div><div class="lbl">⭐ Yulduzlar</div></div>
     <div class="stat"><div class="num">${cities}</div><div class="lbl">Shaharlar</div></div>`;
-}
+        }
 
-document.getElementById('chipRow').addEventListener('click', e=>{
-  const chip = e.target.closest('.chip');
-  if(!chip) return;
-  document.querySelectorAll('#chipRow .chip').forEach(c=>c.classList.remove('active'));
-  chip.classList.add('active');
-});
+        /* ================= QUICK START (direct from city card) ================= */
+        function quickStartCity(city) {
+            const trip = createTrip(city);
+            state.activeTripId = trip.id;
+            renderItinerary(trip);
+            goScreen('itinerary');
+        }
 
-/* ================= QUICK START (direct from city card) ================= */
-function quickStartCity(city){
-  const trip = createTrip(city);
-  state.activeTripId = trip.id;
-  renderItinerary(trip);
-  goScreen('itinerary');
-}
+        function createTrip(city) {
+            const stops = getCityItinerary(city);
+            const trip = { id: uid(), city, stops, currentIndex: 0, started: false, completed: false, createdAt: new Date() };
+            state.trips.unshift(trip);
+            return trip;
+        }
 
-function createTrip(city){
-  const stops = ITINERARIES[city].map((s,i)=>({...s, status: i===0?'upcoming':'upcoming'}));
-  const trip = {id:uid(), city, stops, currentIndex:0, started:false, completed:false, createdAt:new Date()};
-  state.trips.unshift(trip);
-  return trip;
-}
+        /* ================= CHAT ================= */
+        function startChat() {
+            state.chatStep = 0;
+            state.chatAnswers = {};
+            document.getElementById('chatBody').innerHTML = '';
+            goScreen('chat');
+            askStep(0);
+        }
 
-/* ================= CHAT ================= */
-function startChat(){
-  state.chatStep = 0;
-  state.chatAnswers = {};
-  document.getElementById('chatBody').innerHTML='';
-  goScreen('chat');
-  askStep(0);
-}
+        function appendBubble(html, sender) {
+            const wrap = document.createElement('div');
+            wrap.className = 'bubble-row ' + (sender === 'user' ? 'user' : '');
+            wrap.innerHTML = sender === 'ai'
+                ? `<div class="avatar-mini">🧭</div><div class="bubble ai">${html}</div>`
+                : `<div class="bubble user">${html}</div>`;
+            document.getElementById('chatBody').appendChild(wrap);
+            wrap.scrollIntoView({ behavior: 'smooth', block: 'end' });
+            return wrap;
+        }
 
-function appendBubble(html, sender){
-  const wrap = document.createElement('div');
-  wrap.className = 'bubble-row ' + (sender==='user'?'user':'');
-  wrap.innerHTML = sender==='ai'
-    ? `<div class="avatar-mini">🧭</div><div class="bubble ai">${html}</div>`
-    : `<div class="bubble user">${html}</div>`;
-  document.getElementById('chatBody').appendChild(wrap);
-  wrap.scrollIntoView({behavior:'smooth', block:'end'});
-  return wrap;
-}
+        function askStep(i) {
+            if (i >= CHAT_STEPS.length) { finishChat(); return; }
+            let step = getChatStep(i);
+            
+            const typingRow = appendBubble(`<div class="typing"><span></span><span></span><span></span></div>`, 'ai');
+            setTimeout(() => {
+                typingRow.remove();
+                const optsHTML = step.type === 'multi'
+                    ? `<div class="option-wrap" id="optWrap">${step.options.map(o => `<div class="option-chip" data-val="${o.value}">${o.label}</div>`).join('')}<div class="confirm-btn" id="confirmBtn" style="display:none;" onclick="submitMulti(${i})">${t('chat_confirm')}</div></div>`
+                    : `<div class="option-wrap" id="optWrap">${step.options.map(o => `<div class="option-chip" data-val="${o.value}">${o.label}</div>`).join('')}</div>`;
+                appendBubble(step.ai + optsHTML, 'ai');
+                if (step.type === 'single') {
+                    document.querySelectorAll('#optWrap .option-chip').forEach(chip => {
+                        chip.onclick = () => {
+                            document.getElementById('optWrap').querySelectorAll('.option-chip').forEach(c => c.style.pointerEvents = 'none');
+                            appendBubble(chip.textContent, 'user');
+                            if (step.field) state.chatAnswers[step.field] = chip.dataset.val;
+                            setTimeout(() => askStep(i + 1), 450);
+                        };
+                    });
+                } else {
+                    document.querySelectorAll('#optWrap .option-chip').forEach(chip => {
+                        chip.onclick = () => {
+                            chip.classList.toggle('selected');
+                            const any = document.querySelectorAll('#optWrap .option-chip.selected').length > 0;
+                            document.getElementById('confirmBtn').style.display = any ? 'inline-block' : 'none';
+                        };
+                    });
+                }
+            }, 550);
+        }
 
-function askStep(i){
-  if(i >= CHAT_STEPS.length){ finishChat(); return; }
-  const step = CHAT_STEPS[i];
-  const typingRow = appendBubble(`<div class="typing"><span></span><span></span><span></span></div>`, 'ai');
-  setTimeout(()=>{
-    typingRow.remove();
-    const optsHTML = step.type==='multi'
-      ? `<div class="option-wrap" id="optWrap">${step.options.map(o=>`<div class="option-chip" data-val="${o.value}">${o.label}</div>`).join('')}<div class="confirm-btn" id="confirmBtn" style="display:none;" onclick="submitMulti(${i})">Davom etish</div></div>`
-      : `<div class="option-wrap" id="optWrap">${step.options.map(o=>`<div class="option-chip" data-val="${o.value}">${o.label}</div>`).join('')}</div>`;
-    appendBubble(step.ai + optsHTML, 'ai');
+        function submitMulti(i) {
+            const selected = [...document.querySelectorAll('#optWrap .option-chip.selected')].map(c => c.dataset.val);
+            document.querySelectorAll('#optWrap .option-chip, #confirmBtn').forEach(c => c.style.pointerEvents = 'none');
+            appendBubble(selected.join(', '), 'user');
+            state.chatAnswers[CHAT_STEPS[i].field] = selected;
+            setTimeout(() => askStep(i + 1), 450);
+        }
 
-    if(step.type==='single'){
-      document.querySelectorAll('#optWrap .option-chip').forEach(chip=>{
-        chip.onclick = ()=>{
-          document.getElementById('optWrap').querySelectorAll('.option-chip').forEach(c=>c.style.pointerEvents='none');
-          appendBubble(chip.textContent, 'user');
-          if(step.field) state.chatAnswers[step.field] = chip.dataset.val;
-          setTimeout(()=>askStep(i+1), 450);
-        };
-      });
-    } else {
-      document.querySelectorAll('#optWrap .option-chip').forEach(chip=>{
-        chip.onclick = ()=>{
-          chip.classList.toggle('selected');
-          const any = document.querySelectorAll('#optWrap .option-chip.selected').length>0;
-          document.getElementById('confirmBtn').style.display = any ? 'inline-block':'none';
-        };
-      });
-    }
-  }, 550);
-}
+        function finishChat() {
+            const allCities = getAllCities();
+            const defaultCity = allCities.length > 0 ? allCities[0].name : 'Toshkent';
+            const city = state.chatAnswers.city || defaultCity;
+            const typingRow = appendBubble(`<div class="typing"><span></span><span></span><span></span></div>`, 'ai');
+            setTimeout(() => {
+                typingRow.remove();
+                appendBubble(`Zo'r! ${city} bo'yicha ${state.chatAnswers.hours || ''} sayohatingizni tayyorladim ✨`, 'ai');
+                setTimeout(() => {
+                    const trip = createTrip(city);
+                    state.activeTripId = trip.id;
+                    renderItinerary(trip);
+                    goScreen('itinerary');
+                }, 700);
+            }, 900);
+        }
 
-function submitMulti(i){
-  const selected = [...document.querySelectorAll('#optWrap .option-chip.selected')].map(c=>c.dataset.val);
-  document.querySelectorAll('#optWrap .option-chip, #confirmBtn').forEach(c=>c.style.pointerEvents='none');
-  appendBubble(selected.join(', '), 'user');
-  state.chatAnswers[CHAT_STEPS[i].field] = selected;
-  setTimeout(()=>askStep(i+1), 450);
-}
+        /* ================= ITINERARY (PLAN) SCREEN ================= */
+        function totalKm(stops) { return stops.reduce((s, x) => s + (x.travel ? x.travel.km : 0), 0).toFixed(1); }
+        function totalDur(stops) { const mins = stops.reduce((s, x) => s + x.dur + (x.travel ? x.travel.min : 0), 0); return (mins / 60).toFixed(1); }
 
-function finishChat(){
-  const city = state.chatAnswers.city || CITIES[0].name;
-  const typingRow = appendBubble(`<div class="typing"><span></span><span></span><span></span></div>`, 'ai');
-  setTimeout(()=>{
-    typingRow.remove();
-    appendBubble(`Zo'r! ${city} bo'yicha ${state.chatAnswers.hours || ''} sayohatingizni tayyorladim ✨`, 'ai');
-    setTimeout(()=>{
-      const trip = createTrip(city);
-      state.activeTripId = trip.id;
-      renderItinerary(trip);
-      goScreen('itinerary');
-    }, 700);
-  }, 900);
-}
-
-/* ================= ITINERARY (PLAN) SCREEN ================= */
-function totalKm(stops){ return stops.reduce((s,x)=> s + (x.travel? x.travel.km:0), 0).toFixed(1); }
-function totalDur(stops){ const mins = stops.reduce((s,x)=>s+x.dur+(x.travel?x.travel.min:0),0); return (mins/60).toFixed(1); }
-
-function renderItinerary(trip){
-  const el = document.getElementById('itineraryBody');
-  el.innerHTML = `
-    <div class="cover" style="background:${grad(CITIES.findIndex(c=>c.name===trip.city))}">
-      <h3 style="font-size:19px;">${trip.city} — ${totalDur(trip.stops)} soatlik sayohat</h3>
+        function renderItinerary(trip) {
+            const el = document.getElementById('itineraryBody');
+            const allCities = getAllCities();
+            const cityIdx = allCities.findIndex(c => c.name === trip.city);
+            const safeIdx = cityIdx >= 0 ? cityIdx : 0;
+            el.innerHTML = `
+    <div class="cover" style="background:${grad(safeIdx)}">
+      <h3 style="font-size:19px;">${trip.city} — ${totalDur(trip.stops)} ${t('itinerary_hours')}</h3>
       <div class="meta-row">
         <span class="meta-tag">📍 ${trip.city}</span>
-        <span class="meta-tag">⏱ ${totalDur(trip.stops)} soat</span>
-        <span class="meta-tag">📷 ${trip.stops.length} to'xtash</span>
+        <span class="meta-tag">⏱ ${totalDur(trip.stops)} ${t('itinerary_hours')}</span>
+        <span class="meta-tag">📷 ${trip.stops.length} ${t('itinerary_stops')}</span>
         <span class="meta-tag">📏 ${totalKm(trip.stops)} km</span>
       </div>
     </div>
@@ -750,195 +2583,590 @@ function renderItinerary(trip){
       <span class="tag-soft">🔀 Aralash</span>
     </div>
     <div class="tabs2">
-      <button class="active" onclick="event.target.parentElement.querySelectorAll('button').forEach(b=>b.classList.remove('active'));event.target.classList.add('active');document.getElementById('tlView').style.display='block';document.getElementById('mapView').style.display='none';">🕐 Timeline</button>
-      <button onclick="event.target.parentElement.querySelectorAll('button').forEach(b=>b.classList.remove('active'));event.target.classList.add('active');document.getElementById('tlView').style.display='none';document.getElementById('mapView').style.display='block';">📍 Xarita</button>
+      <button class="active" onclick="event.target.parentElement.querySelectorAll('button').forEach(b=>b.classList.remove('active'));event.target.classList.add('active');document.getElementById('tlView').style.display='block';document.getElementById('mapView').style.display='none';">${t('itinerary_timeline')}</button>
+      <button onclick="event.target.parentElement.querySelectorAll('button').forEach(b=>b.classList.remove('active'));event.target.classList.add('active');document.getElementById('tlView').style.display='none';document.getElementById('mapView').style.display='block';showCurrentTripMap();">${t('itinerary_map')}</button>
     </div>
     <div id="tlView" class="timeline">
-      ${trip.stops.map((s,i)=>`
+      ${trip.stops.map((s, i) => `
         ${s.travel ? `<div class="tl-travel">🚗 ${s.travel.min} daq · ${s.travel.km} km</div>` : ''}
         <div class="tl-item">
-          <div class="tl-dot">${i+1}</div>
+          <div class="tl-dot">${i + 1}</div>
           <div class="tl-card">
-            <div class="tl-photo">${locationPhotoHTML(s.emoji, i, 'height:90px;')}</div>
+            <div class="tl-photo">${locationPhotoHTML(s.emoji, i, 'height:90px;', s.image || null)}</div>
             <div class="tl-body">
               <h4>${s.name}</h4>
               <div class="tl-time">🕐 ${s.time} · ${s.dur} daq</div>
               <div class="tl-desc">${s.desc}</div>
-              <div class="tl-link">📍 Xaritada ko'rish ›</div>
+              <div class="tl-link" onclick="openRealMap('${trip.city.replace(/'/g, '\\x27')}','${s.name.replace(/'/g, '\\x27')}')">${t('itinerary_see_map')}</div>
             </div>
           </div>
         </div>`).join('')}
     </div>
     <div id="mapView" class="map-card" style="display:none;">
       <span class="map-pin">📍 ${trip.city}</span>
-      <span class="map-caption">${trip.stops.length} to'xtash · interaktiv xarita tez orada</span>
+      <span class="map-caption">${trip.stops.length} ${t('itinerary_stops')} · ${t('itinerary_map_view')}</span>
     </div>
-    <button class="cta-btn" onclick="beginLiveTrip('${trip.id}')">🚀 Jonli sayohatni boshlash</button>
+    <button class="cta-btn" onclick="beginLiveTrip('${trip.id}')">${t('itinerary_start')}</button>
   `;
-}
+        }
 
-/* ================= LIVE TRIP SCREEN ================= */
-function beginLiveTrip(tripId){
-  const trip = state.trips.find(t=>t.id===tripId);
-  trip.started = true;
-  trip.stops[0].status = 'current';
-  renderLiveTrip(trip);
-  goScreen('livetrip');
-}
+        /* ================= LIVE TRIP SCREEN ================= */
+        function beginLiveTrip(tripId) {
+            const trip = state.trips.find(t => t.id === tripId);
+            trip.started = true;
+            trip.stops[0].status = 'current';
+            renderLiveTrip(trip);
+            goScreen('livetrip');
+        }
 
-function renderLiveTrip(trip){
-  const el = document.getElementById('liveBody');
-  const done = trip.stops.filter(s=>s.status==='done').length;
-  const pct = Math.round((done/trip.stops.length)*100);
+        function renderLiveTrip(trip) {
+            const el = document.getElementById('liveBody');
+            const done = trip.stops.filter(s => s.status === 'done').length;
+            const pct = Math.round((done / trip.stops.length) * 100);
 
-  if(trip.completed){
-    el.innerHTML = `
+            if (trip.completed) {
+                el.innerHTML = `
       <div class="complete-card">
         <div class="em">🎉</div>
-        <h3>Barcha kalitlar yig'ildi!</h3>
-        <p>${trip.city} bo'yicha ${trip.stops.length} ta joyni muvaffaqiyatli ziyorat qildingiz.</p>
+        <h3>${t('live_complete_title')}</h3>
+        <p>${t('live_complete_desc').replace('{city}', trip.city).replace('{n}', trip.stops.length)}</p>
       </div>
-      <button class="cta-btn" onclick="goHome()">Bosh sahifaga qaytish</button>
+      <button class="cta-btn" onclick="goHome()">${t('live_back_home')}</button>
     `;
-    return;
-  }
+                return;
+            }
 
-  const current = trip.stops[trip.currentIndex];
-  const next = trip.stops[trip.currentIndex+1];
-  const cityIdx = CITIES.findIndex(c=>c.name===trip.city);
+            const current = trip.stops[trip.currentIndex];
+            const next = trip.stops[trip.currentIndex + 1];
+            const allCities = getAllCities();
+            const cityIdx = allCities.findIndex(c => c.name === trip.city);
+            const safeIdx = cityIdx >= 0 ? cityIdx : 0;
 
-  el.innerHTML = `
+            el.innerHTML = `
     <div class="progress-wrap">
-      <div class="progress-top"><span>${done} / ${trip.stops.length} joy</span><span class="pct">${pct}%</span></div>
+      <div class="progress-top"><span>${done} / ${trip.stops.length} ${t('live_progress')}</span><span class="pct">${pct}%</span></div>
       <div class="progress-bar"><div class="progress-fill" style="width:${pct}%"></div></div>
     </div>
-    <div class="map-card">
+    <div class="map-card" onclick="openRealMap('${trip.city.replace(/'/g, '\\x27')}')" style="cursor:pointer;">
       <span class="map-pin">📍 ${trip.city}</span>
-      <span class="map-caption">${trip.stops.length} to'xtash · markerga bosing</span>
+      <span class="map-caption">${trip.stops.length} ${t('itinerary_stops')} · ${t('map_open')}</span>
     </div>
-    <div class="eyebrow-lbl">Hozirgi joy</div>
+    <div class="eyebrow-lbl">${t('live_current')}</div>
     <div class="current-card">
-      <div class="current-photo" style="background:${grad(cityIdx+trip.currentIndex)}">
-        <span class="badge-now">⭐ Hozirgi joy</span>
+      <div class="current-photo" style="background:${grad(safeIdx + trip.currentIndex)}">
+        <span class="badge-now">${t('live_badge_now')}</span>
         <div class="current-info"><h3>${current.name}</h3><p>${current.time} · ${current.dur} daq</p></div>
       </div>
       <div class="current-body">
         <p>${current.desc}</p>
         <div class="action-row">
-          <button class="action-ghost">🧭 Yo'l ko'rsatish</button>
-          <button class="action-solid" onclick="completeStop('${trip.id}')">✅ Borildi!</button>
+          <button class="action-ghost" onclick="openRealMap('${trip.city.replace(/'/g, '\\x27')}')">${t('live_navigate')}</button>
+          <button class="action-solid" onclick="verifyStop('${trip.id}')">${t('live_borildi')}</button>
         </div>
       </div>
     </div>
     ${next ? `
-    <div class="eyebrow-lbl">Keyingi joy</div>
+    <div class="eyebrow-lbl">${t('live_next')}</div>
     <div class="next-card">
-      <div class="next-thumb" style="background:${grad(cityIdx+trip.currentIndex+1)};display:flex;align-items:center;justify-content:center;font-size:18px;">${next.emoji}</div>
+      <div class="next-thumb" style="background:${grad(safeIdx + trip.currentIndex + 1)};display:flex;align-items:center;justify-content:center;font-size:18px;">${next.emoji}</div>
       <div><h4>${next.name}</h4><p>🚶 ${next.dur} daq · ${next.time}</p></div>
     </div>` : ''}
-    <div class="eyebrow-lbl">Barcha to'xtashlar</div>
-    ${trip.stops.map((s,i)=>`
-      <div class="stop-row ${s.status==='done'?'done':''}">
-        <div class="stop-num ${s.status}">${s.status==='done'?'✓':i+1}</div>
+    <div class="eyebrow-lbl">${t('live_all_stops')}</div>
+    ${trip.stops.map((s, i) => `
+      <div class="stop-row ${s.status === 'done' ? 'done' : ''}">
+        <div class="stop-num ${s.status}">${s.status === 'done' ? '✓' : i + 1}</div>
         <div><h4>${s.name}</h4><p>${s.time}</p></div>
-        ${s.status==='done' ? `<span class="stop-key">🔑 +1</span>` : ''}
+        ${s.status === 'done' ? `<span class="stop-key">🔑 +1</span>` : ''}
       </div>`).join('')}
   `;
-}
+        }
 
-function completeStop(tripId){
-  const trip = state.trips.find(t=>t.id===tripId);
-  trip.stops[trip.currentIndex].status = 'done';
-  state.keys += 1;
-  showToast();
-  if(trip.currentIndex + 1 < trip.stops.length){
-    trip.currentIndex += 1;
-    trip.stops[trip.currentIndex].status = 'current';
-  } else {
-    trip.completed = true;
-  }
-  setTimeout(()=>{ renderLiveTrip(trip); renderAll(); }, 900);
-}
+        function verifyStop(tripId) {
+            const trip = state.trips.find(t => t.id === tripId);
+            const currentStop = trip.stops[trip.currentIndex];
+            
+            // If stop has a placeId, require QR verification
+            if (currentStop.placeId) {
+                state.pendingVerification = {
+                    tripId: tripId,
+                    placeId: currentStop.placeId,
+                    placeName: currentStop.name
+                };
+                // Show scanner with context
+                document.getElementById('scannerContext').textContent = 
+                    t('verify_qr_context').replace('{name}', currentStop.name);
+                openScanner();
+                showToast('📷', t('verify_qr_prompt'));
+                return;
+            }
+            
+            // Default stops (no placeId) — skip QR, give stars directly
+            doCompleteStop(trip);
+        }
 
-function showToast(){
-  const t = document.getElementById('toast');
-  t.classList.add('show');
-  setTimeout(()=>t.classList.remove('show'), 1100);
-}
+        function doCompleteStop(trip) {
+            trip.stops[trip.currentIndex].status = 'done';
+            const hasBoost = state.ownedItems.includes('boost');
+            const starAmount = hasBoost ? 4 : 2;
+            state.stars += starAmount;
+            saveStars();
+            showToast('⭐', '+' + starAmount + ' ' + (state.lang === 'en' ? 'stars' : state.lang === 'ru' ? 'звёзд' : 'yulduz'));
+            if (trip.currentIndex + 1 < trip.stops.length) {
+                trip.currentIndex += 1;
+                trip.stops[trip.currentIndex].status = 'current';
+                showToast('📍', state.lang === 'en' ? 'Go to the next place!' : state.lang === 'ru' ? 'Следуйте к следующему месту!' : 'Keyingi joyga yo\'l oling!');
+            } else {
+                trip.completed = true;
+                showToast('🎉', state.lang === 'en' ? 'Trip completed!' : state.lang === 'ru' ? 'Поездка завершена!' : 'Sayohat yakunlandi!');
+            }
+            setTimeout(() => { renderLiveTrip(trip); renderAll(); }, 900);
+        }
 
-/* ================= TRIPS TAB ================= */
-function renderTrips(){
-  const el = document.getElementById('tripsList');
-  if(state.trips.length === 0){
-    el.innerHTML = `
+        /* Called from kalit.js after giveKey() successfully awards stars */
+        function resolveStopVerification(placeId) {
+            if (!state.pendingVerification) return;
+            const pv = state.pendingVerification;
+            if (String(pv.placeId) === String(placeId)) {
+                // Correct place! Mark stop as done (stars already given by giveKey)
+                const trip = state.trips.find(t => t.id === pv.tripId);
+                if (trip) {
+                    trip.stops[trip.currentIndex].status = 'done';
+                    if (trip.currentIndex + 1 < trip.stops.length) {
+                        trip.currentIndex += 1;
+                        trip.stops[trip.currentIndex].status = 'current';
+                        showToast('📍', 'Keyingi joyga yo\'l oling!');
+                    } else {
+                        trip.completed = true;
+                        showToast('🎉', 'Sayohat yakunlandi!');
+                    }
+                    renderLiveTrip(trip);
+                    renderAll();
+                }
+                state.pendingVerification = null;
+                closeScannerOverlay();
+            }
+            // If placeId doesn't match, keep scanner open
+        }
+
+        function showToast(icon, text) {
+            const t = document.getElementById('toast');
+            document.querySelector('#toast .tic').textContent = icon || '⭐';
+            document.querySelector('#toast .tic').style.display = 'inline';
+            document.getElementById('toastText').textContent = text || 'Kalit topildi! +1';
+            t.classList.add('show');
+            setTimeout(() => t.classList.remove('show'), 1100);
+        }
+
+        /* ================= TRIPS TAB ================= */
+        function renderTrips() {
+            const el = document.getElementById('tripsList');
+            if (state.trips.length === 0) {
+                el.innerHTML = `
       <div class="empty-state">
         <div class="eic">🧳</div>
-        <h3>Hali sayohatlaringiz yo'q</h3>
-        <p>Bosh sahifadan yangi sayohat rejalashtiring.</p>
-        <button class="cta-btn" onclick="goTab('home')">Yangi sayohat boshlash</button>
+        <h3>${t('trips_empty_h')}</h3>
+        <p>${t('trips_empty_p')}</p>
+        <button class="cta-btn" onclick="goTab('home')">${t('trips_empty_btn')}</button>
       </div>`;
-    return;
-  }
-  el.innerHTML = state.trips.map((t,idx)=>{
-    const done = t.stops.filter(s=>s.status==='done').length;
-    const cityIdx = CITIES.findIndex(c=>c.name===t.city);
-    const badge = t.completed ? `<span class="trip-badge done">Yakunlandi</span>` : `<span class="trip-badge progress">${done}/${t.stops.length}</span>`;
-    return `<div class="trip-item" onclick="openTrip('${t.id}')">
-      <div class="tphoto" style="background:${grad(cityIdx)};display:flex;align-items:center;justify-content:center;font-size:20px;">${CITIES[cityIdx].emoji}</div>
-      <div style="flex:1;"><h4>${t.city}</h4><p>${t.stops.length} to'xtash · ${totalDur(t.stops)} soat</p></div>
+                return;
+            }
+            el.innerHTML = state.trips.map((t, idx) => {
+                const done = t.stops.filter(s => s.status === 'done').length;
+                const allCities = getAllCities();
+                const cityIdx = allCities.findIndex(c => c.name === t.city);
+                const safeIdx = cityIdx >= 0 ? cityIdx : idx;
+                const emoji = cityIdx >= 0 ? allCities[cityIdx].emoji : '🏙️';
+                const badge = t.completed ? `<span class="trip-badge done">${t('trips_badge_done')}</span>` : `<span class="trip-badge progress">${done}/${t.stops.length}</span>`;
+                return `<div class="trip-item" onclick="openTrip('${t.id}')">
+      <div class="tphoto" style="background:${grad(safeIdx)};display:flex;align-items:center;justify-content:center;font-size:20px;">${emoji}</div>
+      <div style="flex:1;"><h4>${t.city}</h4><p>${t.stops.length} ${t('trips_stops')} · ${totalDur(t.stops)} ${t('trips_hours')}</p></div>
       ${badge}
     </div>`;
-  }).join('');
-}
+            }).join('');
+        }
 
-function openTrip(id){
-  const trip = state.trips.find(t=>t.id===id);
-  state.activeTripId = id;
-  if(trip.started && !trip.completed){ renderLiveTrip(trip); goScreen('livetrip'); }
-  else { renderItinerary(trip); goScreen('itinerary'); }
-}
+        function openTrip(id) {
+            const trip = state.trips.find(t => t.id === id);
+            state.activeTripId = id;
+            if (trip.started && !trip.completed) { renderLiveTrip(trip); goScreen('livetrip'); }
+            else { renderItinerary(trip); goScreen('itinerary'); }
+        }
 
-/* ================= PROFILE ================= */
-const ACHIEVEMENTS = [
-  {key:'first', icon:'🚀', label:'Birinchi qadam', test:s=>s.trips.length>=1},
-  {key:'city1', icon:'🏙️', label:'Tadqiqotchi', test:s=>new Set(s.trips.map(t=>t.city)).size>=1},
-  {key:'keys5', icon:'🔑', label:'5 kalit', test:s=>s.keys>=5},
-  {key:'done1', icon:'🏁', label:'Birinchi yakun', test:s=>s.trips.some(t=>t.completed)},
-  {key:'keys10', icon:'👑', label:'Kalitlar ustasi', test:s=>s.keys>=10}
-];
+        /* ================= PROFILE ================= */
+        const ACHIEVEMENTS = [
+            { key: 'first', icon: '🚀', labelKey: 'ach_first', test: s => s.trips.length >= 1 },
+            { key: 'city1', icon: '🏙️', labelKey: 'ach_city1', test: s => new Set(s.trips.map(t => t.city)).size >= 1 },
+            { key: 'stars5', icon: '⭐', labelKey: 'ach_stars5', test: s => s.stars >= 5 },
+            { key: 'stars20', icon: '🌟', labelKey: 'ach_stars20', test: s => s.stars >= 20 },
+            { key: 'done1', icon: '🏁', labelKey: 'ach_done1', test: s => s.trips.some(t => t.completed) },
+            { key: 'stars50', icon: '👑', labelKey: 'ach_stars50', test: s => s.stars >= 50 },
+            { key: 'sub', icon: '💎', labelKey: 'ach_sub', test: s => s.subscription !== 'none' },
+            { key: 'vip', icon: '👑', labelKey: 'ach_vip', test: s => s.subscription === 'vip' }
+        ];
 
-function renderProfile(){
-  const cities = new Set(state.trips.map(t=>t.city)).size;
-  document.getElementById('profileStats').innerHTML = `
+        function renderProfile() {
+            const cities = new Set(state.trips.map(t => t.city)).size;
+            const subLabels = { 'none': 'Obuna yo\'q', 'basic': '⭐ Basic', 'premium': '💎 Premium', 'vip': '👑 VIP' };
+            const subEl = document.getElementById('profileSub');
+            if (subEl) {
+                subEl.textContent = subLabels[state.subscription] || 'Obuna yo\'q';
+                subEl.style.background = state.subscription !== 'none' ? 'var(--gold)' : 'var(--surface-2)';
+                subEl.style.color = state.subscription !== 'none' ? '#3a2708' : 'var(--ink-soft)';
+            }
+            document.getElementById('profileStats').innerHTML = `
     <div class="st"><div class="n">${state.trips.length}</div><div class="l">Sayohatlar</div></div>
-    <div class="st"><div class="n">${state.keys}</div><div class="l">Kalitlar</div></div>
+    <div class="st"><div class="n">${state.stars}</div><div class="l">⭐ Yulduzlar</div></div>
     <div class="st"><div class="n">${cities}</div><div class="l">Shaharlar</div></div>`;
 
-  const unlockedCount = ACHIEVEMENTS.filter(a=>a.test(state)).length;
-  document.getElementById('achCount').textContent = unlockedCount;
-  document.getElementById('achRow').innerHTML = ACHIEVEMENTS.map(a=>{
-    const unlocked = a.test(state);
-    return `<div class="ach-card ${unlocked?'unlocked':'locked'}"><div class="aic">${unlocked?a.icon:'🔒'}</div><div class="al">${a.label}</div></div>`;
-  }).join('');
+            const unlockedCount = ACHIEVEMENTS.filter(a => a.test(state)).length;
+            document.getElementById('achCount').textContent = unlockedCount;
+            document.getElementById('achRow').innerHTML = ACHIEVEMENTS.map(a => {
+                const unlocked = a.test(state);
+                return `<div class="ach-card ${unlocked ? 'unlocked' : 'locked'}"><div class="aic">${unlocked ? a.icon : '🔒'}</div><div class="al">${t(a.labelKey)}</div></div>`;
+            }).join('');
 
-  const langs = [{code:'uz',label:"O'zbekcha"},{code:'en',label:'English'},{code:'ru',label:'Русский'}];
-  if(!state.lang) state.lang='uz';
-  document.getElementById('langList').innerHTML = langs.map(l=>`
-    <div class="lang-item ${state.lang===l.code?'selected':''}" onclick="setLang('${l.code}')">
-      <span>${l.label}</span>${state.lang===l.code?'<span class="chk">✓</span>':''}
+            const langs = [{ code: 'uz', label: "O'zbekcha" }, { code: 'en', label: 'English' }, { code: 'ru', label: 'Русский' }];
+            if (!state.lang) state.lang = 'uz';
+            document.getElementById('langList').innerHTML = langs.map(l => `
+    <div class="lang-item ${state.lang === l.code ? 'selected' : ''}" onclick="setLang('${l.code}')">
+      <span>${l.label}</span>${state.lang === l.code ? '<span class="chk">✓</span>' : ''}
     </div>`).join('');
-}
-function setLang(code){ state.lang = code; renderProfile(); }
+        }
+        function setLang(code) { 
+            state.lang = code; 
+            localStorage.setItem('yolchi_lang', code);
+            applyLang();
+            renderAll(); 
+        }
 
-/* ================= RENDER ALL ================= */
-function renderAll(){
-  renderCityGrid('cityGridHome');
-  renderCityGrid('cityGridDiscover');
-  renderStatsHome();
-  renderTrips();
-  renderProfile();
-}
-renderAll();
-</script>
+        /* ================= SHOP / DO'KON ================= */
+        const SHOP_ITEMS = [
+            { id: 'sub_basic', name: '⭐ Basic obuna', desc: '5 ta joyni oldindan ko\'rish, reklamasiz', icon: '⭐', color: '#1f6d4c', price: 15, type: 'subscription', value: 'basic', dur: 30 },
+            { id: 'sub_premium', name: '💎 Premium obuna', desc: '10 ta joy, offline xarita, shaxsiy agent', icon: '💎', color: '#dda23a', price: 35, type: 'subscription', value: 'premium', dur: 30 },
+            { id: 'sub_vip', name: '👑 VIP obuna', desc: 'Cheksiz joylar, barcha imkoniyatlar', icon: '👑', color: '#a86b1f', price: 60, type: 'subscription', value: 'vip', dur: 30 },
+            { id: 'boost', name: '🚀 Tezlatkich', desc: '2x yulduz yig\'ish (7 kun)', icon: '🚀', color: '#c96b3e', price: 20, type: 'boost', dur: 7 },
+            { id: 'theme_dark', name: '🌙 Maxsus dizayn', desc: 'Premium dark mode dizayni', icon: '🌙', color: '#3a7d94', price: 10, type: 'theme', value: 'dark_pro' },
+            { id: 'guide', name: '📖 Audio gid', desc: 'Shaharlar bo\'ylab audio qo\'llanma', icon: '🎧', color: '#2f8f6a', price: 25, type: 'guide' }
+        ];
+        cleanExpired();
+
+        function getBoostDaysLeft() {
+            if (!state.ownedItems.includes('boost')) return 0;
+            const boostTime = localStorage.getItem('yolchi_boost_time');
+            if (!boostTime) return 0;
+            const elapsed = Date.now() - parseInt(boostTime);
+            const sevenDays = 7 * 24 * 60 * 60 * 1000;
+            const remaining = Math.max(0, Math.ceil((sevenDays - elapsed) / (24 * 60 * 60 * 1000)));
+            return remaining;
+        }
+
+        function renderShop() {
+            const el = document.getElementById('shopBody');
+            const subLabels = { 'none': 'Obuna yo\'q', 'basic': '⭐ Basic', 'premium': '💎 Premium', 'vip': '👑 VIP' };
+            const isSubActive = state.subscription !== 'none';
+
+            let html = `
+            <div class="star-balance">
+                <div class="big">⭐ ${state.stars}</div>
+                <div class="lbl">${t('shop_balance')}</div>
+            </div>`;
+
+            if (isSubActive) {
+                html += `
+            <div class="sub-banner">
+                <div class="sbicon">${subLabels[state.subscription].split(' ')[0]}</div>
+                <div>
+                    <h4>${subLabels[state.subscription]}</h4>
+                    <p>${t('shop_sub_active')} ✅</p>
+                </div>
+            </div>`;
+            }
+
+            html += `<div class="shop-grid">`;
+            SHOP_ITEMS.forEach(item => {
+                const owned = state.ownedItems.includes(item.id);
+                const isSubItem = item.type === 'subscription';
+                const isCurrentSub = isSubItem && state.subscription === item.value;
+                const canAfford = state.stars >= item.price;
+                const btnText = isCurrentSub ? '✅ Mavjud' : owned ? '✅ Sotib olingan' : `⭐ ${item.price}`;
+                const btnClass = isCurrentSub || owned ? 'bought' : '';
+                const disabled = (isCurrentSub || owned) ? 'disabled' : '';
+                
+                // Extra info for specific items
+                let extraInfo = '';
+                if (item.id === 'boost' && owned) {
+                    const daysLeft = getBoostDaysLeft();
+                    extraInfo = `<span class="sbadge" style="background:var(--gold);color:#3a2708;">${daysLeft} ${t('shop_boost_left')}</span>`;
+                }
+                if (isCurrentSub && state.subscriptionExpiry) {
+                    const expiryDate = new Date(state.subscriptionExpiry);
+                    extraInfo = `<span class="sbadge" style="background:var(--gold);color:#3a2708;">${expiryDate.toLocaleDateString('uz-UZ')} gacha</span>`;
+                }
+                
+                html += `
+            <div class="shop-card">
+                <div class="sicon" style="background:${item.color}20;color:${item.color}">${item.icon}</div>
+                <div class="sinfo">
+                    <h4>${item.name}</h4>
+                    <p>${item.desc}</p>
+                    ${isCurrentSub ? '<span class="sbadge">Faol</span>' : owned ? '<span class="sbadge owned">Sotib olingan</span>' : ''}
+                    ${extraInfo}
+                </div>
+                <button class="${btnClass}" onclick="buyItem('${item.id}')" ${disabled}>
+                    ${btnText}
+                </button>
+            </div>`;
+            });
+            html += `</div>`;
+
+            // Admin panel link
+            html += `
+            <div class="list-row" onclick="goScreen('admin')" style="margin-top:20px;cursor:pointer;">
+                <div class="lic">🛠</div><span class="name">Admin panel</span><span class="chev">›</span>
+            </div>`;
+
+            el.innerHTML = html;
+        }
+
+        function buyItem(itemId) {
+            const item = SHOP_ITEMS.find(i => i.id === itemId);
+            if (!item) return;
+            
+            if (state.ownedItems.includes(itemId) || (item.type === 'subscription' && state.subscription === item.value)) {
+                alert("✅ Siz bu mahsulotni allaqachon sotib olgansiz!");
+                return;
+            }
+
+            if (state.stars < item.price) {
+                alert(`❌ Yulduzlaringiz yetarli emas!\n\nKerak: ${item.price} ⭐\nSizda: ${state.stars} ⭐\n\nYulduz yig'ish uchun QR kodlarni skan qiling!`);
+                return;
+            }
+
+            if (!confirm(`🛒 "${item.name}" ni ${item.price} ⭐ ga sotib olasizmi?`)) return;
+
+            state.stars -= item.price;
+            saveStars();
+
+            if (item.type === 'subscription') {
+                state.subscription = item.value;
+                const expiry = new Date();
+                expiry.setDate(expiry.getDate() + (item.dur || 30));
+                state.subscriptionExpiry = expiry.toISOString();
+                saveSub();
+                alert(`🎉 "${item.name}" obunasi faollashtirildi!\nMuddati: ${item.dur || 30} kun`);
+            } else {
+                state.ownedItems.push(itemId);
+                saveItems();
+                // Track boost purchase time for expiry check
+                if (itemId === 'boost') {
+                    localStorage.setItem('yolchi_boost_time', Date.now());
+                }
+                // Apply theme immediately
+                if (itemId === 'theme_dark') {
+                    document.documentElement.setAttribute('data-theme', 'dark');
+                    document.getElementById('darkSwitch')?.classList.add('on');
+                }
+                alert(`🎉 "${item.name}" muvaffaqiyatli sotib olindi!`);
+            }
+
+            renderShop();
+            renderProfile();
+            renderAll();
+        }
+
+        /* ================= ADMIN CITIES ================= */
+        let adminCities = JSON.parse(localStorage.getItem("yolchi_cities")) || [];
+
+        function renderAdminCities() {
+            const el = document.getElementById('adminCities');
+            if (!el) return;
+            if (adminCities.length === 0) {
+                el.innerHTML = '<p style="color:var(--ink-soft);font-size:13px;">'+t('admin_no_cities')+'</p>';
+                return;
+            }
+            el.innerHTML = adminCities.map(c => `
+                <div style="display:flex;align-items:center;gap:10px;padding:8px 12px;background:var(--surface);border:1px solid var(--line);border-radius:12px;margin-bottom:6px;">
+                    <span>${c.emoji}</span>
+                    <span style="flex:1;font-weight:600;">${c.name}</span>
+                    <button onclick="deleteCity('${c.name}')" style="background:none;border:none;color:var(--danger);cursor:pointer;font-size:16px;">✕</button>
+                </div>
+            `).join('');
+        }
+
+        function addCity() {
+            const name = document.getElementById('cityName').value.trim();
+            const emoji = document.getElementById('cityEmoji').value.trim() || '🏙️';
+            if (!name) { alert("Shahar nomini kiriting!"); return; }
+            if (adminCities.find(c => c.name === name)) { alert("Bu shahar allaqachon mavjud!"); return; }
+            adminCities.push({ name, emoji, count: 0 });
+            localStorage.setItem('yolchi_cities', JSON.stringify(adminCities));
+            updateCitySelects();
+            renderAdminCities();
+            document.getElementById('cityName').value = '';
+            document.getElementById('cityEmoji').value = '';
+            alert(`✅ "${name}" shahri qo'shildi!`);
+        }
+
+        function deleteCity(name) {
+            if (!confirm(`"${name}" shahrini o'chirishni tasdiqlaysizmi?`)) return;
+            adminCities = adminCities.filter(c => c.name !== name);
+            localStorage.setItem('yolchi_cities', JSON.stringify(adminCities));
+            updateCitySelects();
+            renderAdminCities();
+        }
+
+        function updateCitySelects() {
+            const sel = document.getElementById('placeCity');
+            if (!sel) return;
+            const allCities = [...adminCities, ...CITIES];
+            const unique = [];
+            const seen = new Set();
+            allCities.forEach(c => {
+                if (!seen.has(c.name)) { seen.add(c.name); unique.push(c); }
+            });
+            sel.innerHTML = '<option value="">Shaharni tanlang</option>' + 
+                unique.map(c => `<option value="${c.name}">${c.emoji || '🏙️'} ${c.name}</option>`).join('');
+        }
+
+        let adminPlaces = JSON.parse(localStorage.getItem("adminPlaces")) || [];
+
+        function adminLogin() {
+            const u = document.getElementById('adminUser').value;
+            const p = document.getElementById('adminPass').value;
+            if (u === 'Xazina' && p === 'xazina2026') {
+                document.getElementById('adminLogin').style.display = 'none';
+                document.getElementById('adminDashboard').style.display = 'block';
+                updateCitySelects();
+                renderAdminCities();
+                renderAdmin();
+            } else {
+                alert('Login yoki parol xato');
+            }
+        }
+
+        function addPlace() {
+            const city = document.getElementById('placeCity').value;
+            const name = document.getElementById('placeName').value.trim();
+            const image = document.getElementById('placeImage').value.trim();
+            const desc = document.getElementById('placeDesc').value.trim();
+            if (!city) { alert("Shaharni tanlang!"); return; }
+            if (!name || !image || !desc) {
+                alert("Iltimos, barcha maydonlarni to'ldiring.");
+                return;
+            }
+            const obj = {
+                id: Date.now(),
+                city,
+                name,
+                image,
+                desc,
+                stars: parseInt(document.getElementById('placeStars').value) || 3
+            };
+            adminPlaces.push(obj);
+            localStorage.setItem('adminPlaces', JSON.stringify(adminPlaces));
+            renderAdmin();
+            document.getElementById('placeName').value = '';
+            document.getElementById('placeImage').value = '';
+            document.getElementById('placeDesc').value = '';
+        }
+
+        function renderAdmin() {
+            updateCitySelects();
+            let html = '';
+            if (adminPlaces.length === 0) {
+                html = '<p style="color:var(--ink-soft);font-size:13px;">'+t('admin_no_places')+'</p>';
+            }
+            adminPlaces.forEach((p, index) => {
+                html += `
+      <div style="background:var(--surface);padding:18px;border-radius:16px;margin-bottom:16px;border:1px solid var(--line);">
+        <img src="${p.image}"
+          style="width:100%; height:160px; object-fit:cover; border-radius:12px;" />
+        <div style="margin-top:10px;">
+          <span style="font-size:12px;color:var(--ink-soft);">${p.city || 'Noma\'lum'}</span>
+          <h3 style="font-size:17px;">${p.name}</h3>
+          <p style="font-size:13px;color:var(--ink-soft);">${p.desc}</p>
+          <div id="adminQr${index}" style="margin:15px auto;width:150px;"></div>
+          <button class="cta-btn" onclick="downloadAdminQR(${index})" style="padding:10px;font-size:13px;">${t('admin_dl_qr')}</button>
+          <button class="cta-btn ghost" onclick="deletePlace(${p.id})" style="padding:10px;font-size:13px;margin-top:8px;">${t('admin_delete')}</button>
+        </div>
+      </div>`;
+            });
+            document.getElementById('adminPlaces').innerHTML = html;
+
+            // Generate QR codes
+            adminPlaces.forEach((p, index) => {
+                const qrEl = document.getElementById('adminQr' + index);
+                if (qrEl && typeof QRCode !== 'undefined') {
+                    qrEl.innerHTML = '';
+                    new QRCode(qrEl, {
+                        text: "yolchi://place?id=" + p.id + "&city=" + encodeURIComponent(p.city || ''),
+                        width: 150,
+                        height: 150
+                    });
+                }
+            });
+        }
+
+        function downloadAdminQR(index) {
+            if (!adminPlaces[index]) { alert("Joy topilmadi!"); return; }
+            const qrEl = document.getElementById('adminQr' + index);
+            if (!qrEl) return;
+            const canvas = qrEl.querySelector('canvas');
+            if (canvas) {
+                const link = document.createElement('a');
+                link.download = 'qr-' + adminPlaces[index].name + '.png';
+                link.href = canvas.toDataURL('image/png');
+                link.click();
+            } else {
+                alert('QR kod hali yaratilmagan.');
+            }
+        }
+
+        function deletePlace(id) {
+            if (!confirm("O'chirishni tasdiqlaysizmi?")) return;
+            adminPlaces = adminPlaces.filter(x => x.id != id);
+            localStorage.setItem('adminPlaces', JSON.stringify(adminPlaces));
+            renderAdmin();
+        }
+
+        /* ================= QR SCANNER ================= */
+        function openScanner() {
+            document.getElementById('scannerOverlay').style.display = 'flex';
+            startScanner();
+        }
+
+        function closeScannerOverlay() {
+            stopScanner();
+            document.getElementById('scannerOverlay').style.display = 'none';
+        }
+
+        function stopScanner() {
+            if (window.scanner && typeof window.scanner.stop === 'function') {
+                try { window.scanner.stop(); } catch(e) {}
+            }
+        }
+
+        /* ================= RENDER ALL ================= */
+        function renderAll() {
+            renderCityGrid('cityGridHome');
+            renderCityGrid('cityGridDiscover');
+            renderStatsHome();
+            renderTrips();
+            renderProfile();
+            renderShop();
+            applyLang();
+        }
+        renderAll();
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+    <script src="https://unpkg.com/html5-qrcode"></script>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="script.js"></script>
+    <script src="nmadur.js"></script>
+    <script src="qr.js"></script>
+    <script src="kalit.js"></script>
+    <script src="map.js"></script>
 </body>
+
 </html>
