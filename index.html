@@ -1,0 +1,944 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>YO'LCHI — AI sayohat hamrohi</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#f6f2e8;
+    --surface:#ffffff;
+    --surface-2:#eef3ea;
+    --ink:#16241d;
+    --ink-soft:#5c6c60;
+    --green:#1f6d4c;
+    --green-deep:#123a28;
+    --gold:#dda23a;
+    --gold-deep:#a86b1f;
+    --line: rgba(22,36,29,0.12);
+    --danger:#b1502e;
+    --radius:18px;
+  }
+  html[data-theme="dark"]{
+    --bg:#0f1912;
+    --surface:#16241d;
+    --surface-2:#1c2b22;
+    --ink:#eef2ea;
+    --ink-soft:#9fb0a6;
+    --green:#3fae7c;
+    --green-deep:#1f6d4c;
+    --gold:#e6b458;
+    --gold-deep:#c79236;
+    --line: rgba(238,242,234,0.14);
+  }
+
+  *{margin:0;padding:0;box-sizing:border-box;}
+  @media (prefers-reduced-motion: reduce){ *{animation-duration:0.01ms !important; transition-duration:0.01ms !important;} }
+
+  body{
+    background:var(--bg); color:var(--ink);
+    font-family:'Inter',sans-serif;
+    display:flex; justify-content:center;
+    min-height:100vh;
+  }
+  h1,h2,h3{font-family:'Plus Jakarta Sans',sans-serif;}
+
+  .app-shell{
+    width:100%; max-width:430px; min-height:100vh;
+    background:var(--bg); position:relative; overflow-x:hidden;
+    box-shadow:0 0 60px rgba(0,0,0,0.06);
+    display:flex; flex-direction:column;
+  }
+
+  /* ---------- shared topbar ---------- */
+  .topbar{
+    display:flex; align-items:center; justify-content:space-between;
+    padding:18px 20px 14px; gap:10px;
+  }
+  .topbar-left{display:flex; align-items:center; gap:10px;}
+  .back-btn, .icon-btn{
+    width:36px;height:36px;border-radius:50%;background:var(--surface-2);
+    border:none; display:flex; align-items:center; justify-content:center;
+    cursor:pointer; color:var(--ink); font-size:16px; flex-shrink:0;
+  }
+  .brand{display:flex;align-items:center;gap:8px;font-weight:800;font-size:17px;}
+  .brand .mark{width:22px;height:22px;}
+  .topbar h2{font-size:17px;font-weight:700;}
+
+  .screen{display:none; padding:0 20px 100px; flex:1;}
+  .screen.active{display:block; animation:fade-up 0.35s ease both;}
+  @keyframes fade-up{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
+
+  /* ---------- bottom nav ---------- */
+  .bottom-nav{
+    position:sticky; bottom:0; left:0; right:0;
+    background:var(--surface); border-top:1px solid var(--line);
+    display:flex; padding:10px 6px 14px;
+  }
+  .bottom-nav button{
+    flex:1; background:none; border:none; display:flex; flex-direction:column;
+    align-items:center; gap:3px; font-family:'Inter',sans-serif; font-size:11px;
+    color:var(--ink-soft); cursor:pointer; padding:6px 2px; font-weight:600;
+  }
+  .bottom-nav button.active{color:var(--green);}
+  .bottom-nav button .ic{font-size:19px;}
+
+  /* ---------- home ---------- */
+  .greet{font-size:13px;color:var(--ink-soft);margin-bottom:2px;}
+  .hero-title{font-size:26px;font-weight:800;line-height:1.2;margin-bottom:16px;}
+  .hero-title span{color:var(--green);}
+
+  .search-box{
+    background:var(--surface); border:1px solid var(--line); border-radius:16px;
+    padding:14px 16px; display:flex; align-items:center; gap:10px; margin-bottom:16px;
+    cursor:pointer;
+  }
+  .search-box .ph{color:var(--ink-soft); font-size:13.5px; flex:1;}
+  .ai-pill{
+    background:var(--green); color:#fff; border-radius:20px; padding:6px 12px;
+    font-size:12px; font-weight:700; display:flex; align-items:center; gap:4px;
+  }
+
+  .chip-row{display:flex; gap:8px; overflow-x:auto; padding-bottom:6px; margin-bottom:20px; scrollbar-width:none;}
+  .chip-row::-webkit-scrollbar{display:none;}
+  .chip{
+    flex-shrink:0; background:var(--surface); border:1px solid var(--line); border-radius:20px;
+    padding:8px 14px; font-size:13px; font-weight:600; color:var(--ink-soft); cursor:pointer;
+    display:flex; align-items:center; gap:6px; transition:all .15s ease;
+  }
+  .chip.active{background:var(--green); color:#fff; border-color:var(--green);}
+
+  .sec-title{font-size:16px;font-weight:800;margin:22px 0 12px;}
+
+  .city-grid{display:grid; grid-template-columns:1fr 1fr; gap:12px;}
+  .city-card{
+    border-radius:16px; overflow:hidden; cursor:pointer; position:relative;
+    height:118px; display:flex; align-items:flex-end; padding:12px;
+    color:#fff; border:1px solid var(--line);
+  }
+  .city-card .cname{font-weight:800; font-size:15px;}
+  .city-card .ccount{font-size:11.5px; opacity:0.9;}
+
+  .stats-card{
+    background:var(--surface-2); border-radius:16px; padding:16px; margin-top:20px;
+    display:grid; grid-template-columns:repeat(3,1fr); gap:10px;
+  }
+  .stats-card .stat{text-align:center;}
+  .stats-card .stat .num{font-size:19px;font-weight:800;color:var(--green);}
+  .stats-card .stat .lbl{font-size:11px;color:var(--ink-soft);}
+
+  .why-grid{display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-top:12px;}
+  .why-card{background:var(--surface); border:1px solid var(--line); border-radius:14px; padding:14px;}
+  .why-card .ic{font-size:20px;margin-bottom:8px;}
+  .why-card h4{font-size:13.5px;font-weight:700;margin-bottom:3px;}
+  .why-card p{font-size:11.5px;color:var(--ink-soft);}
+
+  .cta-btn{
+    width:100%; background:var(--green); color:#fff; border:none; border-radius:14px;
+    padding:16px; font-size:15px; font-weight:700; cursor:pointer; margin-top:22px;
+    display:flex; align-items:center; justify-content:center; gap:8px;
+    transition:transform .15s ease;
+  }
+  .cta-btn:hover{transform:translateY(-1px);}
+  .cta-btn.ghost{background:var(--surface-2); color:var(--ink);}
+
+  /* ---------- chat ---------- */
+  .chat-body{display:flex; flex-direction:column; gap:12px; padding-top:6px;}
+  .bubble-row{display:flex; gap:8px; align-items:flex-end;}
+  .bubble-row.user{justify-content:flex-end;}
+  .avatar-mini{
+    width:26px;height:26px;border-radius:50%;background:var(--surface-2);
+    border:1px solid var(--green); display:flex; align-items:center; justify-content:center;
+    font-size:11px; flex-shrink:0;
+  }
+  .bubble{
+    max-width:78%; padding:11px 15px; border-radius:16px; font-size:13.5px; line-height:1.5;
+  }
+  .bubble.ai{background:var(--surface); border:1px solid var(--line); border-bottom-left-radius:4px;}
+  .bubble.user{background:var(--green); color:#fff; border-bottom-right-radius:4px;}
+  .typing{display:flex; gap:3px; padding:4px 2px;}
+  .typing span{width:5px;height:5px;border-radius:50%;background:var(--ink-soft); animation:blink 1.2s infinite ease-in-out;}
+  .typing span:nth-child(2){animation-delay:.2s;} .typing span:nth-child(3){animation-delay:.4s;}
+  @keyframes blink{0%,80%,100%{opacity:.25;}40%{opacity:1;}}
+
+  .option-wrap{display:flex; flex-wrap:wrap; gap:8px; margin-top:4px;}
+  .option-chip{
+    background:var(--surface); border:1px solid var(--green); color:var(--green-deep);
+    padding:9px 14px; border-radius:20px; font-size:13px; font-weight:600; cursor:pointer;
+    transition:all .15s ease;
+  }
+  .option-chip:hover{background:var(--green); color:#fff;}
+  .option-chip.selected{background:var(--green); color:#fff;}
+  .confirm-btn{
+    background:var(--gold); color:#3a2708; border:none; padding:9px 18px; border-radius:20px;
+    font-size:13px; font-weight:700; cursor:pointer; margin-top:2px;
+  }
+
+  /* ---------- itinerary (plan) ---------- */
+  .cover{
+    height:170px; border-radius:18px; position:relative; overflow:hidden;
+    display:flex; flex-direction:column; justify-content:flex-end; padding:16px;
+    color:#fff; margin-bottom:14px;
+  }
+  .cover .meta-row{display:flex; gap:8px; flex-wrap:wrap; margin-top:8px;}
+  .cover .meta-tag{
+    background:rgba(0,0,0,0.35); backdrop-filter:blur(3px); padding:4px 10px;
+    border-radius:20px; font-size:11.5px; display:flex; align-items:center; gap:4px;
+  }
+  .tag-row{display:flex; gap:8px; margin-bottom:16px;}
+  .tag-soft{background:var(--surface-2); color:var(--ink-soft); font-size:11.5px; font-weight:600; padding:6px 12px; border-radius:20px;}
+
+  .tabs2{display:flex; background:var(--surface-2); border-radius:14px; padding:4px; margin-bottom:16px;}
+  .tabs2 button{
+    flex:1; border:none; background:transparent; padding:10px; border-radius:11px;
+    font-size:13px; font-weight:700; color:var(--ink-soft); cursor:pointer;
+  }
+  .tabs2 button.active{background:var(--surface); color:var(--ink); box-shadow:0 1px 3px rgba(0,0,0,0.06);}
+
+  .timeline{position:relative; padding-left:18px;}
+  .timeline::before{content:"";position:absolute;left:5px;top:8px;bottom:8px;width:1px;background:var(--line);}
+  .tl-item{position:relative; margin-bottom:14px;}
+  .tl-dot{
+    position:absolute; left:-18px; top:2px; width:22px;height:22px;border-radius:50%;
+    background:var(--surface); border:1px solid var(--line); display:flex; align-items:center;
+    justify-content:center; font-size:11px; font-weight:700; color:var(--ink-soft);
+  }
+  .tl-travel{font-size:11.5px; color:var(--ink-soft); margin:2px 0 10px 4px; display:flex; gap:6px;}
+  .tl-card{background:var(--surface); border:1px solid var(--line); border-radius:14px; overflow:hidden;}
+  .tl-photo{height:90px;}
+  .tl-body{padding:12px 14px;}
+  .tl-body h4{font-size:14.5px;font-weight:700;margin-bottom:3px;}
+  .tl-time{font-size:11.5px;color:var(--ink-soft);margin-bottom:6px;}
+  .tl-desc{font-size:12.5px;color:var(--ink-soft);line-height:1.5;margin-bottom:8px;}
+  .tl-link{font-size:12px;font-weight:700;color:var(--green);cursor:pointer;}
+
+  /* ---------- live trip ---------- */
+  .progress-wrap{margin-bottom:16px;}
+  .progress-top{display:flex; justify-content:space-between; font-size:12.5px; font-weight:700; margin-bottom:6px;}
+  .progress-top .pct{color:var(--green);}
+  .progress-bar{height:7px; background:var(--surface-2); border-radius:20px; overflow:hidden;}
+  .progress-fill{height:100%; background:var(--green); border-radius:20px; transition:width .4s ease;}
+
+  .map-card{
+    background:var(--surface-2); border-radius:16px; padding:14px; margin-bottom:16px;
+    min-height:100px; display:flex; flex-direction:column; justify-content:space-between;
+  }
+  .map-pin{
+    align-self:flex-start; background:var(--surface); padding:5px 10px; border-radius:20px;
+    font-size:12px; font-weight:700; color:var(--danger); display:flex; align-items:center; gap:4px;
+  }
+  .map-caption{font-size:11.5px; color:var(--ink-soft);}
+
+  .eyebrow-lbl{font-size:11px; font-weight:700; color:var(--ink-soft); text-transform:uppercase; letter-spacing:0.05em; margin-bottom:8px;}
+
+  .current-card{border:2px solid var(--gold); border-radius:16px; overflow:hidden; margin-bottom:18px;}
+  .current-photo{height:150px; position:relative;}
+  .badge-now{
+    position:absolute; top:10px; left:10px; background:var(--gold); color:#3a2708;
+    font-size:11.5px; font-weight:800; padding:4px 10px; border-radius:20px;
+  }
+  .current-info{position:absolute; left:14px; bottom:10px; color:#fff;}
+  .current-info h3{font-size:17px;font-weight:800;}
+  .current-info p{font-size:12px;opacity:0.9;}
+  .current-body{padding:14px;}
+  .current-body p{font-size:13px; color:var(--ink-soft); line-height:1.5; margin-bottom:12px;}
+  .action-row{display:flex; gap:10px;}
+  .action-row button{
+    flex:1; padding:12px; border-radius:12px; font-size:13.5px; font-weight:700; cursor:pointer; border:none;
+  }
+  .action-ghost{background:var(--surface-2); color:var(--ink);}
+  .action-solid{background:var(--green); color:#fff;}
+
+  .next-card{
+    background:var(--surface); border:1px solid var(--line); border-radius:14px; padding:12px;
+    display:flex; align-items:center; gap:12px; margin-bottom:18px; cursor:pointer;
+  }
+  .next-thumb{width:44px;height:44px;border-radius:10px;flex-shrink:0;}
+  .next-card h4{font-size:13.5px;font-weight:700;}
+  .next-card p{font-size:11.5px;color:var(--ink-soft);}
+
+  .stop-row{
+    display:flex; align-items:center; gap:12px; padding:12px; border-radius:12px; margin-bottom:8px;
+  }
+  .stop-row.done{background:var(--surface-2);}
+  .stop-num{
+    width:26px;height:26px;border-radius:50%; display:flex; align-items:center; justify-content:center;
+    font-size:12px; font-weight:800; flex-shrink:0;
+  }
+  .stop-num.done{background:var(--green); color:#fff;}
+  .stop-num.current{background:var(--gold); color:#3a2708;}
+  .stop-num.upcoming{background:var(--surface-2); color:var(--ink-soft); border:1px solid var(--line);}
+  .stop-row h4{font-size:13.5px; font-weight:600;}
+  .stop-row.done h4{text-decoration:line-through; color:var(--ink-soft);}
+  .stop-row p{font-size:11.5px;color:var(--ink-soft);}
+  .stop-key{font-size:11px; color:var(--gold-deep); font-weight:700; margin-left:auto; display:flex; align-items:center; gap:2px;}
+
+  .toast{
+    position:fixed; left:50%; top:40%; transform:translate(-50%,-50%) scale(0.8); z-index:2000;
+    background:linear-gradient(135deg,var(--gold),var(--gold-deep)); color:#3a2708; padding:26px 30px;
+    border-radius:20px; text-align:center; font-weight:800; font-size:16px; opacity:0; pointer-events:none;
+    transition:all .3s cubic-bezier(.2,1.4,.4,1); box-shadow:0 20px 40px rgba(0,0,0,0.25);
+  }
+  .toast.show{opacity:1; transform:translate(-50%,-50%) scale(1); pointer-events:auto;}
+  .toast .tic{font-size:34px; display:block; margin-bottom:6px;}
+
+  .complete-card{
+    background:linear-gradient(135deg,var(--green),var(--green-deep)); color:#fff; border-radius:18px;
+    padding:26px 20px; text-align:center; margin-bottom:18px;
+  }
+  .complete-card .em{font-size:34px;margin-bottom:8px;}
+  .complete-card h3{font-size:18px;margin-bottom:6px;}
+  .complete-card p{font-size:13px;opacity:0.9;}
+
+  /* ---------- profile ---------- */
+  .profile-hero{
+    background:linear-gradient(135deg,var(--green),var(--green-deep)); border-radius:20px;
+    padding:22px 18px; color:#fff; margin-bottom:18px;
+  }
+  .profile-top{display:flex; align-items:center; gap:12px; margin-bottom:16px;}
+  .avatar{
+    width:50px;height:50px;border-radius:14px;background:rgba(255,255,255,0.2);
+    display:flex;align-items:center;justify-content:center;font-weight:800;font-size:17px;flex-shrink:0;
+  }
+  .profile-top h3{font-size:16px;font-weight:800;}
+  .profile-top p{font-size:12px;opacity:0.85;}
+  .loc-tag{
+    display:inline-block; background:rgba(255,255,255,0.2); font-size:11px; padding:3px 9px;
+    border-radius:20px; margin-top:4px;
+  }
+  .profile-stats{display:grid; grid-template-columns:repeat(3,1fr); gap:8px;}
+  .profile-stats .st{background:rgba(255,255,255,0.14); border-radius:12px; padding:10px 6px; text-align:center;}
+  .profile-stats .st .n{font-size:17px;font-weight:800;}
+  .profile-stats .st .l{font-size:10.5px;opacity:0.85;}
+
+  .ach-row{display:flex; gap:10px; overflow-x:auto; padding-bottom:8px; scrollbar-width:none;}
+  .ach-row::-webkit-scrollbar{display:none;}
+  .ach-card{
+    flex-shrink:0; width:82px; text-align:center; background:var(--surface); border:1px solid var(--line);
+    border-radius:14px; padding:12px 8px;
+  }
+  .ach-card.locked{opacity:0.45;}
+  .ach-card.unlocked{border-color:var(--gold); background:var(--surface-2);}
+  .ach-card .aic{font-size:22px;margin-bottom:6px;}
+  .ach-card .al{font-size:10.5px;font-weight:600;line-height:1.3;}
+
+  .list-row{
+    display:flex; align-items:center; gap:12px; background:var(--surface); border:1px solid var(--line);
+    border-radius:14px; padding:14px; margin-bottom:10px; cursor:pointer;
+  }
+  .list-row .lic{width:34px;height:34px;border-radius:9px;background:var(--surface-2);display:flex;align-items:center;justify-content:center;font-size:15px;}
+  .list-row span.name{flex:1;font-size:13.5px;font-weight:600;}
+  .list-row .count{background:var(--green); color:#fff; font-size:11px; font-weight:700; padding:2px 8px; border-radius:20px;}
+  .list-row .chev{color:var(--ink-soft);}
+
+  .settings-label{font-size:11.5px; font-weight:700; color:var(--ink-soft); text-transform:uppercase; letter-spacing:0.05em; margin:20px 0 10px;}
+  .lang-item{
+    display:flex; align-items:center; gap:10px; padding:12px 14px; border-radius:12px; cursor:pointer;
+    background:var(--surface); border:1px solid var(--line); margin-bottom:8px; font-size:13.5px; font-weight:600;
+  }
+  .lang-item.selected{background:var(--surface-2); border-color:var(--green);}
+  .lang-item .chk{margin-left:auto; color:var(--green); font-weight:800;}
+  .toggle-row{
+    display:flex; align-items:center; justify-content:space-between; background:var(--surface);
+    border:1px solid var(--line); border-radius:14px; padding:14px; margin-bottom:10px;
+  }
+  .switch{width:42px;height:24px;border-radius:20px;background:var(--surface-2);position:relative;cursor:pointer; border:1px solid var(--line);}
+  .switch.on{background:var(--green); border-color:var(--green);}
+  .switch .knob{position:absolute; top:2px; left:2px; width:18px;height:18px;border-radius:50%;background:#fff; transition:transform .2s ease;}
+  .switch.on .knob{transform:translateX(18px);}
+
+  .empty-state{text-align:center; padding:50px 20px;}
+  .empty-state .eic{font-size:38px;margin-bottom:10px;}
+  .empty-state h3{font-size:16px;margin-bottom:6px;}
+  .empty-state p{font-size:13px; color:var(--ink-soft); margin-bottom:18px;}
+
+  .trip-item{
+    background:var(--surface); border:1px solid var(--line); border-radius:16px; padding:14px;
+    display:flex; align-items:center; gap:12px; margin-bottom:10px; cursor:pointer;
+  }
+  .trip-item .tphoto{width:52px;height:52px;border-radius:12px;flex-shrink:0;}
+  .trip-item h4{font-size:14px;font-weight:700;}
+  .trip-item p{font-size:11.5px;color:var(--ink-soft);}
+  .trip-badge{font-size:10.5px; font-weight:700; padding:3px 9px; border-radius:20px;}
+  .trip-badge.progress{background:var(--surface-2); color:var(--ink-soft);}
+  .trip-badge.done{background:var(--green); color:#fff;}
+
+  a:focus-visible, button:focus-visible, input:focus-visible{outline:2px solid var(--gold); outline-offset:2px;}
+</style>
+</head>
+<body>
+
+<div class="app-shell" id="appShell">
+
+  <!-- ============ HOME ============ -->
+  <section class="screen active" data-screen="home">
+    <div class="topbar">
+      <div class="brand">
+        <svg class="mark" viewBox="0 0 24 24"><path d="M12 2 L15 9 L22 9 L16 14 L18 21 L12 17 L6 21 L8 14 L2 9 L9 9 Z" fill="none" stroke="#dda23a" stroke-width="1.6"/></svg>
+        YO'LCHI
+      </div>
+      <button class="icon-btn" onclick="toggleDark()">🌙</button>
+    </div>
+    <div style="padding-top:6px;">
+      <div class="greet">Xush kelibsiz 👋</div>
+      <div class="hero-title">O'zbekistonni <span>AI bilan</span> kashf eting</div>
+
+      <div class="search-box" onclick="startChat()">
+        <span>🔍</span>
+        <span class="ph">Ideal kuningizni tasvirlab bering...</span>
+        <span class="ai-pill">✨ AI</span>
+      </div>
+
+      <div class="chip-row" id="chipRow">
+        <div class="chip active" data-chip="tarixiy">🏛️ Tarixiy joylar</div>
+        <div class="chip" data-chip="tabiat">🌿 Tabiat</div>
+        <div class="chip" data-chip="oilaviy">👨‍👩‍👧 Oilaviy</div>
+        <div class="chip" data-chip="taom">🍲 Taom</div>
+        <div class="chip" data-chip="xarid">🛍️ Xarid</div>
+      </div>
+
+      <div class="sec-title">Mashhur shaharlar</div>
+      <div class="city-grid" id="cityGridHome"></div>
+
+      <div class="stats-card" id="statsCardHome"></div>
+
+      <div class="sec-title">Nega YO'LCHI?</div>
+      <div class="why-grid">
+        <div class="why-card"><div class="ic">🤖</div><h4>AI reja tuzish</h4><p>15 soniyada shaxsiy marshrut</p></div>
+        <div class="why-card"><div class="ic">🗺️</div><h4>Yo'l ko'rsatish</h4><p>Optimallashtirilgan tartib</p></div>
+        <div class="why-card"><div class="ic">🔑</div><h4>Kalit yig'ish</h4><p>Har bir joydan sovg'a ol</p></div>
+        <div class="why-card"><div class="ic">📤</div><h4>Ulashish</h4><p>Rejani do'stlaringga yubor</p></div>
+      </div>
+
+      <button class="cta-btn" onclick="startChat()">⚡ AI bilan boshlash →</button>
+    </div>
+  </section>
+
+  <!-- ============ DISCOVER ============ -->
+  <section class="screen" data-screen="discover">
+    <div class="topbar"><h2>Kashfiyot</h2><button class="icon-btn" onclick="toggleDark()">🌙</button></div>
+    <div class="chip-row">
+      <div class="chip active">🏛️ Tarixiy joylar</div>
+      <div class="chip">🌿 Tabiat</div>
+      <div class="chip">👨‍👩‍👧 Oilaviy</div>
+      <div class="chip">🍲 Taom</div>
+    </div>
+    <div class="sec-title" style="margin-top:8px;">Barcha shaharlar</div>
+    <div class="city-grid" id="cityGridDiscover"></div>
+  </section>
+
+  <!-- ============ TRIPS ============ -->
+  <section class="screen" data-screen="trips">
+    <div class="topbar"><h2>Sayohatlarim</h2><button class="icon-btn" onclick="toggleDark()">🌙</button></div>
+    <div id="tripsList"></div>
+  </section>
+
+  <!-- ============ PROFILE ============ -->
+  <section class="screen" data-screen="profile">
+    <div class="topbar"><h2>Profil</h2><button class="icon-btn" onclick="toggleDark()">🌙</button></div>
+    <div class="profile-hero">
+      <div class="profile-top">
+        <div class="avatar">ME</div>
+        <div>
+          <h3>Mehmon</h3>
+          <p>mehmon@yolchi.uz</p>
+          <span class="loc-tag" id="profileCity">📍 Toshkent</span>
+        </div>
+      </div>
+      <div class="profile-stats" id="profileStats"></div>
+    </div>
+
+    <div class="sec-title" style="margin-top:6px;">🏆 Yutuqlar</div>
+    <div class="ach-row" id="achRow"></div>
+
+    <div style="margin-top:20px;">
+      <div class="list-row"><div class="lic">📑</div><span class="name">Saqlangan sayohatlar</span><span class="chev">›</span></div>
+      <div class="list-row"><div class="lic">❤️</div><span class="name">Sevimlilar</span><span class="chev">›</span></div>
+      <div class="list-row"><div class="lic">🏆</div><span class="name">Yutuqlar</span><span class="count" id="achCount">0</span></div>
+    </div>
+
+    <div class="settings-label">Sozlamalar</div>
+    <div id="langList"></div>
+    <div class="toggle-row">
+      <span style="font-size:13.5px;font-weight:600;">Tungi rejim</span>
+      <div class="switch" id="darkSwitch" onclick="toggleDark()"><div class="knob"></div></div>
+    </div>
+    <button class="cta-btn ghost" style="margin-top:6px;">📤 YO'LCHI'ni do'stlarga ulashish</button>
+  </section>
+
+  <!-- ============ CHAT ============ -->
+  <section class="screen" data-screen="chat">
+    <div class="topbar">
+      <div class="topbar-left"><button class="back-btn" onclick="goHome()">←</button><h2>AI Sayohat Yordamchisi</h2></div>
+      <button class="icon-btn" onclick="toggleDark()">🌙</button>
+    </div>
+    <div class="chat-body" id="chatBody"></div>
+  </section>
+
+  <!-- ============ ITINERARY (PLAN) ============ -->
+  <section class="screen" data-screen="itinerary">
+    <div class="topbar">
+      <div class="topbar-left"><button class="back-btn" onclick="goHome()">←</button><h2>Sayohat Rejasi</h2></div>
+      <button class="icon-btn" onclick="toggleDark()">🌙</button>
+    </div>
+    <div id="itineraryBody"></div>
+  </section>
+
+  <!-- ============ LIVE TRIP ============ -->
+  <section class="screen" data-screen="livetrip">
+    <div class="topbar">
+      <div class="topbar-left"><button class="back-btn" onclick="goHome()">←</button><h2>Jonli Sayohat</h2></div>
+      <button class="icon-btn" onclick="toggleDark()">🌙</button>
+    </div>
+    <div id="liveBody"></div>
+  </section>
+
+  <!-- ============ BOTTOM NAV ============ -->
+  <div class="bottom-nav" id="bottomNav">
+    <button data-tab="home" class="active" onclick="goTab('home')"><span class="ic">🏠</span>Bosh sahifa</button>
+    <button data-tab="discover" onclick="goTab('discover')"><span class="ic">🧭</span>Kashfiyot</button>
+    <button data-tab="trips" onclick="goTab('trips')"><span class="ic">📑</span>Sayohatlar</button>
+    <button data-tab="profile" onclick="goTab('profile')"><span class="ic">👤</span>Profil</button>
+  </div>
+
+  <div class="toast" id="toast"><span class="tic">🔑</span><span id="toastText">Kalit topildi! +1</span></div>
+</div>
+
+<script>
+/* ================= DATA ================= */
+const GRADIENTS = [
+  'linear-gradient(135deg,#1f6d4c,#123a28)',
+  'linear-gradient(135deg,#dda23a,#a86b1f)',
+  'linear-gradient(135deg,#2f8f6a,#1f6d4c)',
+  'linear-gradient(135deg,#c96b3e,#8a3f22)',
+  'linear-gradient(135deg,#3a7d94,#1f4b5c)'
+];
+
+const CITIES = [
+  {name:"Toshkent", emoji:"🏙️", count:6},
+  {name:"Samarqand", emoji:"🕌", count:5},
+  {name:"Buxoro", emoji:"🏰", count:5},
+  {name:"Xiva", emoji:"🏯", count:5},
+  {name:"Namangan", emoji:"⛰️", count:5}
+];
+
+const ITINERARIES = {
+  "Toshkent":[
+    {name:"Chorsu bozori", time:"09:00", dur:60, desc:"Shahar markazidagi eng qadimiy bozor — ziravorlar, mevalar va milliy mahsulotlar bilan to'la.", emoji:"🧺"},
+    {name:"Xast Imom majmuasi", time:"10:15", dur:45, desc:"Mintaqadagi muhim diniy majmua, qadimiy qo'lyozmalar saqlanadigan joy.", emoji:"🕌", travel:{min:8,km:1.2}},
+    {name:"Amir Temur maydoni", time:"11:15", dur:30, desc:"Shahar markazidagi bosh maydon, haykal va bog' bilan mashhur.", emoji:"🌳", travel:{min:8,km:2.4}},
+    {name:"O'zbekiston tarixi muzeyi", time:"12:00", dur:90, desc:"Mamlakat tarixi va madaniyatini o'rganish uchun mingdan ortiq eksponat.", emoji:"🏛️", travel:{min:8,km:2.7}},
+    {name:"Milliy choyxona", time:"13:45", dur:45, desc:"An'anaviy choyxonada ko'k choy va milliy taomlar bilan dam olish.", emoji:"🍵", travel:{min:8,km:1.7}},
+    {name:"Bo'zsuv bo'yi", time:"14:45", dur:40, desc:"Kanal bo'yidagi piyodalar hududi, kechki sayr uchun qulay.", emoji:"🚶", travel:{min:10,km:2.1}}
+  ],
+  "Samarqand":[
+    {name:"Registon maydoni", time:"09:00", dur:75, desc:"Shahar qalbi — uchta ulug'vor madrasa bir maydonda jamlangan.", emoji:"🕌"},
+    {name:"Shohi Zinda", time:"10:30", dur:50, desc:"Ko'k kafel bilan bezatilgan qadimiy maqbaralar majmuasi.", emoji:"🏛️", travel:{min:7,km:1.5}},
+    {name:"Bibixonim masjidi", time:"11:35", dur:40, desc:"Mintaqadagi eng yirik masjidlardan biri, ulkan gumbazlari bilan.", emoji:"🕌", travel:{min:6,km:1.1}},
+    {name:"Siyob bozori", time:"12:30", dur:45, desc:"Mahalliy mevalar, quritilgan mevalar va non turlari sotiladigan bozor.", emoji:"🍈", travel:{min:4,km:0.4}},
+    {name:"Ulug'bek observatoriyasi", time:"13:45", dur:50, desc:"O'rta asr astronomiyasi durdonasi, ilmiy asboblar qoldiqlari bilan.", emoji:"🔭", travel:{min:12,km:3.2}}
+  ],
+  "Buxoro":[
+    {name:"Labi Hovuz", time:"09:00", dur:45, desc:"Hovuz atrofidagi tarixiy maydon, choyxonalar bilan o'ralgan.", emoji:"💧"},
+    {name:"Ark qal'asi", time:"10:00", dur:60, desc:"Shahar hukmdorlarining qadimiy qarorgohi bo'lgan qal'a.", emoji:"🏯", travel:{min:9,km:1.4}},
+    {name:"Kalon minorasi", time:"11:15", dur:40, desc:"Shaharning eng baland va mashhur minorasi.", emoji:"🗼", travel:{min:6,km:0.9}},
+    {name:"Toqi Zargaron", time:"12:00", dur:35, desc:"Qadimiy savdo gumbazi, hozirda hunarmandchilik do'konlari joylashgan.", emoji:"🛍️", travel:{min:4,km:0.5}},
+    {name:"Milliy hunarmandchilik markazi", time:"12:45", dur:40, desc:"Mahalliy ustalarning naqsh va gilam ishlarini ko'rish mumkin.", emoji:"🧵", travel:{min:5,km:0.6}}
+  ],
+  "Xiva":[
+    {name:"Ichon-Qal'a darvozasi", time:"09:00", dur:30, desc:"Qadimiy shaharga kiraverishdagi asosiy darvoza.", emoji:"🚪"},
+    {name:"Kalta minor", time:"09:40", dur:35, desc:"Rangdor kafel bilan qoplangan, tugallanmagan mashhur minora.", emoji:"🗼", travel:{min:5,km:0.4}},
+    {name:"Tosh hovli saroyi", time:"10:25", dur:45, desc:"Xon saroyi — hashamatli ichki hovlilari bilan mashhur.", emoji:"🏰", travel:{min:6,km:0.5}},
+    {name:"Islom Xo'ja minorasi", time:"11:20", dur:35, desc:"Shahardagi eng baland minora, tepasidan shahar manzarasi ochiladi.", emoji:"🏔️", travel:{min:5,km:0.4}},
+    {name:"Mahalliy bozor", time:"12:05", dur:40, desc:"Mahalliy hunarmandchilik va milliy taomlar sotiladigan kichik bozor.", emoji:"🧺", travel:{min:4,km:0.3}}
+  ],
+  "Namangan":[
+    {name:"Uychi masjidi", time:"09:00", dur:40, desc:"Hududdagi qadimiy va faol masjidlardan biri.", emoji:"🕌"},
+    {name:"Xon saroyi", time:"10:00", dur:75, desc:"Qo'qon xonligiga oid tarixiy saroy, viloyat tarixi va me'morchiligi haqida ma'lumotlar.", emoji:"🏯", travel:{min:12,km:2.0}},
+    {name:"Namangan o'lkashunoslik muzeyi", time:"11:30", dur:60, desc:"Viloyat tabiati, tarixi va madaniyatiga bag'ishlangan eksponatlar.", emoji:"🏛️", travel:{min:15,km:2.6}},
+    {name:"Namangan oshxonasi", time:"12:45", dur:50, desc:"Mahalliy taomlar bilan tanishish uchun mashhur oshxona.", emoji:"🍛", travel:{min:8,km:1.3}},
+    {name:"Namangan bozori", time:"13:45", dur:60, desc:"Mahalliy mahsulotlar va hunarmandchilik buyumlari sotiladigan bozor.", emoji:"🧺", travel:{min:6,km:0.8}}
+  ]
+};
+
+const CHAT_STEPS = [
+  {ai:"Assalomu alaykum! 👋 Men sizning shaxsiy AI sayohat yordamchingizman. Sizga mos marshrut tuzib beraman. Boshlaymizmi?", field:null, type:'single', options:[{label:"Salom",value:"Salom"}]},
+  {ai:"Qaysi shaharda sayohat qilmoqchisiz? 🗺️", field:'city', type:'single', options: CITIES.map(c=>({label:c.emoji+" "+c.name, value:c.name}))},
+  {ai:"Ajoyib! Sayohat uchun necha soatingiz bor? ⏰", field:'hours', type:'single', options:[{label:"3 soat",value:"3 soat"},{label:"6 soat",value:"6 soat"},{label:"Butun kun",value:"Butun kun"}]},
+  {ai:"Byudjet qanday? 💰", field:'budget', type:'single', options:[{label:"Tejamkor",value:"Tejamkor"},{label:"O'rtacha",value:"O'rtacha"},{label:"Premium",value:"Premium"}]},
+  {ai:"Qanday harakat qilasiz? 🚶", field:'transport', type:'single', options:[{label:"Piyoda",value:"Piyoda"},{label:"Avtomobil",value:"Avtomobil"},{label:"Jamoat transporti",value:"Jamoat transporti"}]},
+  {ai:"Namoz vaqtlarini hisobga olishim kerakmi? 🕌", field:'prayer', type:'single', options:[{label:"Ha, kerak",value:"Ha, kerak"},{label:"Kerak emas",value:"Kerak emas"}]},
+  {ai:"Oziq-ovqat afzalliklaringiz? 🍽️ (bir nechtasini tanlashingiz mumkin)", field:'food', type:'multi', options:[{label:"Milliy taom",value:"Milliy taom"},{label:"Vegetarian",value:"Vegetarian"},{label:"Tez tayyor",value:"Tez tayyor"},{label:"Farqi yo'q",value:"Farqi yo'q"}]}
+];
+
+/* ================= STATE ================= */
+const state = {
+  keys: 0,
+  trips: [],   // {id, city, stops:[{...,status}], currentIndex, completed}
+  activeTripId: null,
+  chatStep: 0,
+  chatAnswers: {},
+  history: ['home']
+};
+
+/* ================= HELPERS ================= */
+function grad(i){ return GRADIENTS[i % GRADIENTS.length]; }
+function uid(){ return 'id-'+Date.now()+'-'+Math.random().toString(36).slice(2,7); }
+
+function locationPhotoHTML(emoji, idx, extraStyle=''){
+  return `<div style="background:${grad(idx)};display:flex;align-items:center;justify-content:center;font-size:32px;${extraStyle}">${emoji}</div>`;
+}
+
+/* ================= NAV ================= */
+function showScreen(name){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.querySelector(`.screen[data-screen="${name}"]`).classList.add('active');
+  const tabScreens = ['home','discover','trips','profile'];
+  document.getElementById('bottomNav').style.display = tabScreens.includes(name) ? 'flex' : 'none';
+  if(tabScreens.includes(name)){
+    document.querySelectorAll('.bottom-nav button').forEach(b=>b.classList.toggle('active', b.dataset.tab===name));
+  }
+  window.scrollTo({top:0});
+}
+function goTab(name){ state.history=[name]; showScreen(name); renderAll(); }
+function goHome(){ state.history=['home']; showScreen('home'); renderAll(); }
+function goScreen(name){ state.history.push(name); showScreen(name); }
+
+/* ================= DARK MODE ================= */
+function toggleDark(){
+  const html = document.documentElement;
+  const isDark = html.getAttribute('data-theme') === 'dark';
+  html.setAttribute('data-theme', isDark ? 'light' : 'dark');
+  document.getElementById('darkSwitch').classList.toggle('on', !isDark);
+}
+
+/* ================= HOME / DISCOVER RENDER ================= */
+function renderCityGrid(containerId){
+  const el = document.getElementById(containerId);
+  el.innerHTML = CITIES.map((c,i)=>`
+    <div class="city-card" style="background:${grad(i)}" onclick="quickStartCity('${c.name}')">
+      <div><div class="cname">${c.name}</div><div class="ccount">📍 ${c.count} joy</div></div>
+    </div>`).join('');
+}
+
+function renderStatsHome(){
+  const cities = new Set(state.trips.map(t=>t.city)).size;
+  document.getElementById('statsCardHome').innerHTML = `
+    <div class="stat"><div class="num">${state.trips.length}</div><div class="lbl">Sayohatlar</div></div>
+    <div class="stat"><div class="num">${state.keys}</div><div class="lbl">Kalitlar</div></div>
+    <div class="stat"><div class="num">${cities}</div><div class="lbl">Shaharlar</div></div>`;
+}
+
+document.getElementById('chipRow').addEventListener('click', e=>{
+  const chip = e.target.closest('.chip');
+  if(!chip) return;
+  document.querySelectorAll('#chipRow .chip').forEach(c=>c.classList.remove('active'));
+  chip.classList.add('active');
+});
+
+/* ================= QUICK START (direct from city card) ================= */
+function quickStartCity(city){
+  const trip = createTrip(city);
+  state.activeTripId = trip.id;
+  renderItinerary(trip);
+  goScreen('itinerary');
+}
+
+function createTrip(city){
+  const stops = ITINERARIES[city].map((s,i)=>({...s, status: i===0?'upcoming':'upcoming'}));
+  const trip = {id:uid(), city, stops, currentIndex:0, started:false, completed:false, createdAt:new Date()};
+  state.trips.unshift(trip);
+  return trip;
+}
+
+/* ================= CHAT ================= */
+function startChat(){
+  state.chatStep = 0;
+  state.chatAnswers = {};
+  document.getElementById('chatBody').innerHTML='';
+  goScreen('chat');
+  askStep(0);
+}
+
+function appendBubble(html, sender){
+  const wrap = document.createElement('div');
+  wrap.className = 'bubble-row ' + (sender==='user'?'user':'');
+  wrap.innerHTML = sender==='ai'
+    ? `<div class="avatar-mini">🧭</div><div class="bubble ai">${html}</div>`
+    : `<div class="bubble user">${html}</div>`;
+  document.getElementById('chatBody').appendChild(wrap);
+  wrap.scrollIntoView({behavior:'smooth', block:'end'});
+  return wrap;
+}
+
+function askStep(i){
+  if(i >= CHAT_STEPS.length){ finishChat(); return; }
+  const step = CHAT_STEPS[i];
+  const typingRow = appendBubble(`<div class="typing"><span></span><span></span><span></span></div>`, 'ai');
+  setTimeout(()=>{
+    typingRow.remove();
+    const optsHTML = step.type==='multi'
+      ? `<div class="option-wrap" id="optWrap">${step.options.map(o=>`<div class="option-chip" data-val="${o.value}">${o.label}</div>`).join('')}<div class="confirm-btn" id="confirmBtn" style="display:none;" onclick="submitMulti(${i})">Davom etish</div></div>`
+      : `<div class="option-wrap" id="optWrap">${step.options.map(o=>`<div class="option-chip" data-val="${o.value}">${o.label}</div>`).join('')}</div>`;
+    appendBubble(step.ai + optsHTML, 'ai');
+
+    if(step.type==='single'){
+      document.querySelectorAll('#optWrap .option-chip').forEach(chip=>{
+        chip.onclick = ()=>{
+          document.getElementById('optWrap').querySelectorAll('.option-chip').forEach(c=>c.style.pointerEvents='none');
+          appendBubble(chip.textContent, 'user');
+          if(step.field) state.chatAnswers[step.field] = chip.dataset.val;
+          setTimeout(()=>askStep(i+1), 450);
+        };
+      });
+    } else {
+      document.querySelectorAll('#optWrap .option-chip').forEach(chip=>{
+        chip.onclick = ()=>{
+          chip.classList.toggle('selected');
+          const any = document.querySelectorAll('#optWrap .option-chip.selected').length>0;
+          document.getElementById('confirmBtn').style.display = any ? 'inline-block':'none';
+        };
+      });
+    }
+  }, 550);
+}
+
+function submitMulti(i){
+  const selected = [...document.querySelectorAll('#optWrap .option-chip.selected')].map(c=>c.dataset.val);
+  document.querySelectorAll('#optWrap .option-chip, #confirmBtn').forEach(c=>c.style.pointerEvents='none');
+  appendBubble(selected.join(', '), 'user');
+  state.chatAnswers[CHAT_STEPS[i].field] = selected;
+  setTimeout(()=>askStep(i+1), 450);
+}
+
+function finishChat(){
+  const city = state.chatAnswers.city || CITIES[0].name;
+  const typingRow = appendBubble(`<div class="typing"><span></span><span></span><span></span></div>`, 'ai');
+  setTimeout(()=>{
+    typingRow.remove();
+    appendBubble(`Zo'r! ${city} bo'yicha ${state.chatAnswers.hours || ''} sayohatingizni tayyorladim ✨`, 'ai');
+    setTimeout(()=>{
+      const trip = createTrip(city);
+      state.activeTripId = trip.id;
+      renderItinerary(trip);
+      goScreen('itinerary');
+    }, 700);
+  }, 900);
+}
+
+/* ================= ITINERARY (PLAN) SCREEN ================= */
+function totalKm(stops){ return stops.reduce((s,x)=> s + (x.travel? x.travel.km:0), 0).toFixed(1); }
+function totalDur(stops){ const mins = stops.reduce((s,x)=>s+x.dur+(x.travel?x.travel.min:0),0); return (mins/60).toFixed(1); }
+
+function renderItinerary(trip){
+  const el = document.getElementById('itineraryBody');
+  el.innerHTML = `
+    <div class="cover" style="background:${grad(CITIES.findIndex(c=>c.name===trip.city))}">
+      <h3 style="font-size:19px;">${trip.city} — ${totalDur(trip.stops)} soatlik sayohat</h3>
+      <div class="meta-row">
+        <span class="meta-tag">📍 ${trip.city}</span>
+        <span class="meta-tag">⏱ ${totalDur(trip.stops)} soat</span>
+        <span class="meta-tag">📷 ${trip.stops.length} to'xtash</span>
+        <span class="meta-tag">📏 ${totalKm(trip.stops)} km</span>
+      </div>
+    </div>
+    <div class="tag-row">
+      <span class="tag-soft">☀️ Premium</span>
+      <span class="tag-soft">🔀 Aralash</span>
+    </div>
+    <div class="tabs2">
+      <button class="active" onclick="event.target.parentElement.querySelectorAll('button').forEach(b=>b.classList.remove('active'));event.target.classList.add('active');document.getElementById('tlView').style.display='block';document.getElementById('mapView').style.display='none';">🕐 Timeline</button>
+      <button onclick="event.target.parentElement.querySelectorAll('button').forEach(b=>b.classList.remove('active'));event.target.classList.add('active');document.getElementById('tlView').style.display='none';document.getElementById('mapView').style.display='block';">📍 Xarita</button>
+    </div>
+    <div id="tlView" class="timeline">
+      ${trip.stops.map((s,i)=>`
+        ${s.travel ? `<div class="tl-travel">🚗 ${s.travel.min} daq · ${s.travel.km} km</div>` : ''}
+        <div class="tl-item">
+          <div class="tl-dot">${i+1}</div>
+          <div class="tl-card">
+            <div class="tl-photo">${locationPhotoHTML(s.emoji, i, 'height:90px;')}</div>
+            <div class="tl-body">
+              <h4>${s.name}</h4>
+              <div class="tl-time">🕐 ${s.time} · ${s.dur} daq</div>
+              <div class="tl-desc">${s.desc}</div>
+              <div class="tl-link">📍 Xaritada ko'rish ›</div>
+            </div>
+          </div>
+        </div>`).join('')}
+    </div>
+    <div id="mapView" class="map-card" style="display:none;">
+      <span class="map-pin">📍 ${trip.city}</span>
+      <span class="map-caption">${trip.stops.length} to'xtash · interaktiv xarita tez orada</span>
+    </div>
+    <button class="cta-btn" onclick="beginLiveTrip('${trip.id}')">🚀 Jonli sayohatni boshlash</button>
+  `;
+}
+
+/* ================= LIVE TRIP SCREEN ================= */
+function beginLiveTrip(tripId){
+  const trip = state.trips.find(t=>t.id===tripId);
+  trip.started = true;
+  trip.stops[0].status = 'current';
+  renderLiveTrip(trip);
+  goScreen('livetrip');
+}
+
+function renderLiveTrip(trip){
+  const el = document.getElementById('liveBody');
+  const done = trip.stops.filter(s=>s.status==='done').length;
+  const pct = Math.round((done/trip.stops.length)*100);
+
+  if(trip.completed){
+    el.innerHTML = `
+      <div class="complete-card">
+        <div class="em">🎉</div>
+        <h3>Barcha kalitlar yig'ildi!</h3>
+        <p>${trip.city} bo'yicha ${trip.stops.length} ta joyni muvaffaqiyatli ziyorat qildingiz.</p>
+      </div>
+      <button class="cta-btn" onclick="goHome()">Bosh sahifaga qaytish</button>
+    `;
+    return;
+  }
+
+  const current = trip.stops[trip.currentIndex];
+  const next = trip.stops[trip.currentIndex+1];
+  const cityIdx = CITIES.findIndex(c=>c.name===trip.city);
+
+  el.innerHTML = `
+    <div class="progress-wrap">
+      <div class="progress-top"><span>${done} / ${trip.stops.length} joy</span><span class="pct">${pct}%</span></div>
+      <div class="progress-bar"><div class="progress-fill" style="width:${pct}%"></div></div>
+    </div>
+    <div class="map-card">
+      <span class="map-pin">📍 ${trip.city}</span>
+      <span class="map-caption">${trip.stops.length} to'xtash · markerga bosing</span>
+    </div>
+    <div class="eyebrow-lbl">Hozirgi joy</div>
+    <div class="current-card">
+      <div class="current-photo" style="background:${grad(cityIdx+trip.currentIndex)}">
+        <span class="badge-now">⭐ Hozirgi joy</span>
+        <div class="current-info"><h3>${current.name}</h3><p>${current.time} · ${current.dur} daq</p></div>
+      </div>
+      <div class="current-body">
+        <p>${current.desc}</p>
+        <div class="action-row">
+          <button class="action-ghost">🧭 Yo'l ko'rsatish</button>
+          <button class="action-solid" onclick="completeStop('${trip.id}')">✅ Borildi!</button>
+        </div>
+      </div>
+    </div>
+    ${next ? `
+    <div class="eyebrow-lbl">Keyingi joy</div>
+    <div class="next-card">
+      <div class="next-thumb" style="background:${grad(cityIdx+trip.currentIndex+1)};display:flex;align-items:center;justify-content:center;font-size:18px;">${next.emoji}</div>
+      <div><h4>${next.name}</h4><p>🚶 ${next.dur} daq · ${next.time}</p></div>
+    </div>` : ''}
+    <div class="eyebrow-lbl">Barcha to'xtashlar</div>
+    ${trip.stops.map((s,i)=>`
+      <div class="stop-row ${s.status==='done'?'done':''}">
+        <div class="stop-num ${s.status}">${s.status==='done'?'✓':i+1}</div>
+        <div><h4>${s.name}</h4><p>${s.time}</p></div>
+        ${s.status==='done' ? `<span class="stop-key">🔑 +1</span>` : ''}
+      </div>`).join('')}
+  `;
+}
+
+function completeStop(tripId){
+  const trip = state.trips.find(t=>t.id===tripId);
+  trip.stops[trip.currentIndex].status = 'done';
+  state.keys += 1;
+  showToast();
+  if(trip.currentIndex + 1 < trip.stops.length){
+    trip.currentIndex += 1;
+    trip.stops[trip.currentIndex].status = 'current';
+  } else {
+    trip.completed = true;
+  }
+  setTimeout(()=>{ renderLiveTrip(trip); renderAll(); }, 900);
+}
+
+function showToast(){
+  const t = document.getElementById('toast');
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'), 1100);
+}
+
+/* ================= TRIPS TAB ================= */
+function renderTrips(){
+  const el = document.getElementById('tripsList');
+  if(state.trips.length === 0){
+    el.innerHTML = `
+      <div class="empty-state">
+        <div class="eic">🧳</div>
+        <h3>Hali sayohatlaringiz yo'q</h3>
+        <p>Bosh sahifadan yangi sayohat rejalashtiring.</p>
+        <button class="cta-btn" onclick="goTab('home')">Yangi sayohat boshlash</button>
+      </div>`;
+    return;
+  }
+  el.innerHTML = state.trips.map((t,idx)=>{
+    const done = t.stops.filter(s=>s.status==='done').length;
+    const cityIdx = CITIES.findIndex(c=>c.name===t.city);
+    const badge = t.completed ? `<span class="trip-badge done">Yakunlandi</span>` : `<span class="trip-badge progress">${done}/${t.stops.length}</span>`;
+    return `<div class="trip-item" onclick="openTrip('${t.id}')">
+      <div class="tphoto" style="background:${grad(cityIdx)};display:flex;align-items:center;justify-content:center;font-size:20px;">${CITIES[cityIdx].emoji}</div>
+      <div style="flex:1;"><h4>${t.city}</h4><p>${t.stops.length} to'xtash · ${totalDur(t.stops)} soat</p></div>
+      ${badge}
+    </div>`;
+  }).join('');
+}
+
+function openTrip(id){
+  const trip = state.trips.find(t=>t.id===id);
+  state.activeTripId = id;
+  if(trip.started && !trip.completed){ renderLiveTrip(trip); goScreen('livetrip'); }
+  else { renderItinerary(trip); goScreen('itinerary'); }
+}
+
+/* ================= PROFILE ================= */
+const ACHIEVEMENTS = [
+  {key:'first', icon:'🚀', label:'Birinchi qadam', test:s=>s.trips.length>=1},
+  {key:'city1', icon:'🏙️', label:'Tadqiqotchi', test:s=>new Set(s.trips.map(t=>t.city)).size>=1},
+  {key:'keys5', icon:'🔑', label:'5 kalit', test:s=>s.keys>=5},
+  {key:'done1', icon:'🏁', label:'Birinchi yakun', test:s=>s.trips.some(t=>t.completed)},
+  {key:'keys10', icon:'👑', label:'Kalitlar ustasi', test:s=>s.keys>=10}
+];
+
+function renderProfile(){
+  const cities = new Set(state.trips.map(t=>t.city)).size;
+  document.getElementById('profileStats').innerHTML = `
+    <div class="st"><div class="n">${state.trips.length}</div><div class="l">Sayohatlar</div></div>
+    <div class="st"><div class="n">${state.keys}</div><div class="l">Kalitlar</div></div>
+    <div class="st"><div class="n">${cities}</div><div class="l">Shaharlar</div></div>`;
+
+  const unlockedCount = ACHIEVEMENTS.filter(a=>a.test(state)).length;
+  document.getElementById('achCount').textContent = unlockedCount;
+  document.getElementById('achRow').innerHTML = ACHIEVEMENTS.map(a=>{
+    const unlocked = a.test(state);
+    return `<div class="ach-card ${unlocked?'unlocked':'locked'}"><div class="aic">${unlocked?a.icon:'🔒'}</div><div class="al">${a.label}</div></div>`;
+  }).join('');
+
+  const langs = [{code:'uz',label:"O'zbekcha"},{code:'en',label:'English'},{code:'ru',label:'Русский'}];
+  if(!state.lang) state.lang='uz';
+  document.getElementById('langList').innerHTML = langs.map(l=>`
+    <div class="lang-item ${state.lang===l.code?'selected':''}" onclick="setLang('${l.code}')">
+      <span>${l.label}</span>${state.lang===l.code?'<span class="chk">✓</span>':''}
+    </div>`).join('');
+}
+function setLang(code){ state.lang = code; renderProfile(); }
+
+/* ================= RENDER ALL ================= */
+function renderAll(){
+  renderCityGrid('cityGridHome');
+  renderCityGrid('cityGridDiscover');
+  renderStatsHome();
+  renderTrips();
+  renderProfile();
+}
+renderAll();
+</script>
+</body>
+</html>
