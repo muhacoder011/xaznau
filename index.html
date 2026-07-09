@@ -1458,6 +1458,369 @@
                 gap: 6px;
             }
         }
+
+        /* ========== GLASSMORPHISM THEME ========== */
+        html.glass-theme {
+            --glass-bg: rgba(255, 255, 255, 0.1);
+            --glass-border: rgba(255, 255, 255, 0.2);
+            --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+            --glass-blur: 14px;
+        }
+
+        html.glass-theme .app-shell {
+            background: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
+        }
+
+        html.glass-theme .app-shell::before {
+            content: '';
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: 
+                radial-gradient(ellipse at 20% 20%, rgba(102, 126, 234, 0.15) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 80%, rgba(118, 75, 162, 0.15) 0%, transparent 50%),
+                radial-gradient(ellipse at 50% 50%, rgba(238, 130, 238, 0.05) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        html.glass-theme .screen {
+            position: relative;
+            z-index: 1;
+        }
+
+        html.glass-theme .bottom-nav {
+            background: var(--glass-bg) !important;
+            backdrop-filter: blur(var(--glass-blur)) !important;
+            -webkit-backdrop-filter: blur(var(--glass-blur)) !important;
+            border-top: 1px solid var(--glass-border) !important;
+        }
+
+        html.glass-theme .city-card,
+        html.glass-theme .shop-card,
+        html.glass-theme .why-card,
+        html.glass-theme .bubble.ai,
+        html.glass-theme .tl-card,
+        html.glass-theme .current-card,
+        html.glass-theme .next-card,
+        html.glass-theme .stats-card,
+        html.glass-theme .list-row,
+        html.glass-theme .lang-item,
+        html.glass-theme .toggle-row,
+        html.glass-theme .trip-item,
+        html.glass-theme .ach-card,
+        html.glass-theme .search-box,
+        html.glass-theme .cover .meta-tag,
+        html.glass-theme .chip,
+        html.glass-theme .option-chip {
+            background: var(--glass-bg) !important;
+            backdrop-filter: blur(var(--glass-blur)) !important;
+            -webkit-backdrop-filter: blur(var(--glass-blur)) !important;
+            border: 1px solid var(--glass-border) !important;
+            box-shadow: var(--glass-shadow) !important;
+        }
+
+        html.glass-theme .topbar,
+        html.glass-theme .profile-hero,
+        html.glass-theme .sub-banner,
+        html.glass-theme .complete-card,
+        html.glass-theme .star-balance {
+            background: var(--glass-bg) !important;
+            backdrop-filter: blur(var(--glass-blur)) !important;
+            -webkit-backdrop-filter: blur(var(--glass-blur)) !important;
+            border: 1px solid var(--glass-border) !important;
+            box-shadow: var(--glass-shadow) !important;
+            border-radius: var(--radius);
+        }
+
+        html.glass-theme .timeline::before {
+            background: var(--glass-border);
+        }
+
+        html.glass-theme .tl-dot {
+            background: var(--glass-bg);
+            border-color: var(--glass-border);
+        }
+
+        html.glass-theme .back-btn,
+        html.glass-theme .icon-btn {
+            background: var(--glass-bg) !important;
+            border: 1px solid var(--glass-border) !important;
+            color: #fff !important;
+        }
+
+        html.glass-theme .tabs2 {
+            background: var(--glass-bg) !important;
+        }
+
+        html.glass-theme .tabs2 button.active {
+            background: rgba(255, 255, 255, 0.2) !important;
+            color: #fff !important;
+        }
+
+        html.glass-theme .chip.active {
+            background: rgba(255, 255, 255, 0.25) !important;
+            border-color: rgba(255, 255, 255, 0.4) !important;
+            color: #fff !important;
+        }
+
+        html.glass-theme .bottom-nav button.active {
+            color: #fff !important;
+        }
+
+        html.glass-theme .bottom-nav button {
+            color: rgba(255,255,255,0.5) !important;
+        }
+
+        html.glass-theme .brand,
+        html.glass-theme .hero-title,
+        html.glass-theme .sec-title,
+        html.glass-theme h1, html.glass-theme h2, html.glass-theme h3, html.glass-theme h4,
+        html.glass-theme .why-card h4,
+        html.glass-theme .shop-card .sinfo h4,
+        html.glass-theme .empty-state h3 {
+            color: #fff !important;
+        }
+
+        html.glass-theme .greet,
+        html.glass-theme .ph,
+        html.glass-theme .lbl,
+        html.glass-theme .ccount,
+        html.glass-theme p,
+        html.glass-theme .tl-desc,
+        html.glass-theme .tl-time,
+        html.glass-theme .shop-card .sinfo p,
+        html.glass-theme .why-card p,
+        html.glass-theme .empty-state p,
+        html.glass-theme .stats-card .stat .lbl {
+            color: rgba(255, 255, 255, 0.75) !important;
+        }
+
+        html.glass-theme .stats-card .stat .num {
+            color: #fff !important;
+        }
+
+        html.glass-theme .cta-btn {
+            background: rgba(255, 255, 255, 0.15) !important;
+            backdrop-filter: blur(var(--glass-blur)) !important;
+            border: 1px solid rgba(255, 255, 255, 0.25) !important;
+            color: #fff !important;
+        }
+
+        html.glass-theme .cta-btn:hover {
+            background: rgba(255, 255, 255, 0.25) !important;
+        }
+
+        html.glass-theme .cta-btn.ghost {
+            background: rgba(255, 255, 255, 0.06) !important;
+        }
+
+        html.glass-theme .action-solid {
+            background: rgba(255, 255, 255, 0.2) !important;
+            color: #fff !important;
+        }
+
+        html.glass-theme .action-ghost {
+            background: rgba(255, 255, 255, 0.08) !important;
+            color: #fff !important;
+        }
+
+        html.glass-theme .badge-now {
+            background: rgba(255, 215, 0, 0.7) !important;
+            color: #1a1a2e !important;
+        }
+
+        html.glass-theme .current-info h3,
+        html.glass-theme .current-info p {
+            color: #fff !important;
+            text-shadow: 0 2px 8px rgba(0,0,0,0.3);
+        }
+
+        html.glass-theme .stop-row.done {
+            background: rgba(255, 255, 255, 0.06) !important;
+        }
+
+        html.glass-theme .stop-key {
+            color: #ffd700 !important;
+        }
+
+        html.glass-theme .sub-banner {
+            color: #fff !important;
+        }
+
+        html.glass-theme .toast {
+            background: rgba(255, 255, 255, 0.15) !important;
+            backdrop-filter: blur(20px) !important;
+            -webkit-backdrop-filter: blur(20px) !important;
+            border: 1px solid rgba(255, 255, 255, 0.25) !important;
+            color: #fff !important;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3) !important;
+        }
+
+        html.glass-theme .progress-bar {
+            background: rgba(255, 255, 255, 0.1) !important;
+        }
+
+        html.glass-theme .progress-fill {
+            background: linear-gradient(90deg, #667eea, #764ba2) !important;
+        }
+
+        html.glass-theme .cover {
+            border: 1px solid var(--glass-border);
+        }
+
+        html.glass-theme .map-card {
+            background: var(--glass-bg) !important;
+            backdrop-filter: blur(var(--glass-blur)) !important;
+            border: 1px solid var(--glass-border) !important;
+        }
+
+        html.glass-theme .map-pin {
+            background: rgba(255,255,255,0.15) !important;
+        }
+
+        html.glass-theme .map-caption {
+            color: rgba(255,255,255,0.7) !important;
+        }
+
+        html.glass-theme .sicon {
+            background: rgba(255,255,255,0.1) !important;
+        }
+
+        html.glass-theme .profile-hero {
+            background: var(--glass-bg) !important;
+        }
+
+        html.glass-theme .avatar {
+            background: rgba(255,255,255,0.15) !important;
+        }
+
+        html.glass-theme .profile-stats .st {
+            background: rgba(255,255,255,0.08) !important;
+        }
+
+        html.glass-theme .ach-card.unlocked {
+            border-color: rgba(255, 215, 0, 0.5) !important;
+        }
+
+        html.glass-theme .switch {
+            background: rgba(255,255,255,0.15) !important;
+            border-color: rgba(255,255,255,0.2) !important;
+        }
+
+        html.glass-theme .switch.on {
+            background: rgba(102, 126, 234, 0.6) !important;
+        }
+
+        html.glass-theme .loc-tag {
+            background: rgba(255,255,255,0.12) !important;
+        }
+
+        html.glass-theme .shop-card button:not(.bought) {
+            background: rgba(255, 255, 255, 0.2) !important;
+            color: #fff !important;
+        }
+
+        html.glass-theme .shop-card .sbadge.owned {
+            background: rgba(255,255,255,0.08) !important;
+            color: rgba(255,255,255,0.6) !important;
+        }
+
+        html.glass-theme .shop-card .sbadge:not(.owned) {
+            background: rgba(102, 126, 234, 0.4) !important;
+        }
+
+        html.glass-theme .tag-soft {
+            background: rgba(255,255,255,0.08) !important;
+            color: rgba(255,255,255,0.7) !important;
+        }
+
+        html.glass-theme .current-photo {
+            border-bottom: 1px solid var(--glass-border);
+        }
+
+        html.glass-theme .next-thumb {
+            border: 1px solid var(--glass-border) !important;
+        }
+
+        html.glass-theme .stop-num.upcoming {
+            background: rgba(255,255,255,0.08) !important;
+            border-color: rgba(255,255,255,0.15) !important;
+            color: rgba(255,255,255,0.6) !important;
+        }
+
+        html.glass-theme .stop-num.current {
+            background: rgba(255, 215, 0, 0.6) !important;
+            color: #1a1a2e !important;
+        }
+
+        html.glass-theme .stop-num.done {
+            background: rgba(102, 126, 234, 0.5) !important;
+            color: #fff !important;
+        }
+
+        html.glass-theme .trip-badge.progress {
+            background: rgba(255,255,255,0.1) !important;
+            color: rgba(255,255,255,0.7) !important;
+        }
+
+        html.glass-theme .trip-badge.done {
+            background: rgba(102, 126, 234, 0.4) !important;
+            color: #fff !important;
+        }
+
+        html.glass-theme input,
+        html.glass-theme select,
+        html.glass-theme textarea {
+            background: rgba(255,255,255,0.08) !important;
+            border: 1px solid rgba(255,255,255,0.15) !important;
+            color: #fff !important;
+        }
+
+        html.glass-theme input::placeholder,
+        html.glass-theme textarea::placeholder {
+            color: rgba(255,255,255,0.5) !important;
+        }
+
+        html.glass-theme select option {
+            background: #302b63 !important;
+            color: #fff !important;
+        }
+
+        html.glass-theme .star-balance .big {
+            color: #ffd700 !important;
+        }
+
+        html.glass-theme .star-balance .lbl {
+            color: rgba(255,255,255,0.7) !important;
+        }
+
+        html.glass-theme .settings-label {
+            color: rgba(255,255,255,0.5) !important;
+        }
+
+        html.glass-theme .eyebrow-lbl {
+            color: rgba(255,255,255,0.5) !important;
+        }
+
+        html.glass-theme .ai-pill {
+            background: rgba(102, 126, 234, 0.5) !important;
+        }
+
+        html.glass-theme .security-card {
+            background: var(--glass-bg) !important;
+            backdrop-filter: blur(var(--glass-blur)) !important;
+            border: 1px solid var(--glass-border) !important;
+        }
+
+        html.glass-theme .admin-panel-bg {
+            background: var(--glass-bg) !important;
+        }
+
+        html.glass-theme .admin-card {
+            background: var(--glass-bg) !important;
+            backdrop-filter: blur(var(--glass-blur)) !important;
+            border: 1px solid var(--glass-border) !important;
+        }
     </style>
 </head>
 
@@ -1743,38 +2106,38 @@
             "Toshkent": [
                 { name: "Chorsu bozori", time: "09:00", dur: 60, desc: "Shahar markazidagi eng qadimiy bozor — ziravorlar, mevalar va milliy mahsulotlar bilan to'la.", emoji: "🧺", image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/47/Chorsu_Market_general_view.jpg/500px-Chorsu_Market_general_view.jpg' },
                 { name: "Xast Imom majmuasi", time: "10:15", dur: 45, desc: "Mintaqadagi muhim diniy majmua, qadimiy qo'lyozmalar saqlanadigan joy.", emoji: "🕌", travel: { min: 8, km: 1.2 }, image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/34/Barakhan_Madrasah_Tashkent.jpg/500px-Barakhan_Madrasah_Tashkent.jpg' },
-                { name: "Amir Temur maydoni", time: "11:15", dur: 30, desc: "Shahar markazidagi bosh maydon, haykal va bog' bilan mashhur.", emoji: "🌳", travel: { min: 8, km: 2.4 } },
-                { name: "O'zbekiston tarixi muzeyi", time: "12:00", dur: 90, desc: "Mamlakat tarixi va madaniyatini o'rganish uchun mingdan ortiq eksponat.", emoji: "🏛️", travel: { min: 8, km: 2.7 } },
-                { name: "Milliy choyxona", time: "13:45", dur: 45, desc: "An'anaviy choyxonada ko'k choy va milliy taomlar bilan dam olish.", emoji: "🍵", travel: { min: 8, km: 1.7 } },
-                { name: "Bo'zsuv bo'yi", time: "14:45", dur: 40, desc: "Kanal bo'yidagi piyodalar hududi, kechki sayr uchun qulay.", emoji: "🚶", travel: { min: 10, km: 2.1 } }
+                { name: "Amir Temur maydoni", time: "11:15", dur: 30, desc: "Shahar markazidagi bosh maydon, haykal va bog' bilan mashhur.", emoji: "🌳", travel: { min: 8, km: 2.4 }, image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/ff/Amir_Temur_Square.jpg/500px-Amir_Temur_Square.jpg' },
+                { name: "O'zbekiston tarixi muzeyi", time: "12:00", dur: 90, desc: "Mamlakat tarixi va madaniyatini o'rganish uchun mingdan ortiq eksponat.", emoji: "🏛️", travel: { min: 8, km: 2.7 }, image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f6/Nest_One_Tashkent.jpg/500px-Nest_One_Tashkent.jpg' },
+                { name: "Milliy choyxona", time: "13:45", dur: 45, desc: "An'anaviy choyxonada ko'k choy va milliy taomlar bilan dam olish.", emoji: "🍵", travel: { min: 8, km: 1.7 }, image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f6/Nest_One_Tashkent.jpg/500px-Nest_One_Tashkent.jpg' },
+                { name: "Bo'zsuv bo'yi", time: "14:45", dur: 40, desc: "Kanal bo'yidagi piyodalar hududi, kechki sayr uchun qulay.", emoji: "🚶", travel: { min: 10, km: 2.1 }, image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f6/Nest_One_Tashkent.jpg/500px-Nest_One_Tashkent.jpg' }
             ],
             "Samarqand": [
                 { name: "Registon maydoni", time: "09:00", dur: 75, desc: "Shahar qalbi — uchta ulug'vor madrasa bir maydonda jamlangan.", emoji: "🕌", image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/00/Registan_square_Samarkand.jpg/500px-Registan_square_Samarkand.jpg' },
                 { name: "Shohi Zinda", time: "10:30", dur: 50, desc: "Ko'k kafel bilan bezatilgan qadimiy maqbaralar majmuasi.", emoji: "🏛️", travel: { min: 7, km: 1.5 }, image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/94/Shah-i-Zinda%2C_Samarkand_%28Shohi-Zinda_majmuasi%2C_Samarqand%2C_%D0%A8%D0%B0%D1%85%D0%B8_%D0%97%D0%B8%D0%BD%D0%B4%D0%B0%29.jpg/500px-Shah-i-Zinda%2C_Samarkand_%28Shohi-Zinda_majmuasi%2C_Samarqand%2C_%D0%A8%D0%B0%D1%85%D0%B8_%D0%97%D0%B8%D0%BD%D0%B4%D0%B0%29.jpg' },
                 { name: "Bibixonim masjidi", time: "11:35", dur: 40, desc: "Mintaqadagi eng yirik masjidlardan biri, ulkan gumbazlari bilan.", emoji: "🕌", travel: { min: 6, km: 1.1 }, image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/dd/%D0%9C%D0%B5%D1%87%D0%B5%D1%82%D1%8C_%D0%91%D0%B8%D0%B1%D0%B8_%D0%A5%D0%B0%D0%BD%D1%83%D0%BC._%D0%A1%D0%B0%D0%BC%D0%B0%D1%80%D0%BA%D0%B0%D0%BD%D0%B4.jpg/500px-%D0%9C%D0%B5%D1%87%D0%B5%D1%82%D1%8C_%D0%91%D0%B8%D0%B1%D0%B8_%D0%A5%D0%B0%D0%BD%D1%83%D0%BC._%D0%A1%D0%B0%D0%BC%D0%B0%D1%80%D0%BA%D0%B0%D0%BD%D0%B4.jpg' },
-                { name: "Siyob bozori", time: "12:30", dur: 45, desc: "Mahalliy mevalar, quritilgan mevalar va non turlari sotiladigan bozor.", emoji: "🍈", travel: { min: 4, km: 0.4 } },
+                { name: "Siyob bozori", time: "12:30", dur: 45, desc: "Mahalliy mevalar, quritilgan mevalar va non turlari sotiladigan bozor.", emoji: "🍈", travel: { min: 4, km: 0.4 }, image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8c/RegistanSquare_Samarkand.jpg/500px-RegistanSquare_Samarkand.jpg' },
                 { name: "Ulug'bek observatoriyasi", time: "13:45", dur: 50, desc: "O'rta asr astronomiyasi durdonasi, ilmiy asboblar qoldiqlari bilan.", emoji: "🔭", travel: { min: 12, km: 3.2 }, image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f5/A_model_of_Ulug_Beg_obsrvatory_in_the_Uzbek_National_Muzeum.jpg/500px-A_model_of_Ulug_Beg_obsrvatory_in_the_Uzbek_National_Muzeum.jpg' }
             ],
             "Buxoro": [
-                { name: "Labi Hovuz", time: "09:00", dur: 45, desc: "Hovuz atrofidagi tarixiy maydon, choyxonalar bilan o'ralgan.", emoji: "💧" },
+                { name: "Labi Hovuz", time: "09:00", dur: 45, desc: "Hovuz atrofidagi tarixiy maydon, choyxonalar bilan o'ralgan.", emoji: "💧", image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/72/Labi_Hovuz.jpg/500px-Labi_Hovuz.jpg' },
                 { name: "Ark qal'asi", time: "10:00", dur: 60, desc: "Shahar hukmdorlarining qadimiy qarorgohi bo'lgan qal'a.", emoji: "🏯", travel: { min: 9, km: 1.4 }, image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6f/Ark_of_Bukhara_2023.9.jpg/500px-Ark_of_Bukhara_2023.9.jpg' },
                 { name: "Kalon minorasi", time: "11:15", dur: 40, desc: "Shaharning eng baland va mashhur minorasi.", emoji: "🗼", travel: { min: 6, km: 0.9 }, image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/92/Poi_Kalon.jpg/500px-Poi_Kalon.jpg' },
-                { name: "Toqi Zargaron", time: "12:00", dur: 35, desc: "Qadimiy savdo gumbazi, hozirda hunarmandchilik do'konlari joylashgan.", emoji: "🛍️", travel: { min: 4, km: 0.5 } },
-                { name: "Milliy hunarmandchilik markazi", time: "12:45", dur: 40, desc: "Mahalliy ustalarning naqsh va gilam ishlarini ko'rish mumkin.", emoji: "🧵", travel: { min: 5, km: 0.6 } }
+                { name: "Toqi Zargaron", time: "12:00", dur: 35, desc: "Qadimiy savdo gumbazi, hozirda hunarmandchilik do'konlari joylashgan.", emoji: "🛍️", travel: { min: 4, km: 0.5 }, image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e5/Toqi_Zargaron_2.jpg/500px-Toqi_Zargaron_2.jpg' },
+                { name: "Milliy hunarmandchilik markazi", time: "12:45", dur: 40, desc: "Mahalliy ustalarning naqsh va gilam ishlarini ko'rish mumkin.", emoji: "🧵", travel: { min: 5, km: 0.6 }, image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d0/2012_Bukhara_7515821196_cropped.jpg/500px-2012_Bukhara_7515821196_cropped.jpg' }
             ],
             "Xiva": [
                 { name: "Ichon-Qal'a darvozasi", time: "09:00", dur: 30, desc: "Qadimiy shaharga kiraverishdagi asosiy darvoza.", emoji: "🚪", image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c3/Islam_Khodja_Madrasa_01.jpg/500px-Islam_Khodja_Madrasa_01.jpg' },
-                { name: "Kalta minor", time: "09:40", dur: 35, desc: "Rangdor kafel bilan qoplangan, tugallanmagan mashhur minora.", emoji: "🗼", travel: { min: 5, km: 0.4 } },
+                { name: "Kalta minor", time: "09:40", dur: 35, desc: "Rangdor kafel bilan qoplangan, tugallanmagan mashhur minora.", emoji: "🗼", travel: { min: 5, km: 0.4 }, image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/74/Kalta_Minor.jpg/500px-Kalta_Minor.jpg' },
                 { name: "Tosh hovli saroyi", time: "10:25", dur: 45, desc: "Xon saroyi — hashamatli ichki hovlilari bilan mashhur.", emoji: "🏰", travel: { min: 6, km: 0.5 }, image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b2/Room_in_Tach_Khaouli.jpg/500px-Room_in_Tach_Khaouli.jpg' },
-                { name: "Islom Xo'ja minorasi", time: "11:20", dur: 35, desc: "Shahardagi eng baland minora, tepasidan shahar manzarasi ochiladi.", emoji: "🏔️", travel: { min: 5, km: 0.4 } },
-                { name: "Mahalliy bozor", time: "12:05", dur: 40, desc: "Mahalliy hunarmandchilik va milliy taomlar sotiladigan kichik bozor.", emoji: "🧺", travel: { min: 4, km: 0.3 } }
+                { name: "Islom Xo'ja minorasi", time: "11:20", dur: 35, desc: "Shahardagi eng baland minora, tepasidan shahar manzarasi ochiladi.", emoji: "🏔️", travel: { min: 5, km: 0.4 }, image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c3/Islam_Khodja_Madrasa_01.jpg/500px-Islam_Khodja_Madrasa_01.jpg' },
+                { name: "Mahalliy bozor", time: "12:05", dur: 40, desc: "Mahalliy hunarmandchilik va milliy taomlar sotiladigan kichik bozor.", emoji: "🧺", travel: { min: 4, km: 0.3 }, image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/dc/View_from_the_city_walls%2C_Khiva_%284934484894%29.jpg/500px-View_from_the_city_walls%2C_Khiva_%284934484894%29.jpg' }
             ],
             "Namangan": [
-                { name: "Uychi masjidi", time: "09:00", dur: 40, desc: "Hududdagi qadimiy va faol masjidlardan biri.", emoji: "🕌" },
-                { name: "Xon saroyi", time: "10:00", dur: 75, desc: "Qo'qon xonligiga oid tarixiy saroy, viloyat tarixi va me'morchiligi haqida ma'lumotlar.", emoji: "🏯", travel: { min: 12, km: 2.0 } },
+                { name: "Uychi masjidi", time: "09:00", dur: 40, desc: "Hududdagi qadimiy va faol masjidlardan biri.", emoji: "🕌", image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f0/Mulla_Qirg%CA%BBiz_madrasasi_04.jpg/500px-Mulla_Qirg%CA%BBiz_madrasasi_04.jpg' },
+                { name: "Xon saroyi", time: "10:00", dur: 75, desc: "Qo'qon xonligiga oid tarixiy saroy, viloyat tarixi va me'morchiligi haqida ma'lumotlar.", emoji: "🏯", travel: { min: 12, km: 2.0 }, image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f0/Mulla_Qirg%CA%BBiz_madrasasi_04.jpg/500px-Mulla_Qirg%CA%BBiz_madrasasi_04.jpg' },
                 { name: "Namangan o'lkashunoslik muzeyi", time: "11:30", dur: 60, desc: "Viloyat tabiati, tarixi va madaniyatiga bag'ishlangan eksponatlar.", emoji: "🏛️", travel: { min: 15, km: 2.6 }, image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a4/NamDU_binosi.png/500px-NamDU_binosi.png' },
-                { name: "Namangan oshxonasi", time: "12:45", dur: 50, desc: "Mahalliy taomlar bilan tanishish uchun mashhur oshxona.", emoji: "🍛", travel: { min: 8, km: 1.3 } },
-                { name: "Namangan bozori", time: "13:45", dur: 60, desc: "Mahalliy mahsulotlar va hunarmandchilik buyumlari sotiladigan bozor.", emoji: "🧺", travel: { min: 6, km: 0.8 } }
+                { name: "Namangan oshxonasi", time: "12:45", dur: 50, desc: "Mahalliy taomlar bilan tanishish uchun mashhur oshxona.", emoji: "🍛", travel: { min: 8, km: 1.3 }, image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a4/NamDU_binosi.png/500px-NamDU_binosi.png' },
+                { name: "Namangan bozori", time: "13:45", dur: 60, desc: "Mahalliy mahsulotlar va hunarmandchilik buyumlari sotiladigan bozor.", emoji: "🧺", travel: { min: 6, km: 0.8 }, image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f0/Mulla_Qirg%CA%BBiz_madrasasi_04.jpg/500px-Mulla_Qirg%CA%BBiz_madrasasi_04.jpg' }
             ]
         };
 
@@ -1862,9 +2225,12 @@
         function grad(i) { return GRADIENTS[i % GRADIENTS.length]; }
         function uid() { return 'id-' + Date.now() + '-' + Math.random().toString(36).slice(2, 7); }
 
-        function locationPhotoHTML(emoji, idx, extraStyle = '', imageUrl = null) {
-            if (imageUrl) {
-                return `<div style="background:linear-gradient(rgba(0,0,0,0.2),rgba(0,0,0,0.5)),url('${imageUrl}') center/cover;display:flex;align-items:flex-end;padding:12px;font-size:28px;color:#fff;${extraStyle}"><span style="background:rgba(0,0,0,0.3);padding:4px 10px;border-radius:20px;">${emoji}</span></div>`;
+        function locationPhotoHTML(emoji, idx, extraStyle = '', imageUrl = null, cityName = null) {
+            // Use provided image URL, or city-level image as fallback, or gradient
+            const cityImg = cityName ? (CITY_IMAGES[cityName] || null) : null;
+            const finalImg = imageUrl || cityImg;
+            if (finalImg) {
+                return `<div style="background:linear-gradient(rgba(0,0,0,0.15),rgba(0,0,0,0.6)),url('${finalImg}') center/cover;display:flex;align-items:flex-end;padding:12px;font-size:28px;color:#fff;${extraStyle}"><span style="background:rgba(0,0,0,0.3);padding:4px 10px;border-radius:20px;">${emoji}</span></div>`;
             }
             return `<div style="background:${grad(idx)};display:flex;align-items:center;justify-content:center;font-size:32px;${extraStyle}">${emoji}</div>`;
         }
@@ -2592,7 +2958,7 @@
         <div class="tl-item">
           <div class="tl-dot">${i + 1}</div>
           <div class="tl-card">
-            <div class="tl-photo">${locationPhotoHTML(s.emoji, i, 'height:90px;', s.image || null)}</div>
+            <div class="tl-photo">${locationPhotoHTML(s.emoji, i, 'height:90px;', s.image || null, trip.city)}</div>
             <div class="tl-body">
               <h4>${s.name}</h4>
               <div class="tl-time">🕐 ${s.time} · ${s.dur} daq</div>
@@ -2845,7 +3211,7 @@
             { id: 'sub_premium', name: '💎 Premium obuna', desc: '10 ta joy, offline xarita, shaxsiy agent', icon: '💎', color: '#dda23a', price: 35, type: 'subscription', value: 'premium', dur: 30 },
             { id: 'sub_vip', name: '👑 VIP obuna', desc: 'Cheksiz joylar, barcha imkoniyatlar', icon: '👑', color: '#a86b1f', price: 60, type: 'subscription', value: 'vip', dur: 30 },
             { id: 'boost', name: '🚀 Tezlatkich', desc: '2x yulduz yig\'ish (7 kun)', icon: '🚀', color: '#c96b3e', price: 20, type: 'boost', dur: 7 },
-            { id: 'theme_dark', name: '🌙 Maxsus dizayn', desc: 'Premium dark mode dizayni', icon: '🌙', color: '#3a7d94', price: 10, type: 'theme', value: 'dark_pro' },
+            { id: 'theme_dark', name: '🔮 Glassmorphism dizayn', desc: 'Shishasimon premium dizayn — barcha kartalar shaffof oyna effektida', icon: '🔮', color: '#667eea', price: 10, type: 'theme', value: 'glass' },
             { id: 'guide', name: '📖 Audio gid', desc: 'Shaharlar bo\'ylab audio qo\'llanma', icon: '🎧', color: '#2f8f6a', price: 25, type: 'guide' }
         ];
         cleanExpired();
@@ -2963,8 +3329,9 @@
                 }
                 // Apply theme immediately
                 if (itemId === 'theme_dark') {
-                    document.documentElement.setAttribute('data-theme', 'dark');
-                    document.getElementById('darkSwitch')?.classList.add('on');
+                    // Apply Glassmorphism theme
+                    document.documentElement.classList.add('glass-theme');
+                    localStorage.setItem('yolchi_glass_theme', 'true');
                 }
                 alert(`🎉 "${item.name}" muvaffaqiyatli sotib olindi!`);
             }
@@ -3156,6 +3523,11 @@
             renderShop();
             applyLang();
         }
+        // Initialize Glassmorphism theme if purchased
+        if (localStorage.getItem('yolchi_glass_theme') === 'true') {
+            document.documentElement.classList.add('glass-theme');
+        }
+
         renderAll();
     </script>
 
