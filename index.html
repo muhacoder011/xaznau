@@ -1870,6 +1870,33 @@
         .add-task-btn { margin-top: 12px; }
         .manage-tasks { display: flex; flex-direction: column; gap: 8px; }
         .task-manager-overlay * { font-family: 'Inter', sans-serif; }
+
+        /* Sleep mode */
+        .sleep-mode-card { background: linear-gradient(135deg, #1a2744, #0f1a2e); border-radius: 16px; padding: 20px; margin-bottom: 16px; display: flex; align-items: center; gap: 14px; color: #b8c9e8; }
+        .sleep-mode-card .sleep-icon { font-size: 36px; }
+        .sleep-mode-card .sleep-text { font-size: 13px; }
+        .sleep-mode-card strong { color: #d4e0f5; font-size: 15px; }
+
+        /* Pomodoro */
+        .pomodoro-card { background: var(--surface); border: 1px solid var(--line); border-radius: 16px; padding: 20px; text-align: center; }
+        .pomodoro-display { font-size: 48px; font-weight: 800; font-family: 'Plus Jakarta Sans',sans-serif; color: var(--green); letter-spacing: 2px; margin-bottom: 12px; }
+        .pomodoro-presets { display: flex; gap: 8px; justify-content: center; margin-bottom: 14px; }
+        .pom-preset-btn { background: var(--surface-2); border: none; padding: 8px 16px; border-radius: 10px; font-size: 13px; font-weight: 600; cursor: pointer; transition: all .2s; color: var(--ink-soft); }
+        .pom-preset-btn:hover { background: var(--green); color: #fff; }
+        .pom-preset-btn.active { background: var(--green); color: #fff; }
+        .pomodoro-actions { display: flex; gap: 10px; }
+
+        /* Task move button */
+        .task-move-btn { background: var(--surface-2); border: none; width: 28px; height: 28px; border-radius: 8px; cursor: pointer; font-size: 11px; display: flex; align-items: center; justify-content: center; color: var(--ink-soft); }
+        .task-move-btn:hover { background: var(--green); color: #fff; }
+
+        /* Scheduler toast override for independent system */
+        .scheduler-toast { pointer-events: none; user-select: none; }
+
+        /* Task manager day checkboxes */
+        .day-cb { display: none; }
+        .day-cb + span { opacity: 0.6; }
+        .day-cb:checked + span { opacity: 1; }
     </style>
 </head>
 
@@ -2106,9 +2133,18 @@
                     <span style="font-weight:600;" data-tr="admin_stars">⭐ Yulduz miqdori:</span>
                     <input id="placeStars" type="number" value="3" min="1" max="20" style="width:80px;padding:10px;border-radius:10px;border:1px solid var(--line);text-align:center;">
                 </div>
-                <button class="cta-btn" onclick="addPlace()" data-tr="admin_add_place_btn">
-                    Joy qo'shish
-                </button>
+                <div style="display:flex;align-items:center;gap:8px;margin:10px 0;">
+                    <span style="font-weight:600;font-size:12px;">📍 Koordinatalar:</span>
+                    <input id="placeLat" type="number" step="0.0001" placeholder="Kenglik (lat)" style="flex:1;padding:10px;border-radius:10px;border:1px solid var(--line);font-size:13px;">
+                    <input id="placeLng" type="number" step="0.0001" placeholder="Uzunlik (lng)" style="flex:1;padding:10px;border-radius:10px;border:1px solid var(--line);font-size:13px;">
+                    <button class="icon-btn" onclick="getCurrentLocation()" title="Joriy joyni olish">📍</button>
+                </div>
+                <div style="display:flex;gap:10px;">
+                    <button class="cta-btn" onclick="addPlace()" id="addPlaceBtn" data-tr="admin_add_place_btn" style="flex:1;">
+                        Joy qo'shish
+                    </button>
+                    <button class="cta-btn ghost" onclick="clearPlaceForm()" style="flex:0.5;">✕ Tozalash</button>
+                </div>
                 <hr style="margin:20px 0;">
                 <div id="adminPlaces"></div>
             </div>
@@ -3456,41 +3492,92 @@
             const name = document.getElementById('placeName').value.trim();
             const fileInput = document.getElementById('placeImage');
             const desc = document.getElementById('placeDesc').value.trim();
+            const lat = parseFloat(document.getElementById('placeLat').value);
+            const lng = parseFloat(document.getElementById('placeLng').value);
             if (!city) { alert("Shaharni tanlang!"); return; }
             if (!name || !desc) {
                 alert("Iltimos, joy nomi va tavsifni kiriting!");
                 return;
             }
             
-            // Process image: if file uploaded, convert to base64; otherwise use placeholder
             const processImage = new Promise((resolve) => {
                 if (fileInput.files && fileInput.files[0]) {
                     const reader = new FileReader();
                     reader.onload = (e) => resolve(e.target.result);
                     reader.readAsDataURL(fileInput.files[0]);
                 } else {
-                    resolve(''); // No image uploaded
+                    resolve('');
                 }
             });
             
             processImage.then((imageData) => {
+                const btn = document.getElementById('addPlaceBtn');
+                const editId = btn.dataset.editId;
                 const obj = {
-                    id: Date.now(),
-                    city,
-                    name,
-                    image: imageData,
+                    id: editId ? parseInt(editId) : Date.now(),
+                    city, name,
+                    image: imageData || (editId ? adminPlaces.find(x => x.id === parseInt(editId))?.image || '' : ''),
                     desc,
-                    stars: parseInt(document.getElementById('placeStars').value) || 3
+                    stars: parseInt(document.getElementById('placeStars').value) || 3,
+                    lat: isNaN(lat) ? undefined : lat,
+                    lng: isNaN(lng) ? undefined : lng
                 };
-                adminPlaces.push(obj);
+                
+                if (editId) {
+                    // Update existing place in-place
+                    const idx = adminPlaces.findIndex(x => x.id === parseInt(editId));
+                    if (idx !== -1) {
+                        adminPlaces[idx] = obj;
+                    } else {
+                        adminPlaces.push(obj);
+                    }
+                } else {
+                    adminPlaces.push(obj);
+                }
+                
                 localStorage.setItem('adminPlaces', JSON.stringify(adminPlaces));
                 renderAdmin();
-                document.getElementById('placeName').value = '';
-                document.getElementById('placeImage').value = '';
-                document.getElementById('placeDesc').value = '';
-                document.getElementById('imagePreview').style.display = 'none';
-                alert(`✅ "${name}" joyi qo'shildi!`);
+                clearPlaceForm();
+                alert(`✅ "${name}" joyi ${editId ? 'yangilandi' : "qo'shildi"}!`);
             });
+        }
+        
+        function clearPlaceForm() {
+            document.getElementById('placeName').value = '';
+            document.getElementById('placeImage').value = '';
+            document.getElementById('placeDesc').value = '';
+            document.getElementById('placeLat').value = '';
+            document.getElementById('placeLng').value = '';
+            document.getElementById('imagePreview').style.display = 'none';
+            document.getElementById('addPlaceBtn').textContent = t('admin_add_place_btn');
+            delete document.getElementById('addPlaceBtn').dataset.editId;
+        }
+        
+        function getCurrentLocation() {
+            if (!navigator.geolocation) { alert('Geolokatsiya mavjud emas'); return; }
+            navigator.geolocation.getCurrentPosition(function(pos) {
+                document.getElementById('placeLat').value = pos.coords.latitude.toFixed(6);
+                document.getElementById('placeLng').value = pos.coords.longitude.toFixed(6);
+            }, function() { alert('Joylashuvni aniqlab bo\'lmadi'); });
+        }
+        
+        function editPlace(placeId) {
+            const p = adminPlaces.find(x => x.id === placeId);
+            if (!p) return;
+            document.getElementById('placeCity').value = p.city;
+            document.getElementById('placeName').value = p.name;
+            document.getElementById('placeDesc').value = p.desc;
+            document.getElementById('placeStars').value = p.stars || 3;
+            document.getElementById('placeLat').value = p.lat || '';
+            document.getElementById('placeLng').value = p.lng || '';
+            if (p.image) {
+                document.getElementById('previewImg').src = p.image;
+                document.getElementById('imagePreview').style.display = 'block';
+            }
+            const btn = document.getElementById('addPlaceBtn');
+            btn.textContent = '💾 Joyni yangilash';
+            btn.dataset.editId = placeId;
+            document.getElementById('placeCity').scrollIntoView({ behavior: 'smooth', block: 'center' });
         }
         
         // Preview image when file is selected
@@ -3522,6 +3609,7 @@
                     ? `background:url('${p.image}') center/cover` 
                     : `background:${grad(index)};display:flex;align-items:center;justify-content:center;font-size:32px;`;
                 const imgContent = p.image ? '' : '<span>📍</span>';
+                const coordsStr = (p.lat && p.lng) ? `<span style="font-size:11px;color:var(--ink-soft);">📍 ${p.lat}, ${p.lng}</span>` : '';
                 html += `
       <div style="background:var(--surface);padding:18px;border-radius:16px;margin-bottom:16px;border:1px solid var(--line);">
         <div style="width:100%;height:160px;border-radius:12px;${imgStyle}">${imgContent}</div>
@@ -3529,9 +3617,13 @@
           <span style="font-size:12px;color:var(--ink-soft);">${p.city || 'Noma\'lum'}</span>
           <h3 style="font-size:17px;">${p.name}</h3>
           <p style="font-size:13px;color:var(--ink-soft);">${p.desc}</p>
+          ${coordsStr}
+          <div style="display:flex;gap:8px;margin-top:8px;">
+            <button class="cta-btn" onclick="editPlace(${p.id})" style="padding:10px;font-size:12px;flex:1;">✏️ Tahrirlash</button>
+            <button class="cta-btn ghost" onclick="deletePlace(${p.id})" style="padding:10px;font-size:12px;flex:1;">${t('admin_delete')}</button>
+          </div>
           <div id="adminQr${index}" style="margin:15px auto;width:150px;"></div>
           <button class="cta-btn" onclick="downloadAdminQR(${index})" style="padding:10px;font-size:13px;">${t('admin_dl_qr')}</button>
-          <button class="cta-btn ghost" onclick="deletePlace(${p.id})" style="padding:10px;font-size:13px;margin-top:8px;">${t('admin_delete')}</button>
         </div>
       </div>`;
             });
