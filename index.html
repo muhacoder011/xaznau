@@ -2104,7 +2104,108 @@
         .day-cb + span { opacity: 0.6; }
         .day-cb:checked + span { opacity: 1; }
 
-        /* ========== MICRO-ANIMATIONS — ULTRA ========== */\n        .stagger-enter { animation: stagger-in 0.5s cubic-bezier(.2,1.4,.4,1) both; }\n        .stagger-enter:nth-child(1) { animation-delay: 0.02s; }\n        .stagger-enter:nth-child(2) { animation-delay: 0.08s; }\n        .stagger-enter:nth-child(3) { animation-delay: 0.14s; }\n        .stagger-enter:nth-child(4) { animation-delay: 0.20s; }\n        .stagger-enter:nth-child(5) { animation-delay: 0.26s; }\n        .stagger-enter:nth-child(6) { animation-delay: 0.32s; }\n\n        @keyframes stagger-in {\n            from { opacity: 0; transform: translateY(16px) scale(0.95); }\n            to { opacity: 1; transform: translateY(0) scale(1); }\n        }\n\n        /* Button ripple */\n        .ripple-btn { position: relative; overflow: hidden; }\n        .ripple-btn::after {\n            content: '';\n            position: absolute;\n            top: 50%; left: 50%;\n            width: 0; height: 0;\n            border-radius: 50%;\n            background: rgba(255,255,255,0.3);\n            transform: translate(-50%,-50%);\n            transition: width 0.5s, height 0.5s, opacity 0.5s;\n            opacity: 0;\n        }\n        .ripple-btn:active::after {\n            width: 200%; height: 200%;\n            opacity: 1;\n            transition: 0s;\n        }\n\n        /* Card 3D hover */\n        .card-3d {\n            transition: transform 0.3s cubic-bezier(.2,1.4,.4,1);\n            will-change: transform;\n        }\n        .card-3d:hover {\n            transform: perspective(800px) rotateX(var(--rotX, 0deg)) rotateY(var(--rotY, 0deg)) translateZ(8px);\n        }\n\n        /* Smooth scrollbar */\n        ::-webkit-scrollbar { width: 4px; }\n        ::-webkit-scrollbar-track { background: transparent; }\n        ::-webkit-scrollbar-thumb { background: var(--line); border-radius: 10px; }\n        ::-webkit-scrollbar-thumb:hover { background: var(--ink-soft); }\n        * { scrollbar-width: thin; scrollbar-color: var(--line) transparent; }\n\n        /* Toast stack */\n        #toastContainer {\n            position: fixed;\n            top: 20px;\n            left: 50%;\n            transform: translateX(-50%);\n            z-index: 99999;\n            display: flex;\n            flex-direction: column;\n            gap: 8px;\n            pointer-events: none;\n            width: 90%;\n            max-width: 360px;\n        }\n        .toast-item {\n            background: linear-gradient(135deg, var(--gold), var(--gold-deep));\n            color: #3a2708;\n            padding: 16px 20px;\n            border-radius: 16px;\n            font-weight: 700;\n            font-size: 14px;\n            display: flex;\n            align-items: center;\n            gap: 10px;\n            box-shadow: 0 8px 30px rgba(0,0,0,0.15);\n            animation: toast-in 0.4s cubic-bezier(.2,1.4,.4,1) both;\n            pointer-events: auto;\n        }\n        .toast-item.out {\n            animation: toast-out 0.3s ease both;\n        }\n        @keyframes toast-in {\n            from { opacity: 0; transform: translateY(-20px) scale(0.9); }\n            to { opacity: 1; transform: translateY(0) scale(1); }\n        }\n        @keyframes toast-out {\n            from { opacity: 1; transform: translateY(0) scale(1); }\n            to { opacity: 0; transform: translateY(-20px) scale(0.9); }\n        }\n        .toast-item .toast-icon { font-size: 24px; flex-shrink: 0; }\n\n        /* Smooth loading shimmer */\n        .shimmer {\n            background: linear-gradient(90deg, var(--surface-2) 25%, var(--surface) 50%, var(--surface-2) 75%);\n            background-size: 200% 100%;\n            animation: shimmer 1.5s ease-in-out infinite;\n        }\n        @keyframes shimmer {\n            0% { background-position: 200% 0; }\n            100% { background-position: -200% 0; }\n        }\n\n        /* AI Voice badge */"
+        /* ========== MICRO-ANIMATIONS — ULTRA ========== */
+        .stagger-enter { animation: stagger-in 0.5s cubic-bezier(.2,1.4,.4,1) both; }
+        .stagger-enter:nth-child(1) { animation-delay: 0.02s; }
+        .stagger-enter:nth-child(2) { animation-delay: 0.08s; }
+        .stagger-enter:nth-child(3) { animation-delay: 0.14s; }
+        .stagger-enter:nth-child(4) { animation-delay: 0.20s; }
+        .stagger-enter:nth-child(5) { animation-delay: 0.26s; }
+        .stagger-enter:nth-child(6) { animation-delay: 0.32s; }
+
+        @keyframes stagger-in {
+            from { opacity: 0; transform: translateY(16px) scale(0.95); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        /* Button ripple */
+        .ripple-btn { position: relative; overflow: hidden; }
+        .ripple-btn::after {
+            content: '';
+            position: absolute;
+            top: 50%; left: 50%;
+            width: 0; height: 0;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.3);
+            transform: translate(-50%,-50%);
+            transition: width 0.5s, height 0.5s, opacity 0.5s;
+            opacity: 0;
+        }
+        .ripple-btn:active::after {
+            width: 200%; height: 200%;
+            opacity: 1;
+            transition: 0s;
+        }
+
+        /* Card 3D hover */
+        .card-3d {
+            transition: transform 0.3s cubic-bezier(.2,1.4,.4,1);
+            will-change: transform;
+        }
+        .card-3d:hover {
+            transform: perspective(800px) rotateX(var(--rotX, 0deg)) rotateY(var(--rotY, 0deg)) translateZ(8px);
+        }
+
+        /* Smooth scrollbar */
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: var(--line); border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--ink-soft); }
+        * { scrollbar-width: thin; scrollbar-color: var(--line) transparent; }
+
+        /* Toast stack */
+        #toastContainer {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 99999;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            pointer-events: none;
+            width: 90%;
+            max-width: 360px;
+        }
+        .toast-item {
+            background: linear-gradient(135deg, var(--gold), var(--gold-deep));
+            color: #3a2708;
+            padding: 16px 20px;
+            border-radius: 16px;
+            font-weight: 700;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.15);
+            animation: toast-in 0.4s cubic-bezier(.2,1.4,.4,1) both;
+            pointer-events: auto;
+        }
+        .toast-item.out {
+            animation: toast-out 0.3s ease both;
+        }
+        @keyframes toast-in {
+            from { opacity: 0; transform: translateY(-20px) scale(0.9); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+        @keyframes toast-out {
+            from { opacity: 1; transform: translateY(0) scale(1); }
+            to { opacity: 0; transform: translateY(-20px) scale(0.9); }
+        }
+        .toast-item .toast-icon { font-size: 24px; flex-shrink: 0; }
+
+        /* Smooth loading shimmer */
+        .shimmer {
+            background: linear-gradient(90deg, var(--surface-2) 25%, var(--surface) 50%, var(--surface-2) 75%);
+            background-size: 200% 100%;
+            animation: shimmer 1.5s ease-in-out infinite;
+        }
+        @keyframes shimmer {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+
+        /* AI Voice badge */
         .ai-voice-badge { display: inline-block; font-size: 10px; font-weight: 700; background: var(--green); color: #fff; padding: 2px 8px; border-radius: 20px; margin-left: 6px; vertical-align: middle; animation: pulse-voice 2s infinite; }
         @keyframes pulse-voice { 0%,100% { opacity: 1; } 50% { opacity: 0.6; } }
     </style>
