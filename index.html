@@ -13,33 +13,46 @@
         href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap"
         rel="stylesheet">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#1f6d4c">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <style>
         :root {
             --bg: #f6f2e8;
             --surface: #ffffff;
             --surface-2: #eef3ea;
+            --surface-3: #e2e8de;
             --ink: #16241d;
             --ink-soft: #5c6c60;
             --green: #1f6d4c;
             --green-deep: #123a28;
+            --green-glow: rgba(31, 109, 76, 0.3);
             --gold: #dda23a;
             --gold-deep: #a86b1f;
+            --gold-glow: rgba(221, 162, 58, 0.3);
             --line: rgba(22, 36, 29, 0.12);
             --danger: #b1502e;
+            --danger-glow: rgba(177, 80, 46, 0.3);
             --radius: 18px;
+            --radius-sm: 12px;
+            --ease: cubic-bezier(.2,1.4,.4,1);
         }
 
         html[data-theme="dark"] {
-            --bg: #0f1912;
+            --bg: #0a120d;
             --surface: #16241d;
             --surface-2: #1c2b22;
+            --surface-3: #213127;
             --ink: #eef2ea;
-            --ink-soft: #9fb0a6;
+            --ink-soft: #8da89a;
             --green: #3fae7c;
             --green-deep: #1f6d4c;
+            --green-glow: rgba(63, 174, 124, 0.25);
             --gold: #e6b458;
             --gold-deep: #c79236;
-            --line: rgba(238, 242, 234, 0.14);
+            --gold-glow: rgba(230, 180, 88, 0.25);
+            --line: rgba(238, 242, 234, 0.10);
+            --danger-glow: rgba(200, 90, 50, 0.25);
         }
 
         * {
@@ -67,6 +80,7 @@
             touch-action: manipulation;
             overscroll-behavior: none;
             -webkit-font-smoothing: antialiased;
+            scroll-behavior: smooth;
         }
 
         h1,
@@ -142,24 +156,29 @@
             flex: 1;
         }
 
+        .screen {
+            display: none;
+            padding: 0 20px 100px;
+            flex: 1;
+        }
+
         .screen.active {
             display: block;
-            animation: fade-up 0.35s ease both;
+            animation: slide-up 0.45s cubic-bezier(.2,1.4,.4,1) both;
         }
 
-        @keyframes fade-up {
+        @keyframes slide-up {
             from {
                 opacity: 0;
-                transform: translateY(8px);
+                transform: translateY(24px) scale(0.97);
             }
-
             to {
                 opacity: 1;
-                transform: translateY(0);
+                transform: translateY(0) scale(1);
             }
         }
 
-        /* ---------- bottom nav ---------- */
+        /* ---------- bottom nav — ULTRA ---------- */
         .bottom-nav {
             position: sticky;
             bottom: 0;
@@ -168,7 +187,22 @@
             background: var(--surface);
             border-top: 1px solid var(--line);
             display: flex;
-            padding: 10px 6px 14px;
+            padding: 6px 6px 16px;
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            position: relative;
+        }
+
+        .bottom-nav .nav-indicator {
+            position: absolute;
+            bottom: 10px;
+            left: 0;
+            width: 20%;
+            height: 3px;
+            background: var(--green);
+            border-radius: 10px;
+            transition: transform 0.4s cubic-bezier(.34,1.56,.64,1);
+            will-change: transform;
         }
 
         .bottom-nav button {
@@ -178,13 +212,16 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 3px;
+            gap: 2px;
             font-family: 'Inter', sans-serif;
-            font-size: 11px;
+            font-size: 10.5px;
             color: var(--ink-soft);
             cursor: pointer;
-            padding: 6px 2px;
+            padding: 8px 2px 4px;
             font-weight: 600;
+            transition: color 0.3s ease;
+            position: relative;
+            z-index: 1;
         }
 
         .bottom-nav button.active {
@@ -192,25 +229,130 @@
         }
 
         .bottom-nav button .ic {
-            font-size: 19px;
+            font-size: 20px;
+            transition: transform 0.3s cubic-bezier(.2,1.4,.4,1);
+            display: block;
         }
 
-        /* ---------- home ---------- */
+        .bottom-nav button.active .ic {
+            transform: scale(1.2) translateY(-1px);
+        }
+
+        /* ---------- SPLASH SCREEN — ULTRA ---------- */
+        #splashScreen {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            z-index: 99999;
+            background: var(--bg);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 0.6s ease, transform 0.6s ease;
+        }
+        #splashScreen.hidden {
+            opacity: 0;
+            transform: scale(1.05);
+            pointer-events: none;
+        }
+        #splashScreen .splash-star {
+            font-size: 48px;
+            animation: splash-pulse 1.2s ease-in-out infinite;
+        }
+        @keyframes splash-pulse {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.15); opacity: 0.8; }
+        }
+        #splashScreen .splash-brand {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-size: 28px;
+            font-weight: 800;
+            margin-top: 12px;
+            background: linear-gradient(135deg, var(--green), var(--gold));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        #splashScreen .splash-sub {
+            font-size: 13px;
+            color: var(--ink-soft);
+            margin-top: 6px;
+        }
+        #splashScreen .splash-loader {
+            margin-top: 30px;
+            width: 160px;
+            height: 3px;
+            background: var(--line);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        #splashScreen .splash-loader-bar {
+            height: 100%;
+            width: 30%;
+            background: linear-gradient(90deg, var(--green), var(--gold));
+            border-radius: 10px;
+            animation: splash-load 1.2s ease-in-out infinite;
+        }
+        @keyframes splash-load {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(400%); }
+        }
+
+        /* ---------- PARTICLES — ULTRA ---------- */
+        #particlesContainer {
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 180px;
+            overflow: hidden;
+            pointer-events: none;
+            z-index: 0;
+        }
+        .particle {
+            position: absolute;
+            border-radius: 50%;
+            opacity: 0.12;
+            animation: float-up linear infinite;
+        }
+        @keyframes float-up {
+            0% { transform: translateY(120px) rotate(0deg); opacity: 0; }
+            15% { opacity: 0.2; }
+            85% { opacity: 0.15; }
+            100% { transform: translateY(-60px) rotate(360deg); opacity: 0; }
+        }
+
+        /* ---------- ULTRA HOME ---------- */
         .greet {
             font-size: 13px;
             color: var(--ink-soft);
             margin-bottom: 2px;
+            position: relative;
+            z-index: 1;
         }
 
         .hero-title {
-            font-size: 26px;
+            font-size: 28px;
             font-weight: 800;
-            line-height: 1.2;
+            line-height: 1.15;
             margin-bottom: 16px;
+            position: relative;
+            z-index: 1;
         }
 
         .hero-title span {
             color: var(--green);
+            position: relative;
+            display: inline-block;
+        }
+        .hero-title span::after {
+            content: '';
+            position: absolute;
+            bottom: 2px;
+            left: 0;
+            right: 0;
+            height: 6px;
+            background: var(--green-glow);
+            border-radius: 10px;
+            z-index: -1;
         }
 
         .search-box {
@@ -223,6 +365,16 @@
             gap: 10px;
             margin-bottom: 16px;
             cursor: pointer;
+            transition: all 0.25s ease;
+            position: relative;
+            z-index: 1;
+        }
+        .search-box:hover {
+            border-color: var(--green);
+            box-shadow: 0 4px 20px var(--green-glow);
+        }
+        .search-box:active {
+            transform: scale(0.98);
         }
 
         .search-box .ph {
@@ -232,7 +384,7 @@
         }
 
         .ai-pill {
-            background: var(--green);
+            background: linear-gradient(135deg, var(--green), var(--green-deep));
             color: #fff;
             border-radius: 20px;
             padding: 6px 12px;
@@ -241,6 +393,11 @@
             display: flex;
             align-items: center;
             gap: 4px;
+            animation: pill-glow 2s ease-in-out infinite;
+        }
+        @keyframes pill-glow {
+            0%, 100% { box-shadow: 0 0 8px var(--green-glow); }
+            50% { box-shadow: 0 0 16px var(--green-glow), 0 0 24px var(--green-glow); }
         }
 
         .chip-row {
@@ -1227,38 +1384,39 @@
             background: var(--surface);
             border: 1px solid var(--line);
             border-radius: 16px;
-            padding: 18px;
+            overflow: hidden;
             display: flex;
-            align-items: center;
-            gap: 14px;
+            flex-direction: column;
         }
-        .shop-card .sicon {
-            width: 48px;
-            height: 48px;
-            border-radius: 14px;
+        .shop-card .scover {
+            width: 100%;
+            height: 140px;
             display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 24px;
-            flex-shrink: 0;
+            align-items: flex-end;
+            justify-content: flex-start;
+            padding: 14px;
+        }
+        .shop-card .scover-icon {
+            font-size: 32px;
+            background: rgba(0,0,0,0.3);
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+            border-radius: 14px;
+            padding: 6px 12px;
+            line-height: 1;
         }
         .shop-card .sinfo {
-            flex: 1;
+            padding: 16px 16px 0;
         }
         .shop-card .sinfo h4 {
-            font-size: 14.5px;
+            font-size: 15px;
             font-weight: 700;
         }
         .shop-card .sinfo p {
-            font-size: 12px;
+            font-size: 12.5px;
             color: var(--ink-soft);
-            margin: 2px 0;
-        }
-        .shop-card .sprice {
-            font-size: 13px;
-            font-weight: 800;
-            color: var(--gold);
-            white-space: nowrap;
+            margin: 4px 0 8px;
+            line-height: 1.4;
         }
         .shop-card .sbadge {
             font-size: 10.5px;
@@ -1275,15 +1433,16 @@
             color: var(--ink-soft);
         }
         .shop-card button {
-            padding: 8px 16px;
+            margin: 12px 16px 16px;
+            padding: 10px 16px;
             border-radius: 12px;
             border: none;
-            font-size: 12.5px;
+            font-size: 13px;
             font-weight: 700;
             cursor: pointer;
             background: var(--gold);
             color: #3a2708;
-            white-space: nowrap;
+            width: calc(100% - 32px);
         }
         .shop-card button:disabled {
             opacity: 0.4;
@@ -1292,6 +1451,19 @@
         .shop-card button.bought {
             background: var(--surface-2);
             color: var(--ink-soft);
+        }
+        .shop-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+        }
+        .shop-card:hover .scover {
+            transform: scale(1.04);
+        }
+        .shop-card {
+            transition: transform 0.25s ease, box-shadow 0.25s ease;
+        }
+        .shop-card .scover {
+            transition: transform 0.4s ease;
         }
         .sub-banner {
             background: linear-gradient(135deg, var(--gold), var(--gold-deep));
@@ -1656,6 +1828,38 @@
             box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3) !important;
         }
 
+        html.glass-theme .bottom-nav {
+            background: rgba(22, 36, 29, 0.55) !important;
+            backdrop-filter: blur(16px) !important;
+            -webkit-backdrop-filter: blur(16px) !important;
+            border-top: 1px solid rgba(255,255,255,0.06) !important;
+        }
+        html.glass-theme .city-card {
+            backdrop-filter: blur(6px);
+            -webkit-backdrop-filter: blur(6px);
+            border: 1px solid rgba(255,255,255,0.08);
+        }
+        html.glass-theme .search-box {
+            background: rgba(255,255,255,0.12) !important;
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+        }
+        html.glass-theme .topbar {
+            background: rgba(246, 242, 232, 0.55) !important;
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(0,0,0,0.04);
+        }
+        html[data-theme="dark"].glass-theme .topbar {
+            background: rgba(10, 18, 13, 0.65) !important;
+        }
+        html[data-theme="dark"].glass-theme .bottom-nav {
+            background: rgba(10, 18, 13, 0.65) !important;
+        }
+        html[data-theme="dark"].glass-theme .search-box {
+            background: rgba(255,255,255,0.06) !important;
+        }
+
         html.glass-theme .progress-bar {
             background: rgba(255, 255, 255, 0.1) !important;
         }
@@ -1682,8 +1886,10 @@
             color: rgba(255,255,255,0.7) !important;
         }
 
-        html.glass-theme .sicon {
-            background: rgba(255,255,255,0.1) !important;
+        html.glass-theme .scover-icon {
+            background: rgba(255,255,255,0.12) !important;
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
         }
 
         html.glass-theme .profile-hero {
@@ -1898,13 +2104,21 @@
         .day-cb + span { opacity: 0.6; }
         .day-cb:checked + span { opacity: 1; }
 
-        /* AI Voice badge */
+        /* ========== MICRO-ANIMATIONS — ULTRA ========== */\n        .stagger-enter { animation: stagger-in 0.5s cubic-bezier(.2,1.4,.4,1) both; }\n        .stagger-enter:nth-child(1) { animation-delay: 0.02s; }\n        .stagger-enter:nth-child(2) { animation-delay: 0.08s; }\n        .stagger-enter:nth-child(3) { animation-delay: 0.14s; }\n        .stagger-enter:nth-child(4) { animation-delay: 0.20s; }\n        .stagger-enter:nth-child(5) { animation-delay: 0.26s; }\n        .stagger-enter:nth-child(6) { animation-delay: 0.32s; }\n\n        @keyframes stagger-in {\n            from { opacity: 0; transform: translateY(16px) scale(0.95); }\n            to { opacity: 1; transform: translateY(0) scale(1); }\n        }\n\n        /* Button ripple */\n        .ripple-btn { position: relative; overflow: hidden; }\n        .ripple-btn::after {\n            content: '';\n            position: absolute;\n            top: 50%; left: 50%;\n            width: 0; height: 0;\n            border-radius: 50%;\n            background: rgba(255,255,255,0.3);\n            transform: translate(-50%,-50%);\n            transition: width 0.5s, height 0.5s, opacity 0.5s;\n            opacity: 0;\n        }\n        .ripple-btn:active::after {\n            width: 200%; height: 200%;\n            opacity: 1;\n            transition: 0s;\n        }\n\n        /* Card 3D hover */\n        .card-3d {\n            transition: transform 0.3s cubic-bezier(.2,1.4,.4,1);\n            will-change: transform;\n        }\n        .card-3d:hover {\n            transform: perspective(800px) rotateX(var(--rotX, 0deg)) rotateY(var(--rotY, 0deg)) translateZ(8px);\n        }\n\n        /* Smooth scrollbar */\n        ::-webkit-scrollbar { width: 4px; }\n        ::-webkit-scrollbar-track { background: transparent; }\n        ::-webkit-scrollbar-thumb { background: var(--line); border-radius: 10px; }\n        ::-webkit-scrollbar-thumb:hover { background: var(--ink-soft); }\n        * { scrollbar-width: thin; scrollbar-color: var(--line) transparent; }\n\n        /* Toast stack */\n        #toastContainer {\n            position: fixed;\n            top: 20px;\n            left: 50%;\n            transform: translateX(-50%);\n            z-index: 99999;\n            display: flex;\n            flex-direction: column;\n            gap: 8px;\n            pointer-events: none;\n            width: 90%;\n            max-width: 360px;\n        }\n        .toast-item {\n            background: linear-gradient(135deg, var(--gold), var(--gold-deep));\n            color: #3a2708;\n            padding: 16px 20px;\n            border-radius: 16px;\n            font-weight: 700;\n            font-size: 14px;\n            display: flex;\n            align-items: center;\n            gap: 10px;\n            box-shadow: 0 8px 30px rgba(0,0,0,0.15);\n            animation: toast-in 0.4s cubic-bezier(.2,1.4,.4,1) both;\n            pointer-events: auto;\n        }\n        .toast-item.out {\n            animation: toast-out 0.3s ease both;\n        }\n        @keyframes toast-in {\n            from { opacity: 0; transform: translateY(-20px) scale(0.9); }\n            to { opacity: 1; transform: translateY(0) scale(1); }\n        }\n        @keyframes toast-out {\n            from { opacity: 1; transform: translateY(0) scale(1); }\n            to { opacity: 0; transform: translateY(-20px) scale(0.9); }\n        }\n        .toast-item .toast-icon { font-size: 24px; flex-shrink: 0; }\n\n        /* Smooth loading shimmer */\n        .shimmer {\n            background: linear-gradient(90deg, var(--surface-2) 25%, var(--surface) 50%, var(--surface-2) 75%);\n            background-size: 200% 100%;\n            animation: shimmer 1.5s ease-in-out infinite;\n        }\n        @keyframes shimmer {\n            0% { background-position: 200% 0; }\n            100% { background-position: -200% 0; }\n        }\n\n        /* AI Voice badge */"
         .ai-voice-badge { display: inline-block; font-size: 10px; font-weight: 700; background: var(--green); color: #fff; padding: 2px 8px; border-radius: 20px; margin-left: 6px; vertical-align: middle; animation: pulse-voice 2s infinite; }
         @keyframes pulse-voice { 0%,100% { opacity: 1; } 50% { opacity: 0.6; } }
     </style>
 </head>
 
 <body>
+
+    <!-- ============ SPLASH SCREEN — ULTRA ============ -->
+    <div id="splashScreen">
+        <div class="splash-star">⭐</div>
+        <div class="splash-brand">YO'LCHI</div>
+        <div class="splash-sub">AI sayohat hamrohi</div>
+        <div class="splash-loader"><div class="splash-loader-bar"></div></div>
+    </div>
 
     <div class="app-shell" id="appShell">
 
@@ -1918,9 +2132,13 @@
                     </svg>
                     YO'LCHI
                 </div>
-                <button class="icon-btn" onclick="toggleDark()">🌙</button>
+                <div style="display:flex;gap:6px;">
+                    <button class="icon-btn" onclick="openScanner()" title="QR Skanner" style="font-size:15px;">📷</button>
+                    <button class="icon-btn" onclick="toggleDark()">🌙</button>
+                </div>
             </div>
-            <div style="padding-top:6px;">
+            <div style="padding-top:6px;position:relative;">
+                <div id="particlesContainer"></div>
                 <div class="greet" data-tr="welcome">Xush kelibsiz 👋</div>
                 <div class="hero-title" data-tr="hero">O'zbekistonni <span>AI bilan</span> kashf eting</div>
 
@@ -2109,7 +2327,7 @@
                     style="width:100%;padding:15px;margin-bottom:15px;border-radius:12px;">
                 <input id="adminPass" type="password" placeholder="Parol" data-tr="admin_pass"
                     style="width:100%;padding:15px;margin-bottom:15px;border-radius:12px;">
-                <button class="cta-btn" onclick="adminLogin()" data-tr="admin_enter">
+                <button class="cta-btn ripple-btn" onclick="adminLogin()" data-tr="admin_enter">
                     Kirish
                 </button>
             </div>
@@ -2118,7 +2336,7 @@
                 <h3 data-tr="admin_add_city">📍 Shahar qo'shish</h3>
                 <input id="cityName" placeholder="Shahar nomi" data-tr="admin_city_name" style="width:100%;padding:12px;margin:10px 0;">
                 <input id="cityEmoji" placeholder="Emoji (masalan 🏙️)" data-tr="admin_city_emoji" style="width:100%;padding:12px;margin:10px 0;">
-                <button class="cta-btn" onclick="addCity()" data-tr="admin_add_city_btn">
+                <button class="cta-btn ripple-btn" onclick="addCity()" data-tr="admin_add_city_btn">
                     Shahar qo'shish
                 </button>
                 <div id="adminCities" style="margin:10px 0;"></div>
@@ -2144,10 +2362,10 @@
                     <button class="icon-btn" onclick="getCurrentLocation()" title="Joriy joyni olish">📍</button>
                 </div>
                 <div style="display:flex;gap:10px;">
-                    <button class="cta-btn" onclick="addPlace()" id="addPlaceBtn" data-tr="admin_add_place_btn" style="flex:1;">
+                    <button class="cta-btn ripple-btn" onclick="addPlace()" id="addPlaceBtn" data-tr="admin_add_place_btn" style="flex:1;">
                         Joy qo'shish
                     </button>
-                    <button class="cta-btn ghost" onclick="clearPlaceForm()" style="flex:0.5;">✕ Tozalash</button>
+                    <button class="cta-btn ghost ripple-btn" onclick="clearPlaceForm()" style="flex:0.5;">✕ Tozalash</button>
                 </div>
                 <hr style="margin:20px 0;">
                 <div id="adminPlaces"></div>
@@ -2165,16 +2383,18 @@
             <div id="aiSchedulerContainer"></div>
         </section>
 
-        <!-- ============ BOTTOM NAV ============ -->
+        <!-- ============ BOTTOM NAV — ULTRA ============ -->
         <div class="bottom-nav" id="bottomNav">
-            <button data-tab="home" class="active" onclick="goTab('home')" data-tr="nav_home"><span class="ic">🏠</span>Bosh sahifa</button>
-            <button data-tab="scheduler" onclick="goTab('scheduler');setTimeout(()=>initScheduler('aiSchedulerContainer'),300);" data-tr="nav_scheduler"><span class="ic">🤖</span>Reja</button>
-            <button data-tab="shop" onclick="goTab('shop')" data-tr="nav_shop"><span class="ic">⭐</span>Do'kon</button>
-            <button data-tab="trips" onclick="goTab('trips')" data-tr="nav_trips"><span class="ic">📑</span>Sayohatlar</button>
-            <button data-tab="profile" onclick="goTab('profile')" data-tr="nav_profile"><span class="ic">👤</span>Profil</button>
+            <div class="nav-indicator" id="navIndicator"></div>
+            <button data-tab="home" class="active" onclick="goTab('home')" data-tr="nav_home"><span class="ic">🏠</span><span class="nav-label">Bosh sahifa</span></button>
+            <button data-tab="scheduler" onclick="goTab('scheduler');setTimeout(()=>initScheduler('aiSchedulerContainer'),300);" data-tr="nav_scheduler"><span class="ic">🤖</span><span class="nav-label">Reja</span></button>
+            <button data-tab="shop" onclick="goTab('shop')" data-tr="nav_shop"><span class="ic">⭐</span><span class="nav-label">Do'kon</span></button>
+            <button data-tab="trips" onclick="goTab('trips')" data-tr="nav_trips"><span class="ic">📑</span><span class="nav-label">Sayohatlar</span></button>
+            <button data-tab="profile" onclick="goTab('profile')" data-tr="nav_profile"><span class="ic">👤</span><span class="nav-label">Profil</span></button>
         </div>
 
         <div class="toast" id="toast"><span class="tic">🔑</span><span id="toastText">Kalit topildi! +1</span></div>
+        <div id="toastContainer"></div>
     </div>
 
     <div id="scannerOverlay" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.85);z-index:999;justify-content:center;align-items:center;flex-direction:column;">
@@ -2809,13 +3029,30 @@
         }
 
         /* ================= NAV ================= */
+        /* ================= NAV — ULTRA ================= */
+        function moveNavIndicator(name) {
+            const nav = document.getElementById('bottomNav');
+            const indicator = document.getElementById('navIndicator');
+            if (!indicator) return;
+            const btn = nav.querySelector(`button[data-tab="${name}"]`);
+            if (btn) {
+                const tabIndex = Array.from(nav.querySelectorAll('button')).indexOf(btn);
+                indicator.style.transform = `translateX(${tabIndex * 100}%)`;
+            }
+        }
+
         function showScreen(name) {
-            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-            document.querySelector(`.screen[data-screen="${name}"]`).classList.add('active');
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active', 'slide-in'));
+            const target = document.querySelector(`.screen[data-screen="${name}"]`);
+            target.classList.add('active');
+            // Trigger slide animation
+            void target.offsetWidth;
+            target.classList.add('slide-in');
             const tabScreens = ['home', 'discover', 'scheduler', 'shop', 'trips', 'profile'];
             document.getElementById('bottomNav').style.display = tabScreens.includes(name) ? 'flex' : 'none';
             if (tabScreens.includes(name)) {
                 document.querySelectorAll('.bottom-nav button').forEach(b => b.classList.toggle('active', b.dataset.tab === name));
+                moveNavIndicator(name);
             }
             // Initialize scheduler when showing scheduler screen
             if (name === 'scheduler') {
@@ -2823,7 +3060,17 @@
             }
             window.scrollTo({ top: 0 });
         }
-        function goTab(name) { state.history = [name]; showScreen(name); renderAll(); }
+        function goTab(name) { 
+            state.history = [name]; 
+            showScreen(name); 
+            renderAll(); 
+            // Hide splash screen on first interaction
+            const splash = document.getElementById('splashScreen');
+            if (splash && !splash.classList.contains('hidden')) {
+                splash.classList.add('hidden');
+                setTimeout(() => { splash.style.display = 'none'; }, 700);
+            }
+        }
         function goHome() { 
             closeScannerOverlay();
             state.history = ['home']; 
@@ -2835,6 +3082,64 @@
             state.history.push(name); 
             showScreen(name); 
         }
+
+        /* ================= ULTRA JS — SPLASH, PARTICLES, 3D TILT, RIPPLE ================= */
+        // Splash screen auto-hide
+        document.addEventListener('DOMContentLoaded', function() {
+            // Register Service Worker for PWA
+            if ('serviceWorker' in navigator) {
+                navigator.serviceWorker.register('./sw.js').catch(() => {});
+            }
+            setTimeout(() => {
+                const splash = document.getElementById('splashScreen');
+                if (splash) {
+                    splash.classList.add('hidden');
+                    setTimeout(() => { splash.style.display = 'none'; }, 700);
+                }
+            }, 1800);
+            generateParticles();
+        });
+
+        // Particles
+        function generateParticles() {
+            const container = document.getElementById('particlesContainer');
+            if (!container) return;
+            const colors = ['#1f6d4c', '#dda23a', '#3fae7c', '#e6b458', '#fff'];
+            for (let i = 0; i < 15; i++) {
+                const p = document.createElement('div');
+                p.className = 'particle';
+                const size = 4 + Math.random() * 8;
+                p.style.width = size + 'px';
+                p.style.height = size + 'px';
+                p.style.left = Math.random() * 100 + '%';
+                p.style.bottom = '0';
+                p.style.background = colors[Math.floor(Math.random() * colors.length)];
+                p.style.animationDuration = (4 + Math.random() * 6) + 's';
+                p.style.animationDelay = (Math.random() * 4) + 's';
+                container.appendChild(p);
+            }
+        }
+
+        // 3D Tilt on city cards
+        document.addEventListener('mouseover', function(e) {
+            const card = e.target.closest('.card-3d');
+            if (!card) return;
+            const rect = card.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            const centerX = rect.width / 2;
+            const centerY = rect.height / 2;
+            const rotX = ((y - centerY) / centerY) * -8;
+            const rotY = ((x - centerX) / centerX) * 8;
+            card.style.setProperty('--rotX', rotX + 'deg');
+            card.style.setProperty('--rotY', rotY + 'deg');
+        });
+        document.addEventListener('mouseout', function(e) {
+            const card = e.target.closest('.card-3d');
+            if (!card) return;
+            card.style.setProperty('--rotX', '0deg');
+            card.style.setProperty('--rotY', '0deg');
+        });
 
         /* ================= DARK MODE ================= */
         function toggleDark() {
@@ -2879,7 +3184,7 @@
                     ? `background:linear-gradient(rgba(0,0,0,0.1),rgba(0,0,0,0.65)),url('${imgUrl}') center/cover`
                     : `background:${grad(i)}`;
                 return `
-    <div class="city-card" style="${bgStyle}" onclick="quickStartCity('${c.name}')">
+    <div class="city-card card-3d stagger-enter" style="${bgStyle}" onclick="quickStartCity('${c.name}')">
       <div><div class="cname">${c.name}</div><div class="ccount">📍 ${c.count || 0} joy</div></div>
     </div>`;
             }).join('');
@@ -3195,12 +3500,40 @@
         }
 
         function showToast(icon, text) {
-            const t = document.getElementById('toast');
-            document.querySelector('#toast .tic').textContent = icon || '⭐';
-            document.querySelector('#toast .tic').style.display = 'inline';
-            document.getElementById('toastText').textContent = text || 'Kalit topildi! +1';
-            t.classList.add('show');
-            setTimeout(() => t.classList.remove('show'), 1100);
+            // Support both calling conventions:
+            // showToast(icon, text) - old style
+            // showToast(msg, icon) - new style (detect if second arg is an icon emoji)
+            const container = document.getElementById('toastContainer');
+            if (!container) {
+                // Fallback
+                const old = document.getElementById('toast');
+                if (old) { old.style.display = 'flex'; }
+                return;
+            }
+            // Detect parameter order: if text is a single emoji or short, it's probably old-style (icon, text)
+            let msg, ico;
+            if (text !== undefined) {
+                // Old style: showToast(icon, text)
+                ico = icon || '⭐';
+                msg = text;
+            } else {
+                // New style: showToast(msg, icon)
+                msg = icon || 'Kalit topildi! +1';
+                ico = '⭐';
+            }
+            const id = 't' + Date.now() + Math.random().toString(36).slice(2,5);
+            const el = document.createElement('div');
+            el.className = 'toast-item';
+            el.id = id;
+            el.innerHTML = `<span class="toast-icon">${ico}</span><span>${msg}</span>`;
+            container.appendChild(el);
+            setTimeout(() => {
+                const item = document.getElementById(id);
+                if (item) {
+                    item.classList.add('out');
+                    setTimeout(() => { if (item.parentNode) item.remove(); }, 300);
+                }
+            }, 2500);
         }
 
         /* ================= TRIPS TAB ================= */
@@ -3287,12 +3620,12 @@
 
         /* ================= SHOP / DO'KON ================= */
         const SHOP_ITEMS = [
-            { id: 'sub_basic', name: '⭐ Basic obuna', desc: '5 ta joyni oldindan ko\'rish, reklamasiz', icon: '⭐', color: '#1f6d4c', price: 15, type: 'subscription', value: 'basic', dur: 30 },
-            { id: 'sub_premium', name: '💎 Premium obuna', desc: '10 ta joy, offline xarita, shaxsiy agent', icon: '💎', color: '#dda23a', price: 35, type: 'subscription', value: 'premium', dur: 30 },
-            { id: 'sub_vip', name: '👑 VIP obuna', desc: 'Cheksiz joylar, barcha imkoniyatlar', icon: '👑', color: '#a86b1f', price: 60, type: 'subscription', value: 'vip', dur: 30 },
-            { id: 'boost', name: '🚀 Tezlatkich', desc: '2x yulduz yig\'ish (7 kun)', icon: '🚀', color: '#c96b3e', price: 20, type: 'boost', dur: 7 },
-            { id: 'theme_dark', name: '🔮 Glassmorphism dizayn', desc: 'Shishasimon premium dizayn — barcha kartalar shaffof oyna effektida', icon: '🔮', color: '#667eea', price: 10, type: 'theme', value: 'glass' },
-            { id: 'guide', name: '📖 Audio gid', desc: 'Shaharlar bo\'ylab audio qo\'llanma', icon: '🎧', color: '#2f8f6a', price: 25, type: 'guide' }
+            { id: 'sub_basic', name: '⭐ Basic obuna', desc: '5 ta joyni oldindan ko\'rish, reklamasiz', icon: '⭐', color: '#1f6d4c', price: 15, type: 'subscription', value: 'basic', dur: 30, image: 'https://picsum.photos/id/10/400/250' },
+            { id: 'sub_premium', name: '💎 Premium obuna', desc: '10 ta joy, offline xarita, shaxsiy agent', icon: '💎', color: '#dda23a', price: 35, type: 'subscription', value: 'premium', dur: 30, image: 'https://picsum.photos/id/20/400/250' },
+            { id: 'sub_vip', name: '👑 VIP obuna', desc: 'Cheksiz joylar, barcha imkoniyatlar', icon: '👑', color: '#a86b1f', price: 60, type: 'subscription', value: 'vip', dur: 30, image: 'https://picsum.photos/id/30/400/250' },
+            { id: 'boost', name: '🚀 Tezlatkich', desc: '2x yulduz yig\'ish (7 kun)', icon: '🚀', color: '#c96b3e', price: 20, type: 'boost', dur: 7, image: 'https://picsum.photos/id/40/400/250' },
+            { id: 'theme_dark', name: '🔮 Glassmorphism dizayn', desc: 'Shishasimon premium dizayn — barcha kartalar shaffof oyna effektida', icon: '🔮', color: '#667eea', price: 10, type: 'theme', value: 'glass', image: 'https://picsum.photos/id/50/400/250' },
+            { id: 'guide', name: '📖 Audio gid', desc: 'Shaharlar bo\'ylab audio qo\'llanma', icon: '🎧', color: '#2f8f6a', price: 25, type: 'guide', image: 'https://picsum.photos/id/60/400/250' }
         ];
         cleanExpired();
 
@@ -3329,7 +3662,7 @@
             }
 
             html += `<div class="shop-grid">`;
-            SHOP_ITEMS.forEach(item => {
+            SHOP_ITEMS.forEach((item, idx) => {
                 const owned = state.ownedItems.includes(item.id);
                 const isSubItem = item.type === 'subscription';
                 const isCurrentSub = isSubItem && state.subscription === item.value;
@@ -3350,8 +3683,10 @@
                 }
                 
                 html += `
-            <div class="shop-card">
-                <div class="sicon" style="background:${item.color}20;color:${item.color}">${item.icon}</div>
+            <div class="shop-card stagger-enter">
+                <div class="scover" style="background:linear-gradient(rgba(0,0,0,0.2),rgba(0,0,0,0.6)),url('${item.image || ''}') center/cover;background-color:${item.color};">
+                    <div class="scover-icon">${item.icon}</div>
+                </div>
                 <div class="sinfo">
                     <h4>${item.name}</h4>
                     <p>${item.desc}</p>
@@ -3733,6 +4068,7 @@
             document.documentElement.classList.add('glass-theme');
         }
 
+        showScreen('home');
         renderAll();
     </script>
 

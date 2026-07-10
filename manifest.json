@@ -1,0 +1,26 @@
+{
+  "name": "YO'LCHI - AI Sayohat Hamrohi",
+  "short_name": "YO'LCHI",
+  "description": "O'zbekiston bo'ylab AI yordamida sayohat rejalashtirish",
+  "start_url": "/xazna%201/index.html",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#f6f2e8",
+  "theme_color": "#1f6d4c",
+  "categories": ["travel", "lifestyle", "education"],
+  "icons": [
+    {
+      "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'%3E%3Crect width='192' height='192' rx='32' fill='%231f6d4c'/%3E%3Cpath d='M96 16 L118 70 L176 70 L128 106 L144 164 L96 132 L48 164 L64 106 L16 70 L74 70 Z' fill='%23dda23a' stroke='%23fff' stroke-width='4'/%3E%3C/svg%3E",
+      "sizes": "192x192",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' rx='64' fill='%231f6d4c'/%3E%3Cpath d='M256 32 L316 180 L480 180 L350 280 L394 448 L256 344 L118 448 L162 280 L32 180 L196 180 Z' fill='%23dda23a' stroke='%23fff' stroke-width='8'/%3E%3C/svg%3E",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "splash_pages": null
+}
