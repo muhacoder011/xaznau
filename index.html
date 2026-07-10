@@ -1897,6 +1897,10 @@
         .day-cb { display: none; }
         .day-cb + span { opacity: 0.6; }
         .day-cb:checked + span { opacity: 1; }
+
+        /* AI Voice badge */
+        .ai-voice-badge { display: inline-block; font-size: 10px; font-weight: 700; background: var(--green); color: #fff; padding: 2px 8px; border-radius: 20px; margin-left: 6px; vertical-align: middle; animation: pulse-voice 2s infinite; }
+        @keyframes pulse-voice { 0%,100% { opacity: 1; } 50% { opacity: 0.6; } }
     </style>
 </head>
 
@@ -1942,9 +1946,9 @@
 
                 <div class="home-scheduler-widget" id="homeSchedulerWidget" onclick="goTab('scheduler')" style="background:var(--surface-2);border-radius:16px;padding:16px;margin-bottom:20px;cursor:pointer;border:1px solid var(--line);">
                     <div style="display:flex;align-items:center;gap:12px;">
-                        <div style="font-size:28px;">🤖</div>
+                        <div style="font-size:28px;" id="homeSchedulerIcon">🤖</div>
                         <div style="flex:1;">
-                            <div style="font-size:13px;font-weight:700;">AI Kunlik Reja</div>
+                            <div style="font-size:13px;font-weight:700;">AI Kunlik Reja <span id="aiVoiceIndicator" style="display:none;font-size:10px;font-weight:700;background:var(--green);color:#fff;padding:1px 7px;border-radius:20px;vertical-align:middle;">🔊 AI</span></div>
                             <div id="homeSchedulerPreview" style="font-size:12px;color:var(--ink-soft);margin-top:2px;">Bugungi vazifalarni ko'rish</div>
                         </div>
                         <span style="font-size:16px;">›</span>
@@ -3700,6 +3704,11 @@
             if (!widget) return;
             const preview = document.getElementById('homeSchedulerPreview');
             if (!preview) return;
+            // Show AI voice indicator if speech is supported
+            const voiceIndicator = document.getElementById('aiVoiceIndicator');
+            if (voiceIndicator && 'speechSynthesis' in window) {
+                voiceIndicator.style.display = 'inline';
+            }
             // Get next task if ai-scheduler is loaded
             if (typeof getNextTask === 'function' && typeof getTodayStats === 'function') {
                 const nextTask = getNextTask();

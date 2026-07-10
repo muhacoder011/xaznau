@@ -50,6 +50,117 @@ function schedulerToast(icon, text, duration) {
     setTimeout(() => { toast.style.opacity = '0'; toast.style.transform = 'translate(-50%,-50%) scale(0.8)'; setTimeout(() => toast.remove(), 300); }, duration);
 }
 
+/* ---------- Voice/Speech Synthesis — AI o'zi gapirsin ---------- */
+const AI_VOICE = null; // Will be set on first use
+
+function speakAI(text, callback) {
+    if (!('speechSynthesis' in window)) {
+        if (callback) callback();
+        return;
+    }
+    // Cancel any ongoing speech
+    window.speechSynthesis.cancel();
+    
+    const utterance = new SpeechSynthesisUtterance(text);
+    // Try to find a good Uzbek-friendly voice
+    const voices = window.speechSynthesis.getVoices();
+    const uzVoice = voices.find(v => v.lang && (v.lang.startsWith('uz') || v.lang.startsWith('tr') || v.lang.startsWith('az')));
+    const enVoice = voices.find(v => v.lang && v.lang.startsWith('en'));
+    utterance.voice = uzVoice || enVoice || voices[0];
+    utterance.lang = uzVoice ? 'uz-UZ' : 'en-US';
+    utterance.rate = 0.9;
+    utterance.pitch = 1.0;
+    utterance.volume = 1.0;
+    
+    if (callback) {
+        utterance.onend = callback;
+        utterance.onerror = callback;
+    }
+    
+    window.speechSynthesis.speak(utterance);
+    console.log('🔊 AI gapirdi:', text);
+}
+
+/* Auto-plan day — AI automatically adds suggested tasks if day is empty */
+function aiAutoPlanDay() {
+    const today = getDayIndex();
+    const todayTasks = getTodayTasks();
+    const hour = new Date().getHours();
+    const isSleepTime = hour >= 22 || hour < 5;
+    if (isSleepTime) return;
+    
+    // Only auto-plan if there are very few tasks (0 or 1)
+    if (todayTasks.length > 1) return;
+    
+    const suggestions = aiSuggestTasks();
+    let added = 0;
+    
+    suggestions.forEach(function(s) {
+        // Check if a similar task already exists at this time
+        const exists = taskSchedule.some(function(t) {
+            return t.active && t.days.includes(today) && t.time === s.time;
+        });
+        if (!exists && added < 3) {
+            const task = {
+                id: 'task-' + Date.now() + '-' + added,
+                title: s.title,
+                time: s.time,
+                days: [today],
+                active: true,
+                desc: s.desc || '',
+                cat: s.cat || 'other',
+                auto: true
+            };
+            taskSchedule.push(task);
+            added++;
+        }
+    });
+    
+    if (added > 0) {
+        saveTasks();
+        console.log('🤖 AI avtomatik ravishda', added, 'ta vazifa qo\'shdi');
+        // Speak about what was added
+        const firstTask = suggestions[0];
+        if (firstTask) {
+            speakAI('Assalomu alaykum! Bugungi kun uchun ' + added + ' ta yangi vazifa rejalashtirildi. ' + firstTask.title + ' dan boshlang!');
+        } else {
+            speakAI('Assalomu alaykum! Bugungi rejalar tayyor. Vazifalaringizni bajarishga tayyormisiz?');
+        }
+    } else if (todayTasks.length === 0) {
+        // Even if no suggestions, greet the user
+        speakAI('Assalomu alaykum! Bugun uchun hech qanday vazifa topilmadi. Yangi vazifa qo\'shishingiz mumkin.');
+    }
+}
+
+/* Proactive greeting — AI speaks when user opens scheduler */
+let lastAIGreeting = 0;
+
+function aiProactiveGreeting() {
+    const now = Date.now();
+    // Only greet once per hour
+    if (now - lastAIGreeting < 3600000) return;
+    lastAIGreeting = now;
+    
+    const hour = new Date().getHours();
+    const stats = getTodayStats();
+    const nextTask = getNextTask();
+    
+    let greeting = '';
+    if (hour < 12) greeting = 'Xayrli tong! ';
+    else if (hour < 18) greeting = 'Xayrli kun! ';
+    else greeting = 'Xayrli kech! ';
+    
+    if (stats.total > 0) {
+        greeting += 'Bugun ' + stats.total + ' ta vazifa bor. ';
+        if (stats.done > 0) greeting += stats.done + ' tasi bajarildi. ';
+        if (nextTask) greeting += 'Keyingi vazifa: ' + nextTask.title + '.';
+    } else {
+        greeting += 'Bugungi vazifalarni rejalashtirish vaqti.';
+    }
+    
+    speakAI(greeting);
+}
+
 /* ---------- Core Functions ---------- */
 function getDayIndex() { return new Date().getDay(); }
 
@@ -106,42 +217,7 @@ function getPendingReminders() { return getTodayTasks().filter(t => isTaskDue(t)
 
 function getCategoryLabel(catId) { const c = CATEGORIES.find(c => c.id === catId); return c ? c.label : '📌 Boshqa'; }
 
-/* ---------- AI Smart Suggestions ---------- */
-
-/* AI generates suggested tasks based on time of day and user patterns */
-function aiSuggestTasks() {
-    const hour = new Date().getHours();
-    const suggestions = [];
-    
-    if (hour >= 5 && hour < 8) {
-        suggestions.push({ title: '☀️ Erta turish', time: '06:00', desc: 'Kunni barvaqt boshlash samaradorlikni oshiradi' });
-        suggestions.push({ title: '🏃 Tonggi yugurish', time: '06:30', desc: '30 daqiqa ochiq havoda yugurish' });
-        suggestions.push({ title: '🚿 Ertalabki dush', time: '07:00', desc: 'Energiya olish uchun salqin dush' });
-        suggestions.push({ title: '🥣 Nonushta', time: '07:30', desc: 'To\'yimli va sog\'lom nonushta qilish' });
-    } else if (hour >= 8 && hour < 12) {
-        suggestions.push({ title: '💼 Asosiy ishlar', time: '09:00', desc: 'Eng muhim vazifalarni bajarish' });
-        suggestions.push({ title: '☕ Qisqa tanaffus', time: '10:30', desc: '10 daqiqa dam olish va suv ichish' });
-    } else if (hour >= 12 && hour < 14) {
-        suggestions.push({ title: '🍽️ Tushlik', time: '12:30', desc: 'To\'yimli tushlik qilish va dam olish' });
-        suggestions.push({ title: '😴 Qisqa uyqu', time: '13:00', desc: '20 daqiqa power nap — energiya zaxirasini to\'ldirish' });
-    } else if (hour >= 14 && hour < 17) {
-        suggestions.push({ title: '💻 Davomiy ishlar', time: '14:00', desc: 'Tushdan keyingi vazifalarni bajarish' });
-        suggestions.push({ title: '🚶 Sayr qilish', time: '16:00', desc: '15 daqiqa toza havoda sayr qilish' });
-    } else if (hour >= 17 && hour < 20) {
-        suggestions.push({ title: '🏋️ Kechki sport', time: '18:00', desc: '1 soat sport zalida yoki uyda mashq' });
-        suggestions.push({ title: '🚿 Kechki dush', time: '19:00', desc: 'Kun charchog\'ini yuvish' });
-    } else if (hour >= 20 && hour < 23) {
-        suggestions.push({ title: '👨‍👩‍👧 Oila bilan vaqt', time: '20:00', desc: 'Oilangiz bilan muloqot qilish' });
-        suggestions.push({ title: '📖 Yotish oldi o\'qish', time: '21:30', desc: '30 daqiqa kitob o\'qish' });
-    } else {
-        suggestions.push({ title: '😴 Uyquga tayyorgarlik', time: '22:00', desc: 'Telefonni chetga qo\'yib, uyquga tayyorlanish' });
-        suggestions.push({ title: '🌜 Uyqu', time: '23:00', desc: 'Yetarlicha uyqu — sog\'lik garovi' });
-    }
-    
-    return suggestions;
-}
-
-/* ---------- AI Smart Suggestions (Improved) ---------- */
+/* ---------- AI Smart Suggestions (vaqtga asoslangan) ---------- */
 function aiSuggestTasks() {
     const hour = new Date().getHours();
     const s = [];
@@ -229,7 +305,8 @@ function renderAIScheduler(containerId) {
     else if (hour < 18) timeGreeting = '☀️ Xayrli kun!';
     else timeGreeting = '🌆 Xayrli kech!';
     
-    let html = '<div class="ai-scheduler"><div class="scheduler-header"><div class="scheduler-greeting">' + timeGreeting + '</div><div class="scheduler-date">' + new Date().toLocaleDateString('uz-UZ', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }) + '</div></div>';
+    var speechSupported = ('speechSynthesis' in window);
+    let html = '<div class="ai-scheduler"><div class="scheduler-header"><div class="scheduler-greeting">' + timeGreeting + '</div><div class="scheduler-date">' + new Date().toLocaleDateString('uz-UZ', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }) + (speechSupported ? '<span class="ai-voice-badge" title="AI ovozli yordamchi">🔊 AI ovozli</span>' : '') + '</div></div>';
     
     if (isSleepTime) {
         html += '<div class="sleep-mode-card"><span class="sleep-icon">🌜</span><div class="sleep-text"><strong>Dam olish vaqti</strong><br><span style="font-size:12px;opacity:0.8;">Tana va miyangizni dam oldiring. Ertangi kun uchun kuch to\'plang!</span></div></div>';
@@ -271,7 +348,7 @@ function renderAIScheduler(containerId) {
     html += '<div class="scheduler-section-title" style="margin-top:20px;">🤖 AI tavsiyalari</div><p class="ai-hint">Hozirgi vaqtga asoslangan AI tavsiyalari</p><div class="ai-suggestions">' + suggestions.slice(0,5).map(function(s) { return '<div class="suggestion-card" onclick="addSuggestedTask(\'' + s.title.replace(/'/g, '') + '\',\'' + s.time + '\',\'' + (s.desc || '').replace(/'/g, '') + '\',\'' + (s.cat || 'other') + '\')"><div class="sugg-icon">' + s.title.split(' ')[0] + '</div><div class="sugg-content"><div class="sugg-title">' + s.title + '</div><div class="sugg-desc">' + s.desc + '</div><div class="sugg-time">🕐 ' + s.time + '</div></div><button class="sugg-add">+</button></div>'; }).join('') + '</div>';
     
     // Manage
-    html += '<div class="scheduler-section-title" style="margin-top:24px;">⚙️ Boshqarish</div><div class="manage-tasks"><button class="cta-btn ghost" onclick="openTaskManager()" style="margin-bottom:8px;">📋 Barcha vazifalar</button><button class="cta-btn ghost" onclick="showWeeklyPlan()" style="margin-bottom:8px;">📅 Haftalik reja</button><button class="cta-btn ghost" onclick="resetDefaultTasks()">🔄 Standart vazifalarni tiklash</button></div></div>';
+    html += '<div class="scheduler-section-title" style="margin-top:24px;">⚙️ Boshqarish</div><div class="manage-tasks"><button class="cta-btn ghost" onclick="openTaskManager()" style="margin-bottom:8px;">📋 Barcha vazifalar</button><button class="cta-btn ghost" onclick="showWeeklyPlan()" style="margin-bottom:8px;">📅 Haftalik reja</button><button class="cta-btn ghost" onclick="aiRePlanDay()" style="margin-bottom:8px;">🤖 AI qayta rejalashtirsin</button><button class="cta-btn ghost" onclick="resetDefaultTasks()">🔄 Standart vazifalarni tiklash</button></div>';
     
     el.innerHTML = html;
 }
@@ -414,7 +491,7 @@ function scrollToTask(taskId) {
     }
 }
 
-/* ---------- Notification System ---------- */
+/* ---------- Notification System — AI o'zi eslatadi ---------- */
 function checkTaskReminders() {
     var pending = getPendingReminders();
     if (pending.length > 0) {
@@ -424,9 +501,12 @@ function checkTaskReminders() {
         if (!lastReminder || (now - parseInt(lastReminder)) > 5 * 60 * 1000) {
             schedulerToast('🔔', task.title + ' — ' + task.time);
             localStorage.setItem('yolchi_last_reminder', now);
+            // Browser notification
             if ('Notification' in window && Notification.permission === 'granted') {
                 new Notification('YO\'LCHI AI — Eslatma', { body: task.title + ' — ' + task.time });
             }
+            // Voice notification — AI speaks the reminder!
+            speakAI('Diqqat! ' + task.title + ' vaqti keldi. Iltimos, vazifani bajarishni unutmang.');
         }
     }
     var lastRender = localStorage.getItem('yolchi_scheduler_render');
@@ -447,13 +527,44 @@ function requestNotificationPermission() {
 var schedulerInitialized = false;
 
 function initAIScheduler(containerId) {
-    if (schedulerInitialized) { renderAIScheduler(containerId); return; }
+    if (schedulerInitialized) {
+        renderAIScheduler(containerId);
+        return;
+    }
     schedulerInitialized = true;
+    
+    // Load voices for speech synthesis
+    if ('speechSynthesis' in window) {
+        window.speechSynthesis.getVoices(); // Prime the voice list
+    }
+    
     renderAIScheduler(containerId);
     requestNotificationPermission();
+    
+    // Auto-plan the day — AI fills empty slots
+    aiAutoPlanDay();
+    
+    // Proactive greeting — AI speaks
+    setTimeout(aiProactiveGreeting, 1500);
+    
+    // Check reminders every 30 seconds
     setInterval(checkTaskReminders, 30000);
     setTimeout(checkTaskReminders, 3000);
+    
     if (typeof updateHomeSchedulerWidget === 'function') updateHomeSchedulerWidget();
+}
+
+/* Re-initialize scheduler with fresh auto-plan (call when user wants AI to re-plan) */
+function aiRePlanDay() {
+    // Remove all auto-generated tasks for today
+    var today = getDayIndex();
+    taskSchedule = taskSchedule.filter(function(t) {
+        return !(t.auto && t.days.length === 1 && t.days[0] === today);
+    });
+    saveTasks();
+    aiAutoPlanDay();
+    renderAIScheduler('aiSchedulerContainer');
+    speakAI('Kunlik reja yangilandi. Vazifalaringizni tekshirib ko\'ring.');
 }
 
 window.initScheduler = initAIScheduler;
@@ -461,3 +572,6 @@ window.renderScheduler = renderAIScheduler;
 window.checkReminders = checkTaskReminders;
 window.getNextTask = getNextTask;
 window.getTodayStats = getTodayStats;
+window.aiRePlanDay = aiRePlanDay;
+window.speakAI = speakAI;
+window.aiAutoPlanDay = aiAutoPlanDay;
