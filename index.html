@@ -1821,6 +1821,55 @@
             backdrop-filter: blur(var(--glass-blur)) !important;
             border: 1px solid var(--glass-border) !important;
         }
+
+        /* ========== AI SCHEDULER ========== */
+        .ai-scheduler { margin-top: 8px; }
+        .scheduler-header { margin-bottom: 16px; }
+        .scheduler-greeting { font-size: 20px; font-weight: 800; font-family: 'Plus Jakarta Sans',sans-serif; }
+        .scheduler-date { font-size: 12px; color: var(--ink-soft); margin-top: 2px; }
+        .scheduler-stats { display: grid; grid-template-columns: repeat(3,1fr); gap: 10px; margin-bottom: 18px; }
+        .sched-stat { background: var(--surface-2); border-radius: 14px; padding: 14px 10px; text-align: center; }
+        .sched-stat-num { font-size: 18px; font-weight: 800; color: var(--green); }
+        .sched-stat-lbl { font-size: 10.5px; color: var(--ink-soft); margin-top: 2px; }
+        .next-task-widget { background: linear-gradient(135deg, var(--green), var(--green-deep)); color: #fff; border-radius: 16px; padding: 16px; margin-bottom: 16px; cursor: pointer; }
+        .next-task-widget.done { background: var(--surface-2); color: var(--ink); }
+        .next-task-label { font-size: 11px; opacity: 0.85; margin-bottom: 4px; }
+        .next-task-title { font-size: 16px; font-weight: 800; }
+        .next-task-time { font-size: 12px; opacity: 0.9; margin-top: 4px; }
+        .reminder-alert { background: var(--gold); color: #3a2708; border-radius: 14px; padding: 14px; margin-bottom: 16px; display: flex; align-items: center; gap: 12px; animation: pulse-alert 1.5s infinite; }
+        @keyframes pulse-alert { 0%,100% { transform: scale(1); } 50% { transform: scale(1.02); } }
+        .reminder-icon { font-size: 28px; }
+        .reminder-text { flex: 1; font-size: 13px; font-weight: 600; }
+        .reminder-btn { background: rgba(0,0,0,0.2); border: none; color: #3a2708; padding: 8px 16px; border-radius: 10px; font-size: 12px; font-weight: 700; cursor: pointer; white-space: nowrap; }
+        .scheduler-section-title { font-size: 14px; font-weight: 800; color: var(--ink); margin: 18px 0 10px; font-family: 'Plus Jakarta Sans',sans-serif; }
+        .task-list { display: flex; flex-direction: column; gap: 8px; }
+        .task-item { display: flex; align-items: center; gap: 12px; background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 14px; transition: all .2s ease; }
+        .task-item.done { opacity: 0.6; }
+        .task-item.done .task-title { text-decoration: line-through; color: var(--ink-soft); }
+        .task-check { width: 26px; height: 26px; border-radius: 50%; border: 2px solid var(--green); display: flex; align-items: center; justify-content: center; cursor: pointer; font-weight: 800; font-size: 14px; flex-shrink: 0; color: var(--green); background: transparent; }
+        .task-item.done .task-check { background: var(--green); color: #fff; }
+        .task-content { flex: 1; }
+        .task-title { font-size: 14px; font-weight: 700; }
+        .task-time { font-size: 11.5px; color: var(--ink-soft); margin-top: 2px; }
+        .task-actions { display: flex; gap: 6px; }
+        .task-edit-btn, .task-del-btn { background: var(--surface-2); border: none; width: 28px; height: 28px; border-radius: 8px; cursor: pointer; font-size: 13px; display: flex; align-items: center; justify-content: center; }
+        .task-del-btn { color: var(--danger); }
+        .task-edit-btn { color: var(--ink-soft); }
+        .empty-tasks { text-align: center; padding: 30px; color: var(--ink-soft); }
+        .empty-tasks .eic { font-size: 32px; margin-bottom: 8px; }
+        .ai-hint { font-size: 11.5px; color: var(--ink-soft); margin-bottom: 10px; }
+        .ai-suggestions { display: flex; flex-direction: column; gap: 8px; }
+        .suggestion-card { display: flex; align-items: center; gap: 12px; background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 12px; cursor: pointer; transition: all .2s ease; }
+        .suggestion-card:hover { border-color: var(--green); transform: translateX(2px); }
+        .sugg-icon { font-size: 22px; flex-shrink: 0; }
+        .sugg-content { flex: 1; }
+        .sugg-title { font-size: 13.5px; font-weight: 700; }
+        .sugg-desc { font-size: 11.5px; color: var(--ink-soft); }
+        .sugg-time { font-size: 11px; color: var(--green); font-weight: 600; margin-top: 2px; }
+        .sugg-add { width: 28px; height: 28px; border-radius: 50%; background: var(--green); color: #fff; border: none; font-size: 16px; font-weight: 700; cursor: pointer; flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
+        .add-task-btn { margin-top: 12px; }
+        .manage-tasks { display: flex; flex-direction: column; gap: 8px; }
+        .task-manager-overlay * { font-family: 'Inter', sans-serif; }
     </style>
 </head>
 
@@ -1863,6 +1912,17 @@
                 <div class="city-grid" id="cityGridHome"></div>
 
                 <div class="stats-card" id="statsCardHome"></div>
+
+                <div class="home-scheduler-widget" id="homeSchedulerWidget" onclick="goTab('scheduler')" style="background:var(--surface-2);border-radius:16px;padding:16px;margin-bottom:20px;cursor:pointer;border:1px solid var(--line);">
+                    <div style="display:flex;align-items:center;gap:12px;">
+                        <div style="font-size:28px;">🤖</div>
+                        <div style="flex:1;">
+                            <div style="font-size:13px;font-weight:700;">AI Kunlik Reja</div>
+                            <div id="homeSchedulerPreview" style="font-size:12px;color:var(--ink-soft);margin-top:2px;">Bugungi vazifalarni ko'rish</div>
+                        </div>
+                        <span style="font-size:16px;">›</span>
+                    </div>
+                </div>
 
                 <div class="sec-title" data-tr="sec_why">Nega YO'LCHI?</div>
                 <div class="why-grid">
@@ -2039,7 +2099,8 @@
                     <option value="" data-tr="admin_select_city">Shaharni tanlang</option>
                 </select>
                 <input id="placeName" placeholder="Joy nomi" data-tr="admin_place_name" style="width:100%;padding:12px;margin:10px 0;">
-                <input id="placeImage" placeholder="Rasm URL" data-tr="admin_image_url" style="width:100%;padding:12px;margin:10px 0;">
+                <input id="placeImage" type="file" accept="image/*" style="width:100%;padding:12px;margin:10px 0;border-radius:12px;border:1px solid var(--line);background:var(--surface);font-size:13.5px;">
+                <div id="imagePreview" style="display:none;margin-bottom:10px;"><img id="previewImg" style="width:100%;max-height:160px;object-fit:cover;border-radius:12px;"></div>
                 <textarea id="placeDesc" placeholder="Tavsif" data-tr="admin_desc" style="width:100%;padding:12px;height:120px;"></textarea>
                 <div style="display:flex;align-items:center;gap:10px;margin:10px 0;">
                     <span style="font-weight:600;" data-tr="admin_stars">⭐ Yulduz miqdori:</span>
@@ -2053,10 +2114,21 @@
             </div>
         </section>
 
+        <!-- ============ AI SCHEDULER (KUNLIK VAZIFALAR) ============ -->
+        <section class="screen" data-screen="scheduler">
+            <div class="topbar">
+                <div class="topbar-left"><button class="back-btn" onclick="goHome()">←</button>
+                    <h2>🤖 AI Kunlik Reja</h2>
+                </div>
+                <button class="icon-btn" onclick="toggleDark()">🌙</button>
+            </div>
+            <div id="aiSchedulerContainer"></div>
+        </section>
+
         <!-- ============ BOTTOM NAV ============ -->
         <div class="bottom-nav" id="bottomNav">
             <button data-tab="home" class="active" onclick="goTab('home')" data-tr="nav_home"><span class="ic">🏠</span>Bosh sahifa</button>
-            <button data-tab="discover" onclick="goTab('discover')" data-tr="nav_discover"><span class="ic">🧭</span>Kashfiyot</button>
+            <button data-tab="scheduler" onclick="goTab('scheduler');setTimeout(()=>initScheduler('aiSchedulerContainer'),300);" data-tr="nav_scheduler"><span class="ic">🤖</span>Reja</button>
             <button data-tab="shop" onclick="goTab('shop')" data-tr="nav_shop"><span class="ic">⭐</span>Do'kon</button>
             <button data-tab="trips" onclick="goTab('trips')" data-tr="nav_trips"><span class="ic">📑</span>Sayohatlar</button>
             <button data-tab="profile" onclick="goTab('profile')" data-tr="nav_profile"><span class="ic">👤</span>Profil</button>
@@ -2084,62 +2156,12 @@
             'linear-gradient(135deg,#3a7d94,#1f4b5c)'
         ];
 
-        const CITIES = [
-            { name: "Toshkent", emoji: "🏙️", count: 6, categories: ['tarixiy', 'xarid', 'taom'], image: 'https://upload.wikimedia.org/wikipedia/en/thumb/f/f6/Nest_One_Tashkent.jpg/500px-Nest_One_Tashkent.jpg' },
-            { name: "Samarqand", emoji: "🕌", count: 5, categories: ['tarixiy', 'taom'], image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8c/RegistanSquare_Samarkand.jpg/500px-RegistanSquare_Samarkand.jpg' },
-            { name: "Buxoro", emoji: "🏰", count: 5, categories: ['tarixiy', 'xarid'], image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d0/2012_Bukhara_7515821196_cropped.jpg/500px-2012_Bukhara_7515821196_cropped.jpg' },
-            { name: "Xiva", emoji: "🏯", count: 5, categories: ['tarixiy'], image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/dc/View_from_the_city_walls%2C_Khiva_%284934484894%29.jpg/500px-View_from_the_city_walls%2C_Khiva_%284934484894%29.jpg' },
-            { name: "Namangan", emoji: "⛰️", count: 5, categories: ['tabiat', 'taom'], image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f0/Mulla_Qirg%CA%BBiz_madrasasi_04.jpg/500px-Mulla_Qirg%CA%BBiz_madrasasi_04.jpg' }
-        ];
+        const CITIES = [];
 
-        // Real city images for display
-        const CITY_IMAGES = {
-            "Toshkent": "https://upload.wikimedia.org/wikipedia/en/thumb/f/f6/Nest_One_Tashkent.jpg/500px-Nest_One_Tashkent.jpg",
-            "Samarqand": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8c/RegistanSquare_Samarkand.jpg/500px-RegistanSquare_Samarkand.jpg",
-            "Buxoro": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d0/2012_Bukhara_7515821196_cropped.jpg/500px-2012_Bukhara_7515821196_cropped.jpg",
-            "Xiva": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/dc/View_from_the_city_walls%2C_Khiva_%284934484894%29.jpg/500px-View_from_the_city_walls%2C_Khiva_%284934484894%29.jpg",
-            "Namangan": "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f0/Mulla_Qirg%CA%BBiz_madrasasi_04.jpg/500px-Mulla_Qirg%CA%BBiz_madrasasi_04.jpg",
-            "Farg'ona": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3e/Ferghana0234-Urinboev.jpg/500px-Ferghana0234-Urinboev.jpg"
-        };
+        // City images — empty by default, admin can add cities via admin panel
+        const CITY_IMAGES = {};
 
-        const ITINERARIES = {
-            "Toshkent": [
-                { name: "Chorsu bozori", time: "09:00", dur: 60, desc: "Shahar markazidagi eng qadimiy bozor — ziravorlar, mevalar va milliy mahsulotlar bilan to'la.", emoji: "🧺", image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/47/Chorsu_Market_general_view.jpg/500px-Chorsu_Market_general_view.jpg' },
-                { name: "Xast Imom majmuasi", time: "10:15", dur: 45, desc: "Mintaqadagi muhim diniy majmua, qadimiy qo'lyozmalar saqlanadigan joy.", emoji: "🕌", travel: { min: 8, km: 1.2 }, image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/34/Barakhan_Madrasah_Tashkent.jpg/500px-Barakhan_Madrasah_Tashkent.jpg' },
-                { name: "Amir Temur maydoni", time: "11:15", dur: 30, desc: "Shahar markazidagi bosh maydon, haykal va bog' bilan mashhur.", emoji: "🌳", travel: { min: 8, km: 2.4 }, image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/ff/Amir_Temur_Square.jpg/500px-Amir_Temur_Square.jpg' },
-                { name: "O'zbekiston tarixi muzeyi", time: "12:00", dur: 90, desc: "Mamlakat tarixi va madaniyatini o'rganish uchun mingdan ortiq eksponat.", emoji: "🏛️", travel: { min: 8, km: 2.7 }, image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f6/Nest_One_Tashkent.jpg/500px-Nest_One_Tashkent.jpg' },
-                { name: "Milliy choyxona", time: "13:45", dur: 45, desc: "An'anaviy choyxonada ko'k choy va milliy taomlar bilan dam olish.", emoji: "🍵", travel: { min: 8, km: 1.7 }, image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f6/Nest_One_Tashkent.jpg/500px-Nest_One_Tashkent.jpg' },
-                { name: "Bo'zsuv bo'yi", time: "14:45", dur: 40, desc: "Kanal bo'yidagi piyodalar hududi, kechki sayr uchun qulay.", emoji: "🚶", travel: { min: 10, km: 2.1 }, image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f6/Nest_One_Tashkent.jpg/500px-Nest_One_Tashkent.jpg' }
-            ],
-            "Samarqand": [
-                { name: "Registon maydoni", time: "09:00", dur: 75, desc: "Shahar qalbi — uchta ulug'vor madrasa bir maydonda jamlangan.", emoji: "🕌", image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/00/Registan_square_Samarkand.jpg/500px-Registan_square_Samarkand.jpg' },
-                { name: "Shohi Zinda", time: "10:30", dur: 50, desc: "Ko'k kafel bilan bezatilgan qadimiy maqbaralar majmuasi.", emoji: "🏛️", travel: { min: 7, km: 1.5 }, image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/94/Shah-i-Zinda%2C_Samarkand_%28Shohi-Zinda_majmuasi%2C_Samarqand%2C_%D0%A8%D0%B0%D1%85%D0%B8_%D0%97%D0%B8%D0%BD%D0%B4%D0%B0%29.jpg/500px-Shah-i-Zinda%2C_Samarkand_%28Shohi-Zinda_majmuasi%2C_Samarqand%2C_%D0%A8%D0%B0%D1%85%D0%B8_%D0%97%D0%B8%D0%BD%D0%B4%D0%B0%29.jpg' },
-                { name: "Bibixonim masjidi", time: "11:35", dur: 40, desc: "Mintaqadagi eng yirik masjidlardan biri, ulkan gumbazlari bilan.", emoji: "🕌", travel: { min: 6, km: 1.1 }, image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/dd/%D0%9C%D0%B5%D1%87%D0%B5%D1%82%D1%8C_%D0%91%D0%B8%D0%B1%D0%B8_%D0%A5%D0%B0%D0%BD%D1%83%D0%BC._%D0%A1%D0%B0%D0%BC%D0%B0%D1%80%D0%BA%D0%B0%D0%BD%D0%B4.jpg/500px-%D0%9C%D0%B5%D1%87%D0%B5%D1%82%D1%8C_%D0%91%D0%B8%D0%B1%D0%B8_%D0%A5%D0%B0%D0%BD%D1%83%D0%BC._%D0%A1%D0%B0%D0%BC%D0%B0%D1%80%D0%BA%D0%B0%D0%BD%D0%B4.jpg' },
-                { name: "Siyob bozori", time: "12:30", dur: 45, desc: "Mahalliy mevalar, quritilgan mevalar va non turlari sotiladigan bozor.", emoji: "🍈", travel: { min: 4, km: 0.4 }, image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8c/RegistanSquare_Samarkand.jpg/500px-RegistanSquare_Samarkand.jpg' },
-                { name: "Ulug'bek observatoriyasi", time: "13:45", dur: 50, desc: "O'rta asr astronomiyasi durdonasi, ilmiy asboblar qoldiqlari bilan.", emoji: "🔭", travel: { min: 12, km: 3.2 }, image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f5/A_model_of_Ulug_Beg_obsrvatory_in_the_Uzbek_National_Muzeum.jpg/500px-A_model_of_Ulug_Beg_obsrvatory_in_the_Uzbek_National_Muzeum.jpg' }
-            ],
-            "Buxoro": [
-                { name: "Labi Hovuz", time: "09:00", dur: 45, desc: "Hovuz atrofidagi tarixiy maydon, choyxonalar bilan o'ralgan.", emoji: "💧", image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/72/Labi_Hovuz.jpg/500px-Labi_Hovuz.jpg' },
-                { name: "Ark qal'asi", time: "10:00", dur: 60, desc: "Shahar hukmdorlarining qadimiy qarorgohi bo'lgan qal'a.", emoji: "🏯", travel: { min: 9, km: 1.4 }, image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6f/Ark_of_Bukhara_2023.9.jpg/500px-Ark_of_Bukhara_2023.9.jpg' },
-                { name: "Kalon minorasi", time: "11:15", dur: 40, desc: "Shaharning eng baland va mashhur minorasi.", emoji: "🗼", travel: { min: 6, km: 0.9 }, image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/92/Poi_Kalon.jpg/500px-Poi_Kalon.jpg' },
-                { name: "Toqi Zargaron", time: "12:00", dur: 35, desc: "Qadimiy savdo gumbazi, hozirda hunarmandchilik do'konlari joylashgan.", emoji: "🛍️", travel: { min: 4, km: 0.5 }, image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e5/Toqi_Zargaron_2.jpg/500px-Toqi_Zargaron_2.jpg' },
-                { name: "Milliy hunarmandchilik markazi", time: "12:45", dur: 40, desc: "Mahalliy ustalarning naqsh va gilam ishlarini ko'rish mumkin.", emoji: "🧵", travel: { min: 5, km: 0.6 }, image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d0/2012_Bukhara_7515821196_cropped.jpg/500px-2012_Bukhara_7515821196_cropped.jpg' }
-            ],
-            "Xiva": [
-                { name: "Ichon-Qal'a darvozasi", time: "09:00", dur: 30, desc: "Qadimiy shaharga kiraverishdagi asosiy darvoza.", emoji: "🚪", image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c3/Islam_Khodja_Madrasa_01.jpg/500px-Islam_Khodja_Madrasa_01.jpg' },
-                { name: "Kalta minor", time: "09:40", dur: 35, desc: "Rangdor kafel bilan qoplangan, tugallanmagan mashhur minora.", emoji: "🗼", travel: { min: 5, km: 0.4 }, image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/74/Kalta_Minor.jpg/500px-Kalta_Minor.jpg' },
-                { name: "Tosh hovli saroyi", time: "10:25", dur: 45, desc: "Xon saroyi — hashamatli ichki hovlilari bilan mashhur.", emoji: "🏰", travel: { min: 6, km: 0.5 }, image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b2/Room_in_Tach_Khaouli.jpg/500px-Room_in_Tach_Khaouli.jpg' },
-                { name: "Islom Xo'ja minorasi", time: "11:20", dur: 35, desc: "Shahardagi eng baland minora, tepasidan shahar manzarasi ochiladi.", emoji: "🏔️", travel: { min: 5, km: 0.4 }, image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c3/Islam_Khodja_Madrasa_01.jpg/500px-Islam_Khodja_Madrasa_01.jpg' },
-                { name: "Mahalliy bozor", time: "12:05", dur: 40, desc: "Mahalliy hunarmandchilik va milliy taomlar sotiladigan kichik bozor.", emoji: "🧺", travel: { min: 4, km: 0.3 }, image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/dc/View_from_the_city_walls%2C_Khiva_%284934484894%29.jpg/500px-View_from_the_city_walls%2C_Khiva_%284934484894%29.jpg' }
-            ],
-            "Namangan": [
-                { name: "Uychi masjidi", time: "09:00", dur: 40, desc: "Hududdagi qadimiy va faol masjidlardan biri.", emoji: "🕌", image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f0/Mulla_Qirg%CA%BBiz_madrasasi_04.jpg/500px-Mulla_Qirg%CA%BBiz_madrasasi_04.jpg' },
-                { name: "Xon saroyi", time: "10:00", dur: 75, desc: "Qo'qon xonligiga oid tarixiy saroy, viloyat tarixi va me'morchiligi haqida ma'lumotlar.", emoji: "🏯", travel: { min: 12, km: 2.0 }, image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f0/Mulla_Qirg%CA%BBiz_madrasasi_04.jpg/500px-Mulla_Qirg%CA%BBiz_madrasasi_04.jpg' },
-                { name: "Namangan o'lkashunoslik muzeyi", time: "11:30", dur: 60, desc: "Viloyat tabiati, tarixi va madaniyatiga bag'ishlangan eksponatlar.", emoji: "🏛️", travel: { min: 15, km: 2.6 }, image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a4/NamDU_binosi.png/500px-NamDU_binosi.png' },
-                { name: "Namangan oshxonasi", time: "12:45", dur: 50, desc: "Mahalliy taomlar bilan tanishish uchun mashhur oshxona.", emoji: "🍛", travel: { min: 8, km: 1.3 }, image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a4/NamDU_binosi.png/500px-NamDU_binosi.png' },
-                { name: "Namangan bozori", time: "13:45", dur: 60, desc: "Mahalliy mahsulotlar va hunarmandchilik buyumlari sotiladigan bozor.", emoji: "🧺", travel: { min: 6, km: 0.8 }, image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f0/Mulla_Qirg%CA%BBiz_madrasasi_04.jpg/500px-Mulla_Qirg%CA%BBiz_madrasasi_04.jpg' }
-            ]
-        };
+        const ITINERARIES = {};
 
         const CHAT_STEPS = [
             { ai: 'chat_greeting', field: null, type: 'single', options: ['chat_greeting_btn'] },
@@ -2292,6 +2314,7 @@
                 lang_ru: "Русский",
                 nav_home: "Bosh sahifa",
                 nav_discover: "Kashfiyot",
+                nav_scheduler: "Kunlik Reja",
                 nav_shop: "Do'kon",
                 nav_trips: "Sayohatlar",
                 nav_profile: "Profil",
@@ -2434,6 +2457,7 @@
                 lang_ru: "Русский",
                 nav_home: "Home",
                 nav_discover: "Discover",
+                nav_scheduler: "Daily Plan",
                 nav_shop: "Shop",
                 nav_trips: "Trips",
                 nav_profile: "Profile",
@@ -2575,6 +2599,7 @@
                 lang_ru: "Русский",
                 nav_home: "Главная",
                 nav_discover: "Открытия",
+                nav_scheduler: "Ежедневный план",
                 nav_shop: "Магазин",
                 nav_trips: "Поездки",
                 nav_profile: "Профиль",
@@ -2747,10 +2772,14 @@
         function showScreen(name) {
             document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
             document.querySelector(`.screen[data-screen="${name}"]`).classList.add('active');
-            const tabScreens = ['home', 'discover', 'shop', 'trips', 'profile'];
+            const tabScreens = ['home', 'discover', 'scheduler', 'shop', 'trips', 'profile'];
             document.getElementById('bottomNav').style.display = tabScreens.includes(name) ? 'flex' : 'none';
             if (tabScreens.includes(name)) {
                 document.querySelectorAll('.bottom-nav button').forEach(b => b.classList.toggle('active', b.dataset.tab === name));
+            }
+            // Initialize scheduler when showing scheduler screen
+            if (name === 'scheduler') {
+                setTimeout(() => initScheduler('aiSchedulerContainer'), 200);
             }
             window.scrollTo({ top: 0 });
         }
@@ -2786,10 +2815,21 @@
                 : allCities.filter(c => c.categories && c.categories.includes(activeFilter));
             
             if (filtered.length === 0) {
-                el.innerHTML = `<div class="empty-state" style="grid-column:1/-1;padding:30px 10px;">
-                    <div class="eic">🔍</div>
-                    <p style="font-size:13px;color:var(--ink-soft);">${t('shop_found_none')}</p>
-                </div>`;
+                const totalCities = getAllCities();
+                if (totalCities.length === 0) {
+                    // No cities at all — prompt admin to add
+                    el.innerHTML = `<div class="empty-state" style="grid-column:1/-1;padding:40px 10px;">
+                        <div class="eic">🏙️</div>
+                        <h3>Hali shaharlar yo'q</h3>
+                        <p style="font-size:13px;color:var(--ink-soft);margin-bottom:16px;">Admin panel orqali shaharlar va joylarni qo'shing.</p>
+                        <button class="cta-btn" onclick="goScreen('admin')" style="padding:12px 20px;font-size:13px;">🛠 Admin panelga o'tish</button>
+                    </div>`;
+                } else {
+                    el.innerHTML = `<div class="empty-state" style="grid-column:1/-1;padding:30px 10px;">
+                        <div class="eic">🔍</div>
+                        <p style="font-size:13px;color:var(--ink-soft);">${t('shop_found_none')}</p>
+                    </div>`;
+                }
                 return;
             }
             
@@ -3414,28 +3454,62 @@
         function addPlace() {
             const city = document.getElementById('placeCity').value;
             const name = document.getElementById('placeName').value.trim();
-            const image = document.getElementById('placeImage').value.trim();
+            const fileInput = document.getElementById('placeImage');
             const desc = document.getElementById('placeDesc').value.trim();
             if (!city) { alert("Shaharni tanlang!"); return; }
-            if (!name || !image || !desc) {
-                alert("Iltimos, barcha maydonlarni to'ldiring.");
+            if (!name || !desc) {
+                alert("Iltimos, joy nomi va tavsifni kiriting!");
                 return;
             }
-            const obj = {
-                id: Date.now(),
-                city,
-                name,
-                image,
-                desc,
-                stars: parseInt(document.getElementById('placeStars').value) || 3
-            };
-            adminPlaces.push(obj);
-            localStorage.setItem('adminPlaces', JSON.stringify(adminPlaces));
-            renderAdmin();
-            document.getElementById('placeName').value = '';
-            document.getElementById('placeImage').value = '';
-            document.getElementById('placeDesc').value = '';
+            
+            // Process image: if file uploaded, convert to base64; otherwise use placeholder
+            const processImage = new Promise((resolve) => {
+                if (fileInput.files && fileInput.files[0]) {
+                    const reader = new FileReader();
+                    reader.onload = (e) => resolve(e.target.result);
+                    reader.readAsDataURL(fileInput.files[0]);
+                } else {
+                    resolve(''); // No image uploaded
+                }
+            });
+            
+            processImage.then((imageData) => {
+                const obj = {
+                    id: Date.now(),
+                    city,
+                    name,
+                    image: imageData,
+                    desc,
+                    stars: parseInt(document.getElementById('placeStars').value) || 3
+                };
+                adminPlaces.push(obj);
+                localStorage.setItem('adminPlaces', JSON.stringify(adminPlaces));
+                renderAdmin();
+                document.getElementById('placeName').value = '';
+                document.getElementById('placeImage').value = '';
+                document.getElementById('placeDesc').value = '';
+                document.getElementById('imagePreview').style.display = 'none';
+                alert(`✅ "${name}" joyi qo'shildi!`);
+            });
         }
+        
+        // Preview image when file is selected
+        document.addEventListener('change', function(e) {
+            if (e.target && e.target.id === 'placeImage') {
+                const preview = document.getElementById('imagePreview');
+                const img = document.getElementById('previewImg');
+                if (e.target.files && e.target.files[0]) {
+                    const reader = new FileReader();
+                    reader.onload = function(ev) {
+                        img.src = ev.target.result;
+                        preview.style.display = 'block';
+                    };
+                    reader.readAsDataURL(e.target.files[0]);
+                } else {
+                    preview.style.display = 'none';
+                }
+            }
+        });
 
         function renderAdmin() {
             updateCitySelects();
@@ -3444,10 +3518,13 @@
                 html = '<p style="color:var(--ink-soft);font-size:13px;">'+t('admin_no_places')+'</p>';
             }
             adminPlaces.forEach((p, index) => {
+                const imgStyle = p.image 
+                    ? `background:url('${p.image}') center/cover` 
+                    : `background:${grad(index)};display:flex;align-items:center;justify-content:center;font-size:32px;`;
+                const imgContent = p.image ? '' : '<span>📍</span>';
                 html += `
       <div style="background:var(--surface);padding:18px;border-radius:16px;margin-bottom:16px;border:1px solid var(--line);">
-        <img src="${p.image}"
-          style="width:100%; height:160px; object-fit:cover; border-radius:12px;" />
+        <div style="width:100%;height:160px;border-radius:12px;${imgStyle}">${imgContent}</div>
         <div style="margin-top:10px;">
           <span style="font-size:12px;color:var(--ink-soft);">${p.city || 'Noma\'lum'}</span>
           <h3 style="font-size:17px;">${p.name}</h3>
@@ -3522,7 +3599,34 @@
             renderProfile();
             renderShop();
             applyLang();
+            // Update home scheduler widget
+            updateHomeSchedulerWidget();
         }
+
+        function updateHomeSchedulerWidget() {
+            const widget = document.getElementById('homeSchedulerWidget');
+            if (!widget) return;
+            const preview = document.getElementById('homeSchedulerPreview');
+            if (!preview) return;
+            // Get next task if ai-scheduler is loaded
+            if (typeof getNextTask === 'function' && typeof getTodayStats === 'function') {
+                const nextTask = getNextTask();
+                const stats = getTodayStats();
+                if (stats.total > 0 && stats.done === stats.total) {
+                    preview.textContent = '✅ Bugungi barcha vazifalar bajarildi!';
+                } else if (nextTask) {
+                    preview.textContent = `⌛ ${nextTask.title} — ${nextTask.time}`;
+                } else if (stats.total > 0) {
+                    preview.textContent = `📋 ${stats.done}/${stats.total} vazifa bajarildi`;
+                } else {
+                    preview.textContent = '📋 Bugungi vazifalarni rejalashtirish';
+                }
+            } else {
+                preview.textContent = '📋 Bugungi vazifalarni ko\'rish';
+            }
+        }
+
+        /* ================= INIT ================= */
         // Initialize Glassmorphism theme if purchased
         if (localStorage.getItem('yolchi_glass_theme') === 'true') {
             document.documentElement.classList.add('glass-theme');
@@ -3538,6 +3642,7 @@
     <script src="nmadur.js"></script>
     <script src="qr.js"></script>
     <script src="kalit.js"></script>
+    <script src="ai-scheduler.js"></script>
     <script src="map.js"></script>
 </body>
 
