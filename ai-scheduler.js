@@ -1,40 +1,10 @@
-/* ================= AI KUNLIK VAZIFALARNI REJALASHTIRISH ================= */
-/* AI Daily Task Scheduler — advanced daily planning with Pomodoro timer      */
-/* ========================================================================= */
+/* ================= YO'LCHI — KUNLIK MISSIYA ================= */
+/* AI travel companion — daily mission system for weekend trips  */
+/* Replaces old daily task scheduler (kundalik vazifa)           */
+/* ============================================================== */
 
-let taskSchedule = JSON.parse(localStorage.getItem('yolchi_tasks')) || [];
-let taskHistory = JSON.parse(localStorage.getItem('yolchi_task_history')) || [];
-let pomodoroState = JSON.parse(localStorage.getItem('yolchi_pomodoro')) || { running: false, minutes: 25, seconds: 0, active: false };
-
-/* ---------- Default daily tasks ---------- */
-const DEFAULT_TASKS = [
-    { id: 'task-1', title: '📋 Kunni rejalashtirish', time: '08:00', days: [1,2,3,4,5,6,0], active: true, desc: 'Bugungi muhim ishlarni belgilang', cat: 'work' },
-    { id: 'task-2', title: '☀️ Tonggi sport', time: '06:30', days: [1,2,3,4,5,6], active: true, desc: '30 daqiqa yengil mashq', cat: 'health' },
-    { id: 'task-3', title: '🧘 Meditatsiya', time: '07:00', days: [1,2,3,4,5,6,0], active: true, desc: '10 daqiqa nafas olish mashqi', cat: 'health' },
-    { id: 'task-4', title: '📚 O\'qish', time: '20:00', days: [1,2,3,4,5,6,0], active: true, desc: '30 daqiqa kitob o\'qish', cat: 'study' },
-    { id: 'task-5', title: '📝 Kunlik hisobot', time: '21:00', days: [1,2,3,4,5,6,0], active: true, desc: 'Kun davomida bajarilgan ishlarni yozib borish', cat: 'work' }
-];
-
-const CATEGORIES = [
-    { id: 'work', label: '💼 Ish', color: '#1f6d4c' },
-    { id: 'personal', label: '👤 Shaxsiy', color: '#dda23a' },
-    { id: 'health', label: '❤️ Sog\'liq', color: '#c96b3e' },
-    { id: 'study', label: '📖 O\'qish', color: '#3a7d94' },
-    { id: 'other', label: '📌 Boshqa', color: '#5c6c60' }
-];
-const CAT_ICONS = { work: '💼', personal: '👤', health: '❤️', study: '📖', other: '📌' };
-
-function initTasks() {
-    if (taskSchedule.length === 0) {
-        taskSchedule = JSON.parse(JSON.stringify(DEFAULT_TASKS));
-        saveTasks();
-    }
-}
-initTasks();
-
-function saveTasks() { localStorage.setItem('yolchi_tasks', JSON.stringify(taskSchedule)); }
-function saveTaskHistory() { localStorage.setItem('yolchi_task_history', JSON.stringify(taskHistory)); }
-function savePomodoro() { localStorage.setItem('yolchi_pomodoro', JSON.stringify(pomodoroState)); }
+let missionState = JSON.parse(localStorage.getItem('yolchi_mission')) || null;
+let missionHistory = JSON.parse(localStorage.getItem('yolchi_mission_history')) || [];
 
 /* ---------- Independent Toast ---------- */
 function schedulerToast(icon, text, duration) {
@@ -51,18 +21,14 @@ function schedulerToast(icon, text, duration) {
 }
 
 /* ---------- Voice/Speech Synthesis — AI o'zi gapirsin ---------- */
-const AI_VOICE = null; // Will be set on first use
-
 function speakAI(text, callback) {
     if (!('speechSynthesis' in window)) {
         if (callback) callback();
         return;
     }
-    // Cancel any ongoing speech
     window.speechSynthesis.cancel();
     
     const utterance = new SpeechSynthesisUtterance(text);
-    // Try to find a good Uzbek-friendly voice
     const voices = window.speechSynthesis.getVoices();
     const uzVoice = voices.find(v => v.lang && (v.lang.startsWith('uz') || v.lang.startsWith('tr') || v.lang.startsWith('az')));
     const enVoice = voices.find(v => v.lang && v.lang.startsWith('en'));
@@ -81,497 +47,397 @@ function speakAI(text, callback) {
     console.log('🔊 AI gapirdi:', text);
 }
 
-/* Auto-plan day — AI automatically adds suggested tasks if day is empty */
-function aiAutoPlanDay() {
-    const today = getDayIndex();
-    const todayTasks = getTodayTasks();
-    const hour = new Date().getHours();
-    const isSleepTime = hour >= 22 || hour < 5;
-    if (isSleepTime) return;
-    
-    // Only auto-plan if there are very few tasks (0 or 1)
-    if (todayTasks.length > 1) return;
-    
-    const suggestions = aiSuggestTasks();
-    let added = 0;
-    
-    suggestions.forEach(function(s) {
-        // Check if a similar task already exists at this time
-        const exists = taskSchedule.some(function(t) {
-            return t.active && t.days.includes(today) && t.time === s.time;
-        });
-        if (!exists && added < 3) {
-            const task = {
-                id: 'task-' + Date.now() + '-' + added,
-                title: s.title,
-                time: s.time,
-                days: [today],
+/* ---------- Mission Database — sayohat missiyalari ---------- */
+const MISSION_POOL = {
+    general: [
+        { title: 'Mahalliy taomni tatib ko\'r', desc: 'Bugungi joydagi eng mashhur milliy taomni buyurtma qiling va fotosuratga oling!', icon: '🍲', stars: 3 },
+        { title: 'Bir mahalliy bilan suhbat', desc: 'Biror mahalliy aholi bilan suhbatlashing va uning hikoyasini eshiting.', icon: '💬', stars: 3 },
+        { title: 'Yangi do\'st orttir', desc: 'Sayohat paytida kim bilandir tanishing. Yangi do\'st – yangi eshik!', icon: '🤝', stars: 4 },
+        { title: '5 ta surat ol', desc: 'Shaharning eng chiroyli 5 joyini suratga oling va kollektsiya yarating.', icon: '📸', stars: 3 },
+        { title: 'Mahalliy transportda yur', desc: 'Mahalliy jamoat transportida bir bekat yuring. Yangi tajriba!', icon: '🚌', stars: 4 },
+        { title: 'Biror narsa sovg\'a qil', desc: 'Sayohatdan biror kichik sovg\'a oling va uni birovga bering.', icon: '🎁', stars: 5 },
+        { title: 'Qo\'lda yozilgan xat', desc: 'Biror kafeda o\'tirib, qo\'lda xat yozing. Eski usul – eng samimiy usul!', icon: '✉️', stars: 4 },
+        { title: 'Adashib qol', desc: 'Ataylab xaritaga qaramasdan bir ko\'cha bilan yuring. Yangi kashfiyotlar!', icon: '🗺️', stars: 5 },
+        { title: 'Mahalliy musiqani tingla', desc: 'Biror mahalliy musiqachi yoki an\'anaviy kuyni tinglang.', icon: '🎵', stars: 3 },
+        { title: 'Bir kunda 10 km yur', desc: 'Bugun piyoda 10 kilometr masofani bosib o\'ting. Sog\'lik va kashfiyot!', icon: '🚶', stars: 4 },
+        { title: 'Bir narsani birinchi marta sinab ko\'r', desc: 'Hayotingizda birinchi marta biror narsa qiling. Yangi taassurotlar!', icon: '🎯', stars: 5 },
+        { title: 'Kun chiqishini kutib ol', desc: 'Erta turib, quyosh chiqishini tomosha qiling. Kunni go\'zal boshlang!', icon: '🌅', stars: 4 },
+        { title: 'Mahalliy bozorga bor', desc: 'Shaharning markaziy bozoriga boring. Mahalliy hayotni his qiling!', icon: '🏪', stars: 3 },
+        { title: 'Biror narsani o\'rgan', desc: 'Bugun biror yangi narsani o\'rganing — tarix, hunar yoki til.', icon: '📚', stars: 4 },
+        { title: 'Bir kunlik vlogger bo\'l', desc: 'Kuningizni video yoki ovozli xotira shaklida yozib oling.', icon: '🎥', stars: 5 },
+        { title: 'Tabiat bilan bog\'lan', desc: 'Eng yaqin bog\' yoki tabiat burchagiga boring. 10 daqiqa tinch dam oling.', icon: '🌿', stars: 3 },
+        { title: 'Bir mahalliy ibodatxoni ziyorat qil', desc: 'Shahardagi masjid, cherkov yoki ma\'badni ziyorat qiling.', icon: '🕌', stars: 3 },
+        { title: 'Kun botishini kuzat', desc: 'Kun botishini eng chiroyli nuqtadan kuzating. Romantik lahza!', icon: '🌇', stars: 4 }
+    ],
+    food: [
+        { title: '5 xil mahalliy taom', desc: 'Bugun 5 xil mahalliy taomni tatib ko\'ring. Oshxona sayohati!', icon: '🍽️', stars: 4 },
+        { title: 'Ko\'cha taomlari', desc: 'Faqat ko\'cha taomlaridan iborat kun o\'tkazing. Eng mazali narsalar ko\'chada!', icon: '🌮', stars: 4 },
+        { title: 'O\'zing pishir', desc: 'Biror mahalliy taomni o\'zingiz tayyorlashni o\'rganing.', icon: '👨‍🍳', stars: 5 },
+        { title: 'Nonvoyxonaga bor', desc: 'Mahalliy nonvoyxonaga boring va yangi pishgan nonni tatib ko\'ring.', icon: '🍞', stars: 3 }
+    ],
+    photo: [
+        { title: 'Eng yaxshi selfi', desc: 'Shaharning eng mashhur joyida selfi oling va ijtimoiy tarmoqlarda ulashing.', icon: '🤳', stars: 3 },
+        { title: 'Portretlar galereyasi', desc: 'Bugun 5 xil odamning portret suratini oling (ruxsat so\'rab).', icon: '📷', stars: 5 }
+    ],
+    cultural: [
+        { title: 'An\'anaviy kiyim kiy', desc: 'Mahalliy an\'anaviy kiyimda suratga tushing.', icon: '👘', stars: 5 },
+        { title: 'Mahalliy bayramga qatnash', desc: 'Agar bugun biror bayram bo\'lsa, unda ishtirok eting!', icon: '🎉', stars: 5 },
+        { title: 'Muzeyga bor', desc: 'Shahardagi eng qiziqarli muzeyni ziyorat qiling.', icon: '🏛️', stars: 3 }
+    ],
+    adventure: [
+        { title: 'Tog\'ga chiq', desc: 'Eng yaqin tepalik yoki tog\'ga chiqing. Yuqoridan shahar manzarasi!', icon: '⛰️', stars: 5 },
+        { title: 'Daryo bo\'ylab sayr', desc: 'Shahardagi daryo yoki kanal bo\'ylab sayr qiling.', icon: '🌊', stars: 3 },
+        { title: 'Velosiped ijarasi', desc: 'Velosiped olib, shahar bo\'ylab sayohat qiling. Erkinlik hissi!', icon: '🚲', stars: 4 },
+        { title: 'Yulduzlarni tomosha qil', desc: 'Kechasi yulduzlarni tomosha qiling. Shahar chiroqlaridan uzoqroqda.', icon: '⭐', stars: 5 }
+    ]
+};
+
+/* ---------- Mission Generation ---------- */
+function getDayIndex() { return new Date().getDay(); }
+function isWeekend() { const d = getDayIndex(); return d === 0 || d === 6; }
+
+function getActiveTripInfo() {
+    if (typeof state !== 'undefined' && state !== null && state.activeTripId) {
+        const trip = state.trips.find(t => t.id === state.activeTripId);
+        if (trip && trip.started && !trip.completed) {
+            const currentStop = trip.stops[trip.currentIndex];
+            return {
                 active: true,
-                desc: s.desc || '',
-                cat: s.cat || 'other',
-                auto: true
+                city: trip.city,
+                currentStop: currentStop ? currentStop.name : null,
+                tripId: trip.id
             };
-            taskSchedule.push(task);
-            added++;
         }
-    });
-    
-    if (added > 0) {
-        saveTasks();
-        console.log('🤖 AI avtomatik ravishda', added, 'ta vazifa qo\'shdi');
-        // Speak about what was added
-        const firstTask = suggestions[0];
-        if (firstTask) {
-            speakAI('Assalomu alaykum! Bugungi kun uchun ' + added + ' ta yangi vazifa rejalashtirildi. ' + firstTask.title + ' dan boshlang!');
-        } else {
-            speakAI('Assalomu alaykum! Bugungi rejalar tayyor. Vazifalaringizni bajarishga tayyormisiz?');
-        }
-    } else if (todayTasks.length === 0) {
-        // Even if no suggestions, greet the user
-        speakAI('Assalomu alaykum! Bugun uchun hech qanday vazifa topilmadi. Yangi vazifa qo\'shishingiz mumkin.');
     }
+    return { active: false };
 }
 
-/* Proactive greeting — AI speaks when user opens scheduler */
-let lastAIGreeting = 0;
+function pickRandom(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
 
-function aiProactiveGreeting() {
-    const now = Date.now();
-    // Only greet once per hour
-    if (now - lastAIGreeting < 3600000) return;
-    lastAIGreeting = now;
-    
+function generateMission() {
+    const tripInfo = getActiveTripInfo();
     const hour = new Date().getHours();
-    const stats = getTodayStats();
-    const nextTask = getNextTask();
+    const isSleepTime = hour >= 22 || hour < 5;
+    
+    if (isSleepTime) {
+        return {
+            id: 'mission-' + Date.now(),
+            title: '🌜 Dam olish va tiklanish',
+            desc: 'Tanangiz va miyangizni dam oldiring. Ertangi sarguzasht uchun kuch to\'plang! Ertaga yangi missiya kutmoqda.',
+            icon: '🌜',
+            stars: 1,
+            date: new Date().toISOString().split('T')[0],
+            completed: false,
+            auto: true
+        };
+    }
+    
+    let pool = [];
+    
+    if (tripInfo.active) {
+        const r = Math.random();
+        if (r < 0.4) pool = MISSION_POOL.food;
+        else if (r < 0.7) pool = MISSION_POOL.photo;
+        else if (r < 0.9) pool = MISSION_POOL.adventure;
+        else pool = MISSION_POOL.cultural;
+    } else {
+        pool = MISSION_POOL.general;
+    }
+    
+    const mission = pickRandom(pool);
+    
+    let desc = mission.desc;
+    if (tripInfo.active && tripInfo.currentStop) {
+        desc = desc + ' Hozirgi joyingiz: ' + tripInfo.currentStop;
+    }
+    
+    return {
+        id: 'mission-' + Date.now(),
+        title: mission.icon + ' ' + mission.title,
+        desc: desc,
+        icon: mission.icon,
+        stars: mission.stars,
+        date: new Date().toISOString().split('T')[0],
+        completed: false,
+        auto: false,
+        tripCity: tripInfo.active ? tripInfo.city : null,
+        tripStop: tripInfo.active ? tripInfo.currentStop : null
+    };
+}
+
+/* ---------- Mission State Management ---------- */
+function getTodayMission() {
+    const today = new Date().toISOString().split('T')[0];
+    if (missionState && missionState.date === today) {
+        return missionState;
+    }
+    missionState = generateMission();
+    localStorage.setItem('yolchi_mission', JSON.stringify(missionState));
+    return missionState;
+}
+
+function completeMission() {
+    if (!missionState || missionState.completed) return;
+    
+    missionState.completed = true;
+    localStorage.setItem('yolchi_mission', JSON.stringify(missionState));
+    
+    const starAmount = missionState.stars || 3;
+    if (typeof state !== 'undefined' && state !== null) {
+        const hasBoost = (state.ownedItems || []).includes('boost');
+        const multiplier = hasBoost ? 2 : 1;
+        const awarded = starAmount * multiplier;
+        state.stars = (state.stars || 0) + awarded;
+        if (typeof saveStars === 'function') saveStars();
+        if (typeof renderAll === 'function') renderAll();
+        
+        schedulerToast('⭐', '+' + awarded + ' yulduz! Missiya bajarildi! 🎉', 3000);
+        
+        const msgs = [
+            'Tabriklayman! Missiyani muvaffaqiyatli bajardingiz!',
+            'Ajoyib! Siz haqiqiy sarguzashtchisiz!',
+            'Barakalla! Kunlik missiya bajarildi!',
+            'Zo\'r! Shu bilan bugungi sarguzasht yakunlandi!'
+        ];
+        speakAI(pickRandom(msgs));
+    } else {
+        schedulerToast('⭐', '+' + starAmount + ' yulduz! Missiya bajarildi! 🎉', 3000);
+    }
+    
+    missionHistory.push({ ...missionState, completedAt: new Date().toISOString() });
+    if (missionHistory.length > 50) missionHistory = missionHistory.slice(-50);
+    localStorage.setItem('yolchi_mission_history', JSON.stringify(missionHistory));
+    
+    renderMissionContainer('aiSchedulerContainer');
+    if (typeof updateHomeSchedulerWidget === 'function') updateHomeSchedulerWidget();
+}
+
+function refreshMission() {
+    missionState = generateMission();
+    localStorage.setItem('yolchi_mission', JSON.stringify(missionState));
+    renderMissionContainer('aiSchedulerContainer');
+    speakAIMission();
+    if (typeof updateHomeSchedulerWidget === 'function') updateHomeSchedulerWidget();
+}
+
+/* ---------- AI Speaks the Mission ---------- */
+function speakAIMission() {
+    if (!missionState || missionState.completed) return;
     
     let greeting = '';
+    const hour = new Date().getHours();
     if (hour < 12) greeting = 'Xayrli tong! ';
     else if (hour < 18) greeting = 'Xayrli kun! ';
     else greeting = 'Xayrli kech! ';
     
-    if (stats.total > 0) {
-        greeting += 'Bugun ' + stats.total + ' ta vazifa bor. ';
-        if (stats.done > 0) greeting += stats.done + ' tasi bajarildi. ';
-        if (nextTask) greeting += 'Keyingi vazifa: ' + nextTask.title + '.';
-    } else {
-        greeting += 'Bugungi vazifalarni rejalashtirish vaqti.';
+    const tripInfo = getActiveTripInfo();
+    let locationPhrase = '';
+    if (tripInfo.active) {
+        locationPhrase = tripInfo.city + ' shahrida ';
     }
     
-    speakAI(greeting);
+    const missionText = missionState.title.replace(/[^\w\s\u0600-\u06FF\u0400-\u04FF]/g, '').trim();
+    const speech = greeting + 'Bugungi kunlik missiya! ' + locationPhrase + missionText + '. ' + missionState.desc.replace(/[^\w\s\u0600-\u06FF\u0400-\u04FF]/g, '').trim();
+    
+    speakAI(speech);
 }
 
-/* ---------- Core Functions ---------- */
-function getDayIndex() { return new Date().getDay(); }
-
-function getTodayTasks() {
-    const today = getDayIndex();
-    return taskSchedule.filter(t => t.active && t.days.includes(today)).sort((a, b) => a.time.localeCompare(b.time));
+/* ---------- Active Trip Mission Override ---------- */
+function setTripMission(tripCity, stopName) {
+    const pool = [...MISSION_POOL.general, ...MISSION_POOL.food, ...MISSION_POOL.photo, ...MISSION_POOL.cultural, ...MISSION_POOL.adventure];
+    const mission = pickRandom(pool);
+    
+    missionState = {
+        id: 'mission-' + Date.now(),
+        title: mission.icon + ' ' + mission.title,
+        desc: mission.desc + ' ' + tripCity + ' shahrida!',
+        icon: mission.icon,
+        stars: mission.stars + 1,
+        date: new Date().toISOString().split('T')[0],
+        completed: false,
+        auto: false,
+        tripCity: tripCity,
+        tripStop: stopName
+    };
+    localStorage.setItem('yolchi_mission', JSON.stringify(missionState));
+    
+    renderMissionContainer('aiSchedulerContainer');
+    speakAIMission();
+    if (typeof updateHomeSchedulerWidget === 'function') updateHomeSchedulerWidget();
 }
-
-function getNextTask() {
-    const now = new Date();
-    const currentMinutes = now.getHours() * 60 + now.getMinutes();
-    for (const task of getTodayTasks()) {
-        const [h, m] = task.time.split(':').map(Number);
-        if (h * 60 + m > currentMinutes) return task;
-    }
-    return null;
-}
-
-function addManualTask(title, time, days, desc, cat) {
-    const task = { id: 'task-' + Date.now(), title: title, time: time, days: days || [1,2,3,4,5,6,0], active: true, desc: desc || '', cat: cat || 'other', manual: true };
-    taskSchedule.push(task); saveTasks(); return task;
-}
-
-function toggleTaskCompletion(taskId) {
-    const today = new Date().toISOString().split('T')[0];
-    const existing = taskHistory.find(h => h.taskId === taskId && h.date === today);
-    if (existing) { existing.done = !existing.done; }
-    else { taskHistory.push({ taskId, date: today, done: true }); }
-    saveTaskHistory();
-    return existing ? existing.done : true;
-}
-
-function isTaskDone(taskId) {
-    const today = new Date().toISOString().split('T')[0];
-    const found = taskHistory.find(h => h.taskId === taskId && h.date === today);
-    return found ? found.done : false;
-}
-
-function getTodayStats() {
-    const todayTasks = getTodayTasks();
-    const done = todayTasks.filter(t => isTaskDone(t.id)).length;
-    return { total: todayTasks.length, done, pct: todayTasks.length > 0 ? Math.round((done / todayTasks.length) * 100) : 0 };
-}
-
-function isTaskDue(task) {
-    if (!task || !task.active) return false;
-    const now = new Date();
-    const currentMinutes = now.getHours() * 60 + now.getMinutes();
-    const [h, m] = task.time.split(':').map(Number);
-    return Math.abs(currentMinutes - (h * 60 + m)) <= 30 && !isTaskDone(task.id);
-}
-
-function getPendingReminders() { return getTodayTasks().filter(t => isTaskDue(t)); }
-
-function getCategoryLabel(catId) { const c = CATEGORIES.find(c => c.id === catId); return c ? c.label : '📌 Boshqa'; }
-
-/* ---------- AI Smart Suggestions (vaqtga asoslangan) ---------- */
-function aiSuggestTasks() {
-    const hour = new Date().getHours();
-    const s = [];
-    if (hour >= 5 && hour < 6) {
-        s.push({ title: '🌅 Saharlik', time: '05:00', desc: 'Saharlik vaqti — tonggi ovqatlanish', cat: 'health' });
-    } else if (hour >= 6 && hour < 8) {
-        s.push({ title: '🏃 Tonggi yugurish', time: '06:30', desc: '30 daqiqa ochiq havoda yugurish', cat: 'health' });
-        s.push({ title: '🧘 Ertalabki yoga', time: '07:00', desc: '15 daqiqa yoga yoki cho\'zilish', cat: 'health' });
-        s.push({ title: '🥣 Nonushta', time: '07:30', desc: 'To\'yimli va sog\'lom nonushta', cat: 'health' });
-        s.push({ title: '📰 Yangiliklar', time: '07:45', desc: 'Kun muhim yangiliklarini o\'qish', cat: 'personal' });
-    } else if (hour >= 8 && hour < 12) {
-        s.push({ title: '💼 Eng muhim vazifa', time: '09:00', desc: 'Kunning eng muhim ishini bajarish', cat: 'work' });
-        s.push({ title: '☕ Kofe-break', time: '10:30', desc: '10 daqiqa dam olish va suv ichish', cat: 'work' });
-        s.push({ title: '💻 Pochta va xabarlar', time: '11:00', desc: 'Email va xabarlarni tekshirish', cat: 'work' });
-    } else if (hour >= 12 && hour < 14) {
-        s.push({ title: '🍽️ Tushlik', time: '12:30', desc: 'To\'yimli tushlik va dam olish', cat: 'health' });
-        s.push({ title: '😴 Power nap', time: '13:15', desc: '20 daqiqa qisqa uyqu', cat: 'health' });
-    } else if (hour >= 14 && hour < 17) {
-        s.push({ title: '💻 Davomiy ish', time: '14:00', desc: 'Tushdan keyingi vazifalarni bajarish', cat: 'work' });
-        s.push({ title: '🚶 Sayr', time: '16:00', desc: '15 daqiqa toza havoda sayr', cat: 'health' });
-    } else if (hour >= 17 && hour < 20) {
-        s.push({ title: '🏋️ Sport', time: '18:00', desc: '1 soat sport mashg\'uloti', cat: 'health' });
-        s.push({ title: '🚿 Kechki dush', time: '19:00', desc: 'Kun charchog\'ini yuvish', cat: 'health' });
-    } else if (hour >= 20 && hour < 22) {
-        s.push({ title: '👨\u200d👩\u200d👧 Oila vaqti', time: '20:00', desc: 'Oilangiz bilan muloqot qilish', cat: 'personal' });
-        s.push({ title: '📖 Kitob o\'qish', time: '21:00', desc: '30 daqiqa kitob o\'qish', cat: 'study' });
-    } else {
-        s.push({ title: '📝 Kunlik hisobot', time: '22:00', desc: 'Kun yakuni bo\'yicha hisobot', cat: 'work' });
-        s.push({ title: '😴 Uyquga tayyorgarlik', time: '22:30', desc: 'Telefonni chetga qo\'yish', cat: 'health' });
-        s.push({ title: '🌜 Uyqu', time: '23:00', desc: 'Xayrli tun! 7-8 soat uyqu', cat: 'health' });
-    }
-    return s;
-}
-
-function addMinutesToTime(time, minutes) {
-    const [h, m] = time.split(':').map(Number);
-    const total = h * 60 + m + minutes;
-    const newH = Math.floor(total / 60) % 24;
-    const newM = total % 60;
-    return String(newH).padStart(2, '0') + ':' + String(newM).padStart(2, '0');
-}
-
-/* ---------- Pomodoro Timer ---------- */
-function togglePomodoro() {
-    if (!pomodoroState.active) { pomodoroState = { running: false, minutes: 25, seconds: 0, active: true }; savePomodoro(); }
-    else { pomodoroState.active = false; pomodoroState.running = false; savePomodoro(); }
-    renderAIScheduler('aiSchedulerContainer');
-}
-function startPomodoro() { pomodoroState.running = true; savePomodoro(); renderAIScheduler('aiSchedulerContainer'); }
-function pausePomodoro() { pomodoroState.running = false; savePomodoro(); renderAIScheduler('aiSchedulerContainer'); }
-function resetPomodoro() { pomodoroState.minutes = 25; pomodoroState.seconds = 0; pomodoroState.running = false; savePomodoro(); renderAIScheduler('aiSchedulerContainer'); }
-function setPomodoroTime(min) { pomodoroState.minutes = min; pomodoroState.seconds = 0; pomodoroState.running = false; savePomodoro(); renderAIScheduler('aiSchedulerContainer'); }
-
-function pomodoroTick() {
-    if (!pomodoroState.active || !pomodoroState.running) return;
-    if (pomodoroState.seconds === 0) {
-        if (pomodoroState.minutes === 0) {
-            pomodoroState.running = false; savePomodoro();
-            schedulerToast('⏰', 'Pomodoro tugadi! 5 daqiqa dam oling 🎉', 4000);
-            renderAIScheduler('aiSchedulerContainer'); return;
-        }
-        pomodoroState.minutes--; pomodoroState.seconds = 59;
-    } else { pomodoroState.seconds--; }
-    savePomodoro();
-    const display = document.getElementById('pomodoroDisplay');
-    if (display) { display.textContent = String(pomodoroState.minutes).padStart(2,'0') + ':' + String(pomodoroState.seconds).padStart(2,'0'); }
-}
-setInterval(pomodoroTick, 1000);
 
 /* ---------- UI Rendering ---------- */
-function renderAIScheduler(containerId) {
+function renderMissionContainer(containerId) {
     const el = document.getElementById(containerId);
     if (!el) return;
-    const todayTasks = getTodayTasks();
-    const stats = getTodayStats();
-    const nextTask = getNextTask();
-    const pendingReminders = getPendingReminders();
-    const suggestions = aiSuggestTasks();
+    
+    const mission = getTodayMission();
+    const tripInfo = getActiveTripInfo();
     const hour = new Date().getHours();
     const isSleepTime = hour >= 22 || hour < 5;
+    const isW = isWeekend();
     
-    let timeGreeting;
-    if (isSleepTime) timeGreeting = '🌜 Xayrli tun!';
-    else if (hour < 12) timeGreeting = '🌅 Xayrli tong!';
-    else if (hour < 18) timeGreeting = '☀️ Xayrli kun!';
-    else timeGreeting = '🌆 Xayrli kech!';
+    const speechSupported = ('speechSynthesis' in window);
     
-    var speechSupported = ('speechSynthesis' in window);
-    let html = '<div class="ai-scheduler"><div class="scheduler-header"><div class="scheduler-greeting">' + timeGreeting + '</div><div class="scheduler-date">' + new Date().toLocaleDateString('uz-UZ', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }) + (speechSupported ? '<span class="ai-voice-badge" title="AI ovozli yordamchi">🔊 AI ovozli</span>' : '') + '</div></div>';
+    let html = '<div class="mission-container">';
     
-    if (isSleepTime) {
-        html += '<div class="sleep-mode-card"><span class="sleep-icon">🌜</span><div class="sleep-text"><strong>Dam olish vaqti</strong><br><span style="font-size:12px;opacity:0.8;">Tana va miyangizni dam oldiring. Ertangi kun uchun kuch to\'plang!</span></div></div>';
-    }
-    
-    html += '<div class="scheduler-stats"><div class="sched-stat"><span class="sched-stat-num">' + stats.done + '/' + stats.total + '</span><span class="sched-stat-lbl">Bajarildi</span></div><div class="sched-stat"><span class="sched-stat-num">' + stats.pct + '%</span><span class="sched-stat-lbl">Samaradorlik</span></div><div class="sched-stat"><span class="sched-stat-num">' + (nextTask ? '🕐' : '✅') + '</span><span class="sched-stat-lbl">' + (nextTask ? 'Keyingi' : 'Tugadi') + '</span></div></div>';
-    
-    if (nextTask && !isSleepTime) {
-        html += '<div class="next-task-widget" onclick="scrollToTask(\'' + nextTask.id + '\')"><div class="next-task-label">⌛ Keyingi vazifa</div><div class="next-task-title">' + nextTask.title + '</div><div class="next-task-time">🕐 ' + nextTask.time + '</div></div>';
-    } else if (todayTasks.length > 0 && stats.done === stats.total && !isSleepTime) {
-        html += '<div class="next-task-widget done"><div class="next-task-label" style="font-size:24px;">🎉</div><div class="next-task-title">Bugungi barcha vazifalar bajarildi!</div></div>';
-    }
-    
-    if (pendingReminders.length > 0 && !isSleepTime) {
-        html += '<div class="reminder-alert"><span class="reminder-icon">🔔</span><div class="reminder-text"><strong>' + pendingReminders[0].title + '</strong> — bajarish vaqti keldi!</div><button class="reminder-btn" onclick="completeReminder(\'' + pendingReminders[0].id + '\')">✅ Bajarildi</button></div>';
-    }
-    
-    html += '<div class="scheduler-section-title">📋 Bugungi vazifalar</div><div class="task-list" id="taskListToday">';
-    if (todayTasks.length === 0) {
-        html += '<div class="empty-tasks"><div class="eic">🎉</div><p>Bugun uchun vazifalar yo\'q. Yangi vazifa qo\'shing!</p></div>';
-    } else {
-        todayTasks.forEach(function(t) {
-            var done = isTaskDone(t.id);
-            var catIcon = CAT_ICONS[t.cat] || '📌';
-            html += '<div class="task-item ' + (done ? 'done' : '') + '" data-task-id="' + t.id + '"><div class="task-check" onclick="toggleTask(\'' + t.id + '\')">' + (done ? '✓' : '○') + '</div><div class="task-content"><div class="task-title">' + catIcon + ' ' + t.title + '</div><div class="task-time">🕐 ' + t.time + (t.desc ? ' · ' + t.desc : '') + '</div></div><div class="task-actions"><button class="task-move-btn" onclick="moveTask(\'' + t.id + '\',-1)" title="Yuqoriga">▲</button><button class="task-move-btn" onclick="moveTask(\'' + t.id + '\',1)" title="Pastga">▼</button><button class="task-edit-btn" onclick="editTask(\'' + t.id + '\')" title="Tahrirlash">✎</button><button class="task-del-btn" onclick="deleteTask(\'' + t.id + '\')" title="O\'chirish">✕</button></div></div>';
-        });
-    }
+    // Header
+    html += '<div class="mission-header">';
+    html += '<div class="mission-greeting">' + timeGreeting + '</div>';
+    html += '<div class="mission-date">' + new Date().toLocaleDateString('uz-UZ', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }) + '</div>';
     html += '</div>';
     
-    if (!isSleepTime) {
-        html += '<button class="cta-btn add-task-btn" onclick="showAddTaskForm()">➕ Yangi vazifa qo\'shish</button>';
-        html += '<div id="addTaskForm" style="display:none;margin-top:16px;"><input id="newTaskTitle" placeholder="Vazifa nomi" style="width:100%;padding:12px;margin-bottom:8px;border-radius:12px;border:1px solid var(--line);background:var(--surface);font-size:14px;"><div style="display:flex;gap:8px;margin-bottom:8px;"><input id="newTaskTime" type="time" style="flex:1;padding:12px;border-radius:12px;border:1px solid var(--line);background:var(--surface);font-size:14px;"><select id="newTaskCat" style="flex:1;padding:12px;border-radius:12px;border:1px solid var(--line);background:var(--surface);font-size:14px;">' + CATEGORIES.map(function(c) { return '<option value="' + c.id + '">' + c.label + '</option>'; }).join('') + '</select></div><input id="newTaskDesc" placeholder="Tavsif (ixtiyoriy)" style="width:100%;padding:12px;margin-bottom:10px;border-radius:12px;border:1px solid var(--line);background:var(--surface);font-size:14px;"><div style="display:flex;gap:10px;"><button class="cta-btn ripple-btn" onclick="saveNewTask()" style="flex:1;">💾 Saqlash</button><button class="cta-btn ghost ripple-btn" onclick="cancelAddTask()" style="flex:1;">✕ Bekor qilish</button></div></div>';
+    // Trip status banner
+    if (tripInfo.active) {
+        html += '<div class="trip-status-banner">';
+        html += '<span class="tsb-icon">🧳</span>';
+        html += '<div class="tsb-content">';
+        html += '<div class="tsb-title">' + tripInfo.city + ' — jonli sayohat</div>';
+        if (tripInfo.currentStop) {
+            html += '<div class="tsb-stop">📍 Hozir: ' + tripInfo.currentStop + '</div>';
+        }
+        html += '</div>';
+        html += '</div>';
+    } else if (isW) {
+        html += '<div class="weekend-banner">';
+        html += '<span class="tsb-icon">🎉</span>';
+        html += '<div class="tsb-content">';
+        html += '<div class="tsb-title">Dam olish kuni!</div>';
+        html += '<div class="tsb-stop">Bugun sayohatga chiqish uchun ajoyib kun!</div>';
+        html += '</div>';
+        html += '</div>';
     }
     
-    // Pomodoro
-    html += '<div class="scheduler-section-title" style="margin-top:20px;">🍅 Pomodoro timer</div><div class="pomodoro-card"><div class="pomodoro-display" id="pomodoroDisplay">' + String(pomodoroState.minutes).padStart(2,'0') + ':' + String(pomodoroState.seconds).padStart(2,'0') + '</div><div class="pomodoro-presets">' + [15,25,45,60].map(function(m) { return '<button class="pom-preset-btn ' + (pomodoroState.active && pomodoroState.minutes === m && !pomodoroState.running ? 'active' : '') + '" onclick="setPomodoroTime(' + m + ')">' + m + 'm</button>'; }).join('') + '</div><div class="pomodoro-actions">' + (!pomodoroState.active ? '<button class="cta-btn" onclick="togglePomodoro()" style="flex:1;">▶️ Boshlash</button>' : !pomodoroState.running ? '<button class="cta-btn" onclick="startPomodoro()" style="flex:1;">▶️ Davom</button><button class="cta-btn ghost" onclick="resetPomodoro()" style="flex:1;">🔄 Qayta</button><button class="cta-btn ghost" onclick="togglePomodoro()" style="flex:1;">✕ Yopish</button>' : '<button class="cta-btn" onclick="pausePomodoro()" style="flex:1;">⏸️ Pauza</button><button class="cta-btn ghost" onclick="resetPomodoro()" style="flex:1;">🔄 Qayta</button>') + '</div></div>';
+    // Sleep time message
+    if (isSleepTime) {
+        html += '<div class="sleep-mission-card">';
+        html += '<div class="sleep-icon">🌜</div>';
+        html += '<div class="sleep-text">';
+        html += '<strong>Dam olish vaqti</strong><br>';
+        html += '<span style="font-size:12px;opacity:0.8;">Ertangi sarguzashtlar uchun kuch to\'plang!</span>';
+        html += '</div>';
+        html += '</div>';
+    }
     
-    // AI suggestions
-    html += '<div class="scheduler-section-title" style="margin-top:20px;">🤖 AI tavsiyalari</div><p class="ai-hint">Hozirgi vaqtga asoslangan AI tavsiyalari</p><div class="ai-suggestions">' + suggestions.slice(0,5).map(function(s) { return '<div class="suggestion-card" onclick="addSuggestedTask(\'' + s.title.replace(/'/g, '') + '\',\'' + s.time + '\',\'' + (s.desc || '').replace(/'/g, '') + '\',\'' + (s.cat || 'other') + '\')"><div class="sugg-icon">' + s.title.split(' ')[0] + '</div><div class="sugg-content"><div class="sugg-title">' + s.title + '</div><div class="sugg-desc">' + s.desc + '</div><div class="sugg-time">🕐 ' + s.time + '</div></div><button class="sugg-add">+</button></div>'; }).join('') + '</div>';
+    // Mission card
+    if (mission && !isSleepTime) {
+        const isDone = mission.completed;
+        html += '<div class="mission-card ' + (isDone ? 'mission-done' : '') + '">';
+        html += '<div class="mission-badge">🎯 Kunlik Missiya</div>';
+        
+        if (isDone) {
+            html += '<div class="mission-complete-icon">✅</div>';
+        }
+        
+        html += '<div class="mission-icon-large">' + (mission.icon || '🎯') + '</div>';
+        html += '<h2 class="mission-title">' + mission.title + '</h2>';
+        html += '<p class="mission-desc">' + mission.desc + '</p>';
+        
+        // Star reward
+        html += '<div class="mission-stars">';
+        html += '<span class="ms-label">Mukofot:</span>';
+        for (let i = 0; i < (mission.stars || 3); i++) {
+            html += '<span class="ms-star">⭐</span>';
+        }
+        html += '<span class="ms-count">+' + (mission.stars || 3) + ' yulduz</span>';
+        html += '</div>';
+        
+        // Action buttons
+        html += '<div class="mission-actions">';
+        if (!isDone) {
+            html += '<button class="cta-btn mission-complete-btn" onclick="completeMission()">✅ Missiyani bajarildi deb belgilash</button>';
+            if (speechSupported) {
+                html += '<button class="cta-btn ghost mission-speak-btn" onclick="speakAIMission()">🔊 AI gapirsin</button>';
+            }
+            html += '<button class="cta-btn ghost mission-refresh-btn" onclick="if(confirm(\'Yangi missiya generatsiya qilinsinmi?\'))refreshMission()">🔄 Yangi missiya</button>';
+        } else {
+            html += '<div class="mission-done-message">';
+            html += '<span class="md-icon">🎉</span>';
+            html += '<span>Bugungi missiya bajarildi! Ertaga yangi sarguzasht kutmoqda.</span>';
+            html += '</div>';
+            html += '<button class="cta-btn ghost" onclick="refreshMission()">🔄 Yangi missiya</button>';
+        }
+        html += '</div>';
+        html += '</div>';
+    }
     
-    // Manage
-    html += '<div class="scheduler-section-title" style="margin-top:24px;">⚙️ Boshqarish</div><div class="manage-tasks"><button class="cta-btn ghost" onclick="openTaskManager()" style="margin-bottom:8px;">📋 Barcha vazifalar</button><button class="cta-btn ghost" onclick="showWeeklyPlan()" style="margin-bottom:8px;">📅 Haftalik reja</button><button class="cta-btn ghost" onclick="aiRePlanDay()" style="margin-bottom:8px;">🤖 AI qayta rejalashtirsin</button><button class="cta-btn ghost" onclick="resetDefaultTasks()">🔄 Standart vazifalarni tiklash</button></div>';
+    // Suggestions / travel prompts
+    if (!isSleepTime) {
+        html += '<div class="mission-section-title">💡 Sayohat maslahatlari</div>';
+        html += '<div class="mission-tips">';
+        
+        const tips = [
+            { icon: '🧴', text: 'Quyosh kremini unutmang!' },
+            { icon: '💧', text: 'Ko\'proq suv iching — 2 litr!' },
+            { icon: '📱', text: 'Yo\'l xaritangizni yuklab oling' },
+            { icon: '🔋', text: 'Powerbank oling!' },
+            { icon: '👟', text: 'Qulay poyabzal kiying' }
+        ];
+        
+        const shuffled = tips.sort(() => Math.random() - 0.5).slice(0, 3);
+        shuffled.forEach(tip => {
+            html += '<div class="tip-item">';
+            html += '<span class="tip-icon">' + tip.icon + '</span>';
+            html += '<span class="tip-text">' + tip.text + '</span>';
+            html += '</div>';
+        });
+        html += '</div>';
+    }
+    
+    // Mission history (last few)
+    if (missionHistory.length > 0) {
+        html += '<div class="mission-section-title">📜 Missiyalar tarixi</div>';
+        html += '<div class="mission-history">';
+        const recent = missionHistory.slice(-5).reverse();
+        recent.forEach(h => {
+            const date = h.date ? h.date.split('T')[0] : '';
+            html += '<div class="history-item">';
+            html += '<span class="hi-icon">' + (h.icon || '🎯') + '</span>';
+            html += '<span class="hi-title">' + (h.title || '').replace(/[^\w\s\u0600-\u06FF\u0400-\u04FF]/g, '').trim() + '</span>';
+            html += '<span class="hi-date">' + date + '</span>';
+            html += '<span class="hi-status">✅</span>';
+            html += '</div>';
+        });
+        html += '</div>';
+    }
+    
+    html += '</div>'; // mission-container
     
     el.innerHTML = html;
 }
 
-/* ---------- Task Actions ---------- */
-function toggleTask(taskId) {
-    toggleTaskCompletion(taskId);
-    var stats = getTodayStats();
-    var taskEl = document.querySelector('.task-item[data-task-id="' + taskId + '"]');
-    if (taskEl) { taskEl.classList.toggle('done'); var check = taskEl.querySelector('.task-check'); if (check) check.textContent = isTaskDone(taskId) ? '✓' : '○'; }
-    var numEl = document.querySelector('.sched-stat-num');
-    if (numEl) numEl.textContent = stats.done + '/' + stats.total;
-}
-
-function completeReminder(taskId) {
-    toggleTaskCompletion(taskId);
-    var taskEl = document.querySelector('.task-item[data-task-id="' + taskId + '"]');
-    if (taskEl) { taskEl.classList.add('done'); taskEl.querySelector('.task-check').textContent = '✓'; }
-    renderAIScheduler('aiSchedulerContainer');
-    schedulerToast('✅', 'Vazifa bajarildi!');
-}
-
-function moveTask(taskId, direction) {
-    var idx = taskSchedule.findIndex(function(t) { return t.id === taskId; });
-    if (idx === -1) return;
-    var newIdx = idx + direction;
-    if (newIdx < 0 || newIdx >= taskSchedule.length) return;
-    var temp = taskSchedule[idx]; taskSchedule[idx] = taskSchedule[newIdx]; taskSchedule[newIdx] = temp;
-    saveTasks();
-    renderAIScheduler('aiSchedulerContainer');
-}
-
-function showAddTaskForm() {
-    var form = document.getElementById('addTaskForm');
-    if (form) { form.style.display = 'block'; document.getElementById('newTaskTime').value = new Date().toTimeString().slice(0, 5); form.scrollIntoView({ behavior: 'smooth', block: 'center' }); }
-}
-
-function cancelAddTask() { var form = document.getElementById('addTaskForm'); if (form) form.style.display = 'none'; }
-
-function saveNewTask() {
-    var title = document.getElementById('newTaskTitle').value.trim();
-    var time = document.getElementById('newTaskTime').value;
-    var desc = document.getElementById('newTaskDesc').value.trim();
-    var cat = (document.getElementById('newTaskCat') && document.getElementById('newTaskCat').value) || 'other';
-    if (!title || !time) { alert('Iltimos, vazifa nomi va vaqtini kiriting!'); return; }
-    addManualTask(title, time, [1,2,3,4,5,6,0], desc, cat);
-    document.getElementById('newTaskTitle').value = ''; document.getElementById('newTaskDesc').value = '';
-    cancelAddTask();
-    renderAIScheduler('aiSchedulerContainer');
-    schedulerToast('✅', 'Vazifa qo\'shildi!');
-}
-
-function addSuggestedTask(title, time, desc, cat) {
-    addManualTask(title, time, [1,2,3,4,5,6,0], desc, cat || 'other');
-    renderAIScheduler('aiSchedulerContainer');
-    schedulerToast('✅', 'AI tavsiyasi qo\'shildi!');
-}
-
-function deleteTask(taskId) {
-    if (!confirm('Bu vazifani o\'chirishni tasdiqlaysizmi?')) return;
-    taskSchedule = taskSchedule.filter(function(t) { return t.id !== taskId; });
-    saveTasks();
-    renderAIScheduler('aiSchedulerContainer');
-}
-
-function editTask(taskId) {
-    var task = taskSchedule.find(function(t) { return t.id === taskId; });
-    if (!task) return;
-    var form = document.getElementById('addTaskForm');
-    form.style.display = 'block';
-    document.getElementById('newTaskTitle').value = task.title;
-    document.getElementById('newTaskTime').value = task.time;
-    document.getElementById('newTaskDesc').value = task.desc || '';
-    var catSelect = document.getElementById('newTaskCat');
-    if (catSelect) catSelect.value = task.cat || 'other';
-    taskSchedule = taskSchedule.filter(function(t) { return t.id !== taskId; });
-    saveTasks();
-    form.scrollIntoView({ behavior: 'smooth', block: 'center' });
-}
-
-/* ---------- Weekly Plan Modal ---------- */
-function showWeeklyPlan() {
-    var dayNames = ['Yakshanba', 'Dushanba', 'Seshanba', 'Chorshanba', 'Payshanba', 'Juma', 'Shanba'];
-    var today = getDayIndex();
-    var overlay = document.createElement('div');
-    overlay.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.6);z-index:1000;display:flex;align-items:center;justify-content:center;';
-    var html = '<div style="background:var(--surface);border-radius:20px;padding:24px;width:92%;max-width:420px;max-height:80vh;overflow-y:auto;position:relative;"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;"><h3 style="font-size:17px;">📅 Haftalik reja</h3><button onclick="this.parentElement.parentElement.parentElement.remove()" style="background:none;border:none;font-size:20px;cursor:pointer;">✕</button></div>';
-    dayNames.forEach(function(d, dayIdx) {
-        var dayTasks = taskSchedule.filter(function(t) { return t.active && t.days.includes(dayIdx); }).sort(function(a,b) { return a.time.localeCompare(b.time); });
-        var isToday = dayIdx === today;
-        html += '<div style="margin-bottom:12px;' + (isToday ? 'background:var(--surface-2);border-radius:12px;padding:10px;border:2px solid var(--green);' : '') + '"><div style="font-weight:700;font-size:13px;margin-bottom:6px;' + (isToday ? 'color:var(--green);' : '') + '">' + (isToday ? '📍 ' : '') + d + ' (' + dayTasks.length + ')</div>' + (dayTasks.length === 0 ? '<div style="font-size:11px;color:var(--ink-soft);padding:4px 0;">Vazifalar yo\'q</div>' : dayTasks.map(function(t) { return '<div style="display:flex;justify-content:space-between;font-size:12px;padding:4px 0;border-bottom:1px solid var(--line);"><span>' + t.title + '</span><span style="color:var(--ink-soft);">' + t.time + '</span></div>'; }).join('')) + '</div>';
-    });
-    html += '</div>';
-    overlay.innerHTML = html;
-    document.body.appendChild(overlay);
-}
-
-/* ---------- Task Manager (Improved) ---------- */
-function openTaskManager() {
-    var dayNames = ['Ya', 'Du', 'Se', 'Ch', 'Pa', 'Ju', 'Sh'];
-    var overlay = document.createElement('div');
-    overlay.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.6);z-index:1000;display:flex;align-items:center;justify-content:center;';
-    var html = '<div style="background:var(--surface);border-radius:20px;padding:24px;width:92%;max-width:420px;max-height:80vh;overflow-y:auto;position:relative;"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;"><h3 style="font-size:17px;">📋 Barcha vazifalar</h3><button onclick="this.parentElement.parentElement.parentElement.remove()" style="background:none;border:none;font-size:20px;cursor:pointer;">✕</button></div><p style="font-size:12px;color:var(--ink-soft);margin-bottom:12px;">Vazifani yoqish/o\'chirish uchun kunlarni bosing</p>';
-    taskSchedule.forEach(function(t) {
-        var dayCheckboxes = dayNames.map(function(d, i) {
-            return '<label style="font-size:11px;display:flex;flex-direction:column;align-items:center;gap:1px;cursor:pointer;padding:4px 2px;border-radius:6px;' + (t.days.includes(i) ? 'background:var(--green);color:#fff;' : 'background:var(--surface-2);') + '"><input type="checkbox" class="day-cb" data-task-id="' + t.id + '" data-day="' + i + '" ' + (t.days.includes(i) ? 'checked' : '') + ' onchange="updateTaskDays(\'' + t.id + '\',' + i + ',this.checked)" style="display:none;"><span style="font-size:10px;font-weight:700;">' + d + '</span></label>';
-        }).join('');
-        var catIcon = CAT_ICONS[t.cat] || '📌';
-        html += '<div style="background:var(--surface-2);border-radius:12px;padding:12px;margin-bottom:10px;"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;"><span style="font-weight:600;font-size:13px;">' + catIcon + ' ' + t.title + '</span><span style="font-size:12px;color:var(--ink-soft);">🕐 ' + t.time + '</span></div><div style="display:flex;gap:4px;flex-wrap:wrap;">' + dayCheckboxes + '</div>' + (t.desc ? '<div style="font-size:11px;color:var(--ink-soft);margin-top:6px;">' + t.desc + '</div>' : '') + '<div style="margin-top:8px;"><button onclick="deleteTask(\'' + t.id + '\');this.parentElement.parentElement.parentElement.parentElement.remove();openTaskManager();" style="background:var(--danger);color:#fff;border:none;padding:4px 12px;border-radius:8px;font-size:11px;cursor:pointer;">🗑 O\'chirish</button></div></div>';
-    });
-    html += '</div>';
-    overlay.innerHTML = html;
-    document.body.appendChild(overlay);
-}
-
-function updateTaskDays(taskId, dayIndex, checked) {
-    var task = taskSchedule.find(function(t) { return t.id === taskId; });
-    if (!task) return;
-    if (checked && !task.days.includes(dayIndex)) { task.days.push(dayIndex); task.days.sort(); }
-    else if (!checked) { task.days = task.days.filter(function(d) { return d !== dayIndex; }); }
-    saveTasks();
-}
-
-function resetDefaultTasks() {
-    if (!confirm('Barcha vazifalarni standart holatga qaytarishni tasdiqlaysizmi?')) return;
-    taskSchedule = JSON.parse(JSON.stringify(DEFAULT_TASKS));
-    taskHistory = [];
-    saveTasks(); saveTaskHistory();
-    renderAIScheduler('aiSchedulerContainer');
-    schedulerToast('🔄', 'Standart vazifalar tiklandi!');
-}
-
-function scrollToTask(taskId) {
-    var el = document.querySelector('.task-item[data-task-id="' + taskId + '"]');
-    if (el) {
-        el.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        el.style.background = 'var(--surface-2)';
-        el.style.borderColor = 'var(--gold)';
-        setTimeout(function() { el.style.background = ''; el.style.borderColor = ''; }, 2000);
-    }
-}
-
-/* ---------- Notification System — AI o'zi eslatadi ---------- */
-function checkTaskReminders() {
-    var pending = getPendingReminders();
-    if (pending.length > 0) {
-        var task = pending[0];
-        var lastReminder = localStorage.getItem('yolchi_last_reminder');
-        var now = Date.now();
-        if (!lastReminder || (now - parseInt(lastReminder)) > 5 * 60 * 1000) {
-            schedulerToast('🔔', task.title + ' — ' + task.time);
-            localStorage.setItem('yolchi_last_reminder', now);
-            // Browser notification
-            if ('Notification' in window && Notification.permission === 'granted') {
-                new Notification('YO\'LCHI AI — Eslatma', { body: task.title + ' — ' + task.time });
-            }
-            // Voice notification — AI speaks the reminder!
-            speakAI('Diqqat! ' + task.title + ' vaqti keldi. Iltimos, vazifani bajarishni unutmang.');
-        }
-    }
-    var lastRender = localStorage.getItem('yolchi_scheduler_render');
-    var now = Date.now();
-    if (!lastRender || (now - parseInt(lastRender)) > 60 * 1000) {
-        var container = document.getElementById('aiSchedulerContainer');
-        if (container && container.offsetParent !== null) { renderAIScheduler('aiSchedulerContainer'); }
-        localStorage.setItem('yolchi_scheduler_render', now);
-        if (typeof updateHomeSchedulerWidget === 'function') updateHomeSchedulerWidget();
-    }
-}
-
-function requestNotificationPermission() {
-    if ('Notification' in window && Notification.permission === 'default') Notification.requestPermission();
-}
-
 /* ---------- Initialize ---------- */
-var schedulerInitialized = false;
+var missionInitialized = false;
 
 function initAIScheduler(containerId) {
-    if (schedulerInitialized) {
-        renderAIScheduler(containerId);
+    if (missionInitialized) {
+        renderMissionContainer(containerId);
         return;
     }
-    schedulerInitialized = true;
+    missionInitialized = true;
     
-    // Load voices for speech synthesis
     if ('speechSynthesis' in window) {
-        window.speechSynthesis.getVoices(); // Prime the voice list
+        window.speechSynthesis.getVoices();
     }
     
-    renderAIScheduler(containerId);
-    requestNotificationPermission();
+    renderMissionContainer(containerId);
     
-    // Auto-plan the day — AI fills empty slots
-    aiAutoPlanDay();
-    
-    // Proactive greeting — AI speaks
-    setTimeout(aiProactiveGreeting, 1500);
-    
-    // Check reminders every 30 seconds
-    setInterval(checkTaskReminders, 30000);
-    setTimeout(checkTaskReminders, 3000);
+    setTimeout(() => {
+        const mission = getTodayMission();
+        if (mission && !mission.completed) {
+            speakAIMission();
+        }
+    }, 1500);
     
     if (typeof updateHomeSchedulerWidget === 'function') updateHomeSchedulerWidget();
 }
 
-/* Re-initialize scheduler with fresh auto-plan (call when user wants AI to re-plan) */
-function aiRePlanDay() {
-    // Remove all auto-generated tasks for today
-    var today = getDayIndex();
-    taskSchedule = taskSchedule.filter(function(t) {
-        return !(t.auto && t.days.length === 1 && t.days[0] === today);
-    });
-    saveTasks();
-    aiAutoPlanDay();
-    renderAIScheduler('aiSchedulerContainer');
-    speakAI('Kunlik reja yangilandi. Vazifalaringizni tekshirib ko\'ring.');
-}
-
+/* ---------- Export for global use ---------- */
 window.initScheduler = initAIScheduler;
-window.renderScheduler = renderAIScheduler;
-window.checkReminders = checkTaskReminders;
-window.getNextTask = getNextTask;
-window.getTodayStats = getTodayStats;
-window.aiRePlanDay = aiRePlanDay;
+window.renderScheduler = renderMissionContainer;
 window.speakAI = speakAI;
-window.aiAutoPlanDay = aiAutoPlanDay;
+window.completeMission = completeMission;
+window.refreshMission = refreshMission;
+window.speakAIMission = speakAIMission;
+window.setTripMission = setTripMission;
+window.getTodayMission = getTodayMission;

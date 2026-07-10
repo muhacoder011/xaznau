@@ -2092,17 +2092,134 @@
         .pom-preset-btn.active { background: var(--green); color: #fff; }
         .pomodoro-actions { display: flex; gap: 10px; }
 
-        /* Task move button */
-        .task-move-btn { background: var(--surface-2); border: none; width: 28px; height: 28px; border-radius: 8px; cursor: pointer; font-size: 11px; display: flex; align-items: center; justify-content: center; color: var(--ink-soft); }
-        .task-move-btn:hover { background: var(--green); color: #fff; }
+        /* ========== KUNLIK MISSIYA ========== */
+        .mission-container { margin-top: 8px; }
+        .mission-header { margin-bottom: 16px; }
+        .mission-greeting { font-size: 20px; font-weight: 800; font-family: 'Plus Jakarta Sans',sans-serif; }
+        .mission-date { font-size: 12px; color: var(--ink-soft); margin-top: 2px; }
+        
+        /* Trip status banner */
+        .trip-status-banner, .weekend-banner {
+            background: var(--surface-2);
+            border: 1px solid var(--line);
+            border-radius: 14px;
+            padding: 14px;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .trip-status-banner { border-left: 4px solid var(--green); }
+        .weekend-banner { border-left: 4px solid var(--gold); }
+        .tsb-icon { font-size: 28px; flex-shrink: 0; }
+        .tsb-title { font-size: 15px; font-weight: 700; }
+        .tsb-stop { font-size: 12px; color: var(--ink-soft); margin-top: 2px; }
+        
+        /* Sleep mode card */
+        .sleep-mission-card {
+            background: linear-gradient(135deg, #1a2744, #0f1a2e);
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            color: #b8c9e8;
+        }
+        .sleep-mission-card .sleep-icon { font-size: 36px; }
+        .sleep-mission-card .sleep-text { font-size: 13px; }
+        .sleep-mission-card strong { color: #d4e0f5; font-size: 15px; }
+        
+        /* Mission card */
+        .mission-card {
+            background: var(--surface);
+            border: 1px solid var(--line);
+            border-radius: 20px;
+            padding: 28px 22px;
+            text-align: center;
+            margin-bottom: 20px;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        .mission-card.mission-done {
+            opacity: 0.75;
+            background: var(--surface-2);
+        }
+        .mission-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, var(--gold), var(--gold-deep));
+            color: #3a2708;
+            font-size: 11px;
+            font-weight: 800;
+            padding: 5px 12px;
+            border-radius: 20px;
+            margin-bottom: 12px;
+            letter-spacing: 0.03em;
+        }
+        .mission-complete-icon {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            font-size: 32px;
+            animation: complete-pop 0.5s cubic-bezier(.2,1.4,.4,1);
+        }
+        @keyframes complete-pop {
+            0% { transform: scale(0) rotate(-30deg); opacity: 0; }
+            100% { transform: scale(1) rotate(0deg); opacity: 1; }
+        }
+        .mission-icon-large { font-size: 52px; margin-bottom: 10px; }
+        .mission-title { font-size: 18px; font-weight: 800; margin-bottom: 8px; line-height: 1.3; }
+        .mission-desc { font-size: 13.5px; color: var(--ink-soft); line-height: 1.5; margin-bottom: 14px; }
+        .mission-stars { display: flex; align-items: center; justify-content: center; gap: 4px; margin-bottom: 18px; flex-wrap: wrap; }
+        .mission-stars .ms-label { font-size: 12px; font-weight: 600; color: var(--ink-soft); margin-right: 4px; }
+        .mission-stars .ms-star { font-size: 16px; }
+        .mission-stars .ms-count { font-size: 13px; font-weight: 700; color: var(--gold-deep); margin-left: 6px; }
+        .mission-actions { display: flex; flex-direction: column; gap: 10px; }
+        .mission-done-message {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--green);
+            padding: 10px;
+        }
+        .mission-done-message .md-icon { font-size: 28px; }
+        
+        /* Tips */
+        .mission-section-title { font-size: 14px; font-weight: 800; margin: 18px 0 10px; font-family: 'Plus Jakarta Sans',sans-serif; }
+        .mission-tips { display: flex; flex-direction: column; gap: 8px; margin-bottom: 16px; }
+        .tip-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: var(--surface);
+            border: 1px solid var(--line);
+            border-radius: 12px;
+            padding: 12px 14px;
+        }
+        .tip-icon { font-size: 20px; flex-shrink: 0; }
+        .tip-text { font-size: 13px; font-weight: 500; }
+        
+        /* Mission history */
+        .mission-history { display: flex; flex-direction: column; gap: 6px; }
+        .history-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: var(--surface-2);
+            border-radius: 10px;
+            padding: 10px 12px;
+            font-size: 12px;
+        }
+        .history-item .hi-icon { font-size: 16px; flex-shrink: 0; }
+        .history-item .hi-title { flex: 1; font-weight: 600; }
+        .history-item .hi-date { color: var(--ink-soft); font-size: 11px; }
+        .history-item .hi-status { font-size: 14px; }
 
         /* Scheduler toast override for independent system */
         .scheduler-toast { pointer-events: none; user-select: none; }
-
-        /* Task manager day checkboxes */
-        .day-cb { display: none; }
-        .day-cb + span { opacity: 0.6; }
-        .day-cb:checked + span { opacity: 1; }
 
         /* ========== MICRO-ANIMATIONS — ULTRA ========== */
         .stagger-enter { animation: stagger-in 0.5s cubic-bezier(.2,1.4,.4,1) both; }
@@ -2267,7 +2384,7 @@
                     <div style="display:flex;align-items:center;gap:12px;">
                         <div style="font-size:28px;" id="homeSchedulerIcon">🤖</div>
                         <div style="flex:1;">
-                            <div style="font-size:13px;font-weight:700;">AI Kunlik Reja <span id="aiVoiceIndicator" style="display:none;font-size:10px;font-weight:700;background:var(--green);color:#fff;padding:1px 7px;border-radius:20px;vertical-align:middle;">🔊 AI</span></div>
+                            <div style="font-size:13px;font-weight:700;">🎯 Kunlik Missiya <span id="aiVoiceIndicator" style="display:none;font-size:10px;font-weight:700;background:var(--green);color:#fff;padding:1px 7px;border-radius:20px;vertical-align:middle;">🔊 AI</span></div>
                             <div id="homeSchedulerPreview" style="font-size:12px;color:var(--ink-soft);margin-top:2px;">Bugungi vazifalarni ko'rish</div>
                         </div>
                         <span style="font-size:16px;">›</span>
@@ -2473,11 +2590,11 @@
             </div>
         </section>
 
-        <!-- ============ AI SCHEDULER (KUNLIK VAZIFALAR) ============ -->
+        <!-- ============ KUNLIK MISSIYA ============ -->
         <section class="screen" data-screen="scheduler">
             <div class="topbar">
                 <div class="topbar-left"><button class="back-btn" onclick="goHome()">←</button>
-                    <h2>🤖 AI Kunlik Reja</h2>
+                    <h2>🎯 Kunlik Missiya</h2>
                 </div>
                 <button class="icon-btn" onclick="toggleDark()">🌙</button>
             </div>
@@ -2488,7 +2605,7 @@
         <div class="bottom-nav" id="bottomNav">
             <div class="nav-indicator" id="navIndicator"></div>
             <button data-tab="home" class="active" onclick="goTab('home')" data-tr="nav_home"><span class="ic">🏠</span><span class="nav-label">Bosh sahifa</span></button>
-            <button data-tab="scheduler" onclick="goTab('scheduler');setTimeout(()=>initScheduler('aiSchedulerContainer'),300);" data-tr="nav_scheduler"><span class="ic">🤖</span><span class="nav-label">Reja</span></button>
+            <button data-tab="scheduler" onclick="goTab('scheduler');setTimeout(()=>initScheduler('aiSchedulerContainer'),300);" data-tr="nav_scheduler"><span class="ic">🎯</span><span class="nav-label">Missiya</span></button>
             <button data-tab="shop" onclick="goTab('shop')" data-tr="nav_shop"><span class="ic">⭐</span><span class="nav-label">Do'kon</span></button>
             <button data-tab="trips" onclick="goTab('trips')" data-tr="nav_trips"><span class="ic">📑</span><span class="nav-label">Sayohatlar</span></button>
             <button data-tab="profile" onclick="goTab('profile')" data-tr="nav_profile"><span class="ic">👤</span><span class="nav-label">Profil</span></button>
@@ -2675,7 +2792,7 @@
                 lang_ru: "Русский",
                 nav_home: "Bosh sahifa",
                 nav_discover: "Kashfiyot",
-                nav_scheduler: "Kunlik Reja",
+                nav_scheduler: "Missiya",
                 nav_shop: "Do'kon",
                 nav_trips: "Sayohatlar",
                 nav_profile: "Profil",
@@ -2818,7 +2935,7 @@
                 lang_ru: "Русский",
                 nav_home: "Home",
                 nav_discover: "Discover",
-                nav_scheduler: "Daily Plan",
+                nav_scheduler: "Mission",
                 nav_shop: "Shop",
                 nav_trips: "Trips",
                 nav_profile: "Profile",
@@ -2960,7 +3077,7 @@
                 lang_ru: "Русский",
                 nav_home: "Главная",
                 nav_discover: "Открытия",
-                nav_scheduler: "Ежедневный план",
+                nav_scheduler: "Миссия",
                 nav_shop: "Магазин",
                 nav_trips: "Поездки",
                 nav_profile: "Профиль",
@@ -3469,6 +3586,11 @@
             trip.stops[0].status = 'current';
             renderLiveTrip(trip);
             goScreen('livetrip');
+            // Set a trip-themed daily mission
+            if (typeof setTripMission === 'function') {
+                const currentStop = trip.stops[trip.currentIndex];
+                setTripMission(trip.city, currentStop ? currentStop.name : null);
+            }
         }
 
         function renderLiveTrip(trip) {
@@ -4140,26 +4262,23 @@
             if (!widget) return;
             const preview = document.getElementById('homeSchedulerPreview');
             if (!preview) return;
-            // Show AI voice indicator if speech is supported
             const voiceIndicator = document.getElementById('aiVoiceIndicator');
             if (voiceIndicator && 'speechSynthesis' in window) {
                 voiceIndicator.style.display = 'inline';
             }
-            // Get next task if ai-scheduler is loaded
-            if (typeof getNextTask === 'function' && typeof getTodayStats === 'function') {
-                const nextTask = getNextTask();
-                const stats = getTodayStats();
-                if (stats.total > 0 && stats.done === stats.total) {
-                    preview.textContent = '✅ Bugungi barcha vazifalar bajarildi!';
-                } else if (nextTask) {
-                    preview.textContent = `⌛ ${nextTask.title} — ${nextTask.time}`;
-                } else if (stats.total > 0) {
-                    preview.textContent = `📋 ${stats.done}/${stats.total} vazifa bajarildi`;
+            // Show mission info if ai-scheduler is loaded
+            if (typeof getTodayMission === 'function') {
+                const mission = getTodayMission();
+                if (mission && mission.completed) {
+                    preview.textContent = '✅ Bugungi missiya bajarildi! 🎉';
+                } else if (mission) {
+                    const title = mission.title.replace(/[^\w\s\u0600-\u06FF\u0400-\u04FF]/g, '').trim();
+                    preview.textContent = '🎯 ' + title + ' — +' + (mission.stars || 3) + ' ⭐';
                 } else {
-                    preview.textContent = '📋 Bugungi vazifalarni rejalashtirish';
+                    preview.textContent = '🎯 Bugungi missiyani ko\'rish';
                 }
             } else {
-                preview.textContent = '📋 Bugungi vazifalarni ko\'rish';
+                preview.textContent = '🎯 Bugungi missiyani ko\'rish';
             }
         }
 
