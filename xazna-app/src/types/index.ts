@@ -114,3 +114,96 @@ export const CATEGORY_COLORS: Record<LocationCategory, string> = {
   restaurant: 'bg-orange-100 text-orange-800',
   historical: 'bg-purple-100 text-purple-800',
 }
+
+// ============================================
+// Yangi turlar: Do'kon, Missiyalar, Profil, Inventar
+// ============================================
+
+// --- Foydalanuvchi profili ---
+
+export interface AppUser {
+  id: string
+  name: string
+  email: string
+  avatar: string
+  level: number
+  experience: number
+  experienceToNextLevel: number
+  coins: number
+  tripsPlanned: number
+  destinationsVisited: number
+  joinedAt: Date
+}
+
+// --- Do'kon (Shop) turlari ---
+
+export type ShopItemCategory = 'transport' | 'food' | 'guide' | 'souvenir' | 'boost'
+
+export interface ShopItem {
+  id: string
+  name: string
+  description: string
+  price: number
+  category: ShopItemCategory
+  icon: string
+  color: string
+  benefits: string[]
+  isPopular?: boolean
+}
+
+// --- Inventory (Sotib olingan narsalar) ---
+
+export interface InventoryItem {
+  id: string
+  shopItemId: string
+  name: string
+  description: string
+  icon: string
+  category: ShopItemCategory
+  purchasedAt: Date
+  isUsed: boolean
+  quantity: number
+}
+
+// --- Missiyalar (Missions/Quests) ---
+
+export type MissionStatus = 'available' | 'in_progress' | 'completed' | 'claimed'
+export type MissionDifficulty = 'easy' | 'medium' | 'hard'
+export type MissionType = 'daily' | 'weekly' | 'achievement'
+
+export interface Mission {
+  id: string
+  title: string
+  description: string
+  icon: string
+  type: MissionType
+  difficulty: MissionDifficulty
+  reward: {
+    coins: number
+    experience: number
+    item?: string
+  }
+  requirements: {
+    type: string
+    target: number
+    current: number
+  }
+  status: MissionStatus
+  progress: number // 0-100
+}
+
+// --- Ulashish (Sharing) turlari ---
+
+export interface ShareData {
+  title: string
+  text: string
+  url?: string
+}
+
+export const SHOP_ITEM_CATEGORY_LABELS: Record<ShopItemCategory, string> = {
+  transport: '🚗 Transport',
+  food: '🍽️ Oziq-ovqat',
+  guide: '🧭 Gid xizmati',
+  souvenir: '🎁 Suvenir',
+  boost: '⚡ Kuchaytirish',
+}

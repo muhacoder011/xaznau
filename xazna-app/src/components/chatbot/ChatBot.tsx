@@ -9,8 +9,6 @@ export const ChatBot: React.FC = () => {
     messages,
     isLoading,
     itinerary,
-    selectedOptions,
-    handleOptionSelect,
     handleUserMessage,
     resetChat,
     messagesEndRef,
@@ -70,8 +68,6 @@ export const ChatBot: React.FC = () => {
           <ChatMessage
             key={msg.id}
             message={msg}
-            onOptionSelect={handleOptionSelect}
-            isSelected={!!selectedOptions[Number(msg.id.replace('bot-', ''))]}
           />
         ))}
 
