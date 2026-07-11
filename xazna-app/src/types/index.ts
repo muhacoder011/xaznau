@@ -149,6 +149,9 @@ export interface ShopItem {
   color: string
   benefits: string[]
   isPopular?: boolean
+  originalPrice?: number // Chegirma uchun asl narx
+  stock?: number // Qancha dona qolgan (limited)
+  isNew?: boolean // Yangi mahsulot
 }
 
 // --- Inventory (Sotib olingan narsalar) ---
