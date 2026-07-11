@@ -197,45 +197,60 @@ export function useChatBot() {
     setSelectedOptions({})
   }, [])
 
-  const handleTextMessage = useCallback(
+  // Klaviaturada matn kiritish uchun handler
+  const handleUserMessage = useCallback(
     async (text: string) => {
-      // Foydalanuvchi matnli xabarini qo'shish
+      const trimmed = text.trim()
+      if (!trimmed || isLoading) return
+
+      // Foydalanuvchi xabarini qo'shish
       const userMessage: ChatMessage = {
         id: `user-text-${Date.now()}`,
         type: 'user',
-        text: text,
+        text: trimmed,
         timestamp: new Date(),
       }
       setMessages((prev) => [...prev, userMessage])
 
-      // Agar hali savollar tugamagan bo'lsa, keyingi savolga o'tish
-      const nextIndex = currentQuestionIndex + 1
-      if (nextIndex < QUESTIONS.length) {
-        const nextQuestion = QUESTIONS[nextIndex]
-        setCurrentQuestionIndex(nextIndex)
+      // Agar hali savol berilayotgan bo'lsa, variantni matn orqali topish
+      if (currentQuestionIndex < QUESTIONS.length) {
+        const question = QUESTIONS[currentQuestionIndex]
+        const matchedOption = question.options.find(
+          (opt) =>
+            opt.label.toLowerCase() === trimmed.toLowerCase() ||
+            opt.value.toLowerCase() === trimmed.toLowerCase()
+        )
 
-        setTimeout(() => {
-          const botMessage: ChatMessage = {
-            id: `bot-${nextQuestion.id}`,
+        if (matchedOption) {
+          // Agar variant topilsa, xuddi tugma bosilgandek ishlov berish
+          // Kechikish bilan chaqiramiz, chunki handleOptionSelect ichida
+          // setTimeout bilan keyingi savol qo'shiladi
+          setTimeout(() => {
+            handleOptionSelect(matchedOption)
+          }, 100)
+        } else {
+          // Variant topilmasa, xatolik xabarini ko'rsatish
+          const errorMessage: ChatMessage = {
+            id: `bot-error-${Date.now()}`,
             type: 'bot',
-            text: nextQuestion.text,
-            options: nextQuestion.options,
+            text: `😅 "${trimmed}" variantini topa olmadim. Iltimos, quyidagi variantlardan birini tanlang yoki tugmalarni bosing:`,
+            options: question.options,
             timestamp: new Date(),
           }
-          setMessages((prev) => [...prev, botMessage])
-        }, 600)
+          setMessages((prev) => [...prev, errorMessage])
+        }
       } else {
-        // Bot javob beradi
-        const botMessage: ChatMessage = {
-          id: `bot-text-${Date.now()}`,
+        // Barcha savollar tugagan bo'lsa, marshrut haqida qo'shimcha so'rash
+        const botReply: ChatMessage = {
+          id: `bot-reply-${Date.now()}`,
           type: 'bot',
-          text: "Tushunarli! Keling, sayohatingizni rejalashtirishda davom etamiz. 😊 Yuqoridagi variantlardan birini tanlang yoki o'z fikringizni yozing.",
+          text: `Sizning xabaringiz qabul qilindi. Marshrut haqida qo'shimcha ma'lumot olish uchun "Yangi sayohat rejalash" tugmasini bosing.`,
           timestamp: new Date(),
         }
-        setMessages((prev) => [...prev, botMessage])
+        setMessages((prev) => [...prev, botReply])
       }
     },
-    [currentQuestionIndex]
+    [currentQuestionIndex, isLoading, handleOptionSelect]
   )
 
   return {
@@ -244,7 +259,7 @@ export function useChatBot() {
     itinerary,
     selectedOptions,
     handleOptionSelect,
-    handleTextMessage,
+    handleUserMessage,
     resetChat,
     messagesEndRef,
   }

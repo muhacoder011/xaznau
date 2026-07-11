@@ -5,14 +5,7 @@ import { DistanceCalculator } from './components/admin/DistanceCalculator'
 import { LoginForm } from './components/auth/LoginForm'
 import { RegisterForm } from './components/auth/RegisterForm'
 import { UserProfile } from './components/auth/UserProfile'
-import type { LocationFormData, Itinerary } from './types'
-
-// Extend Window interface for TypeScript
-declare global {
-  interface Window {
-    fs?: any
-  }
-}
+import type { LocationFormData } from './types'
 
 type Tab = 'chat' | 'admin' | 'calculator'
 
