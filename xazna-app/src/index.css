@@ -1,0 +1,57 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * {
+    box-sizing: border-box;
+  }
+
+  body {
+    @apply min-h-screen;
+  }
+
+  ::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  ::-webkit-scrollbar-track {
+    @apply bg-transparent;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    @apply bg-gray-300 rounded-full;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-gray-400;
+  }
+}
+
+@layer components {
+  .chat-bubble-user {
+    @apply bg-primary-600 text-white rounded-2xl rounded-br-sm px-4 py-3 max-w-[80%] self-end shadow-sm;
+  }
+
+  .chat-bubble-bot {
+    @apply bg-white text-gray-800 rounded-2xl rounded-bl-sm px-4 py-3 max-w-[85%] self-start shadow-sm border border-gray-100;
+  }
+
+  .option-btn {
+    @apply px-5 py-2.5 rounded-full border-2 border-primary-500 text-primary-700 font-medium 
+           transition-all duration-200 hover:bg-primary-500 hover:text-white 
+           active:scale-95 focus:outline-none focus:ring-2 focus:ring-primary-300;
+  }
+
+  .option-btn-selected {
+    @apply bg-primary-600 text-white border-primary-600;
+  }
+
+  .timeline-dot {
+    @apply w-4 h-4 rounded-full bg-primary-500 border-4 border-primary-100 absolute -left-2 top-1;
+  }
+
+  .timeline-line {
+    @apply w-0.5 bg-gradient-to-b from-primary-400 to-primary-200 absolute left-0 top-4 bottom-0;
+  }
+}
