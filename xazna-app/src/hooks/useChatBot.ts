@@ -197,12 +197,54 @@ export function useChatBot() {
     setSelectedOptions({})
   }, [])
 
+  const handleTextMessage = useCallback(
+    async (text: string) => {
+      // Foydalanuvchi matnli xabarini qo'shish
+      const userMessage: ChatMessage = {
+        id: `user-text-${Date.now()}`,
+        type: 'user',
+        text: text,
+        timestamp: new Date(),
+      }
+      setMessages((prev) => [...prev, userMessage])
+
+      // Agar hali savollar tugamagan bo'lsa, keyingi savolga o'tish
+      const nextIndex = currentQuestionIndex + 1
+      if (nextIndex < QUESTIONS.length) {
+        const nextQuestion = QUESTIONS[nextIndex]
+        setCurrentQuestionIndex(nextIndex)
+
+        setTimeout(() => {
+          const botMessage: ChatMessage = {
+            id: `bot-${nextQuestion.id}`,
+            type: 'bot',
+            text: nextQuestion.text,
+            options: nextQuestion.options,
+            timestamp: new Date(),
+          }
+          setMessages((prev) => [...prev, botMessage])
+        }, 600)
+      } else {
+        // Bot javob beradi
+        const botMessage: ChatMessage = {
+          id: `bot-text-${Date.now()}`,
+          type: 'bot',
+          text: "Tushunarli! Keling, sayohatingizni rejalashtirishda davom etamiz. 😊 Yuqoridagi variantlardan birini tanlang yoki o'z fikringizni yozing.",
+          timestamp: new Date(),
+        }
+        setMessages((prev) => [...prev, botMessage])
+      }
+    },
+    [currentQuestionIndex]
+  )
+
   return {
     messages,
     isLoading,
     itinerary,
     selectedOptions,
     handleOptionSelect,
+    handleTextMessage,
     resetChat,
     messagesEndRef,
   }

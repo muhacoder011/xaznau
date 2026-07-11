@@ -1,8 +1,7 @@
-import React, { useEffect, useRef } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { useChatBot } from '../../hooks/useChatBot'
 import { ChatMessage } from './ChatMessage'
 import { Timeline } from './Timeline'
-import { Button } from '../ui/Button'
 
 export const ChatBot: React.FC = () => {
   const {
@@ -11,9 +10,26 @@ export const ChatBot: React.FC = () => {
     itinerary,
     selectedOptions,
     handleOptionSelect,
+    handleTextMessage,
     resetChat,
     messagesEndRef,
   } = useChatBot()
+
+  const [inputText, setInputText] = useState('')
+  const inputRef = useRef<HTMLInputElement>(null)
+
+  const handleSendText = () => {
+    if (!inputText.trim() || isLoading) return
+    handleTextMessage(inputText.trim())
+    setInputText('')
+  }
+
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault()
+      handleSendText()
+    }
+  }
 
   const chatContainerRef = useRef<HTMLDivElement>(null)
 
@@ -86,19 +102,59 @@ export const ChatBot: React.FC = () => {
         <div ref={messagesEndRef} />
       </div>
 
-      {/* Footer */}
-      {itinerary && (
-        <div className="border-t border-gray-100 bg-white px-6 py-4 flex justify-center">
-          <Button variant="outline" size="md" onClick={resetChat}>
-            <span className="flex items-center gap-2">
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+      {/* Footer - Keyboard Input */}
+      <div className="border-t border-gray-100 bg-white px-4 py-3">
+        <div className="flex items-center gap-2">
+          <div className="flex-1 relative">
+            <input
+              ref={inputRef}
+              type="text"
+              value={inputText}
+              onChange={(e) => setInputText(e.target.value)}
+              onKeyDown={handleKeyDown}
+              placeholder="Xabaringizni yozing..."
+              disabled={isLoading}
+              className="w-full px-4 py-2.5 pr-10 rounded-xl border border-gray-200 bg-gray-50 text-sm
+                focus:outline-none focus:ring-2 focus:ring-primary-400 focus:border-transparent
+                disabled:opacity-50 disabled:cursor-not-allowed
+                placeholder:text-gray-400 transition-all"
+            />
+            {inputText.length > 0 && (
+              <button
+                onClick={() => setInputText('')}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+              >
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            )}
+          </div>
+          <button
+            onClick={handleSendText}
+            disabled={!inputText.trim() || isLoading}
+            className="w-10 h-10 rounded-xl bg-primary-600 text-white flex items-center justify-center
+              hover:bg-primary-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed
+              active:scale-95"
+          >
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
+            </svg>
+          </button>
+          {itinerary && (
+            <button
+              onClick={resetChat}
+              className="w-10 h-10 rounded-xl bg-gray-100 text-gray-600 flex items-center justify-center
+                hover:bg-gray-200 transition-colors active:scale-95"
+              title="Qaytadan boshlash"
+            >
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
               </svg>
-              Yangi sayohat rejalash
-            </span>
-          </Button>
+            </button>
+          )}
         </div>
-      )}
+      </div>
     </div>
   )
 }
