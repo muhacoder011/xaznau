@@ -2963,6 +2963,241 @@
         .google-account:active {
             transform: scale(0.97) !important;
         }
+
+        /* ========== LANDING PAGE ========== */
+        #landingPage {
+            position: fixed;
+            inset: 0;
+            z-index: 9998;
+            background: linear-gradient(135deg, #0a1f14 0%, #0d2b1a 30%, #123a28 60%, #1a4a35 100%);
+            overflow-y: auto;
+            overflow-x: hidden;
+            display: none;
+            flex-direction: column;
+        }
+        #landingPage.visible {
+            display: flex;
+        }
+        #landingPage.hiding {
+            animation: landingFadeOut 0.6s ease forwards;
+        }
+        @keyframes landingFadeOut {
+            to { opacity: 0; transform: translateY(-30px); }
+        }
+
+        .landing-particles {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            overflow: hidden;
+            z-index: 0;
+        }
+        .landing-particle {
+            position: absolute;
+            border-radius: 50%;
+            opacity: 0.12;
+            animation: lp-float 8s infinite ease-in-out;
+        }
+        @keyframes lp-float {
+            0%, 100% { transform: translateY(0) scale(1); opacity: 0.08; }
+            50% { transform: translateY(-40px) scale(1.3); opacity: 0.18; }
+        }
+
+        .landing-hero {
+            position: relative;
+            z-index: 1;
+            text-align: center;
+            padding: 60px 24px 40px;
+            min-height: 55vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        .landing-logo {
+            width: 80px;
+            height: 80px;
+            border-radius: 24px;
+            background: linear-gradient(135deg, #dda23a, #e6b458, #c79236);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 36px;
+            color: #fff;
+            margin: 0 auto 20px;
+            box-shadow: 0 12px 40px rgba(221, 162, 58, 0.35);
+            animation: logoPulse 3s ease infinite;
+        }
+        @keyframes logoPulse {
+            0%, 100% { box-shadow: 0 12px 40px rgba(221, 162, 58, 0.35); }
+            50% { box-shadow: 0 16px 60px rgba(221, 162, 58, 0.5); }
+        }
+        .landing-title {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-size: 38px;
+            font-weight: 800;
+            color: #fff;
+            line-height: 1.15;
+            margin-bottom: 16px;
+            animation: heroSlide 0.8s ease both;
+        }
+        .landing-title span {
+            background: linear-gradient(135deg, #dda23a, #e6b458);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        @keyframes heroSlide {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .landing-desc {
+            font-size: 16px;
+            color: rgba(255,255,255,0.65);
+            max-width: 480px;
+            margin: 0 auto 32px;
+            line-height: 1.6;
+            animation: heroSlide 0.8s ease 0.15s both;
+        }
+        .landing-cta {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 16px 40px;
+            background: linear-gradient(135deg, #dda23a, #c79236);
+            color: #fff;
+            font-size: 17px;
+            font-weight: 700;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            border: none;
+            border-radius: 16px;
+            cursor: pointer;
+            box-shadow: 0 8px 32px rgba(221, 162, 58, 0.4);
+            transition: all 0.3s ease;
+            animation: heroSlide 0.8s ease 0.3s both;
+        }
+        .landing-cta:hover {
+            transform: translateY(-2px) scale(1.03);
+            box-shadow: 0 12px 44px rgba(221, 162, 58, 0.55);
+        }
+        .landing-cta:active {
+            transform: scale(0.97);
+        }
+        .landing-skip {
+            display: block;
+            margin: 16px auto 0;
+            background: none;
+            border: 1px solid rgba(255,255,255,0.2);
+            color: rgba(255,255,255,0.5);
+            padding: 10px 28px;
+            border-radius: 12px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s;
+            animation: heroSlide 0.8s ease 0.45s both;
+        }
+        .landing-skip:hover {
+            border-color: rgba(255,255,255,0.4);
+            color: rgba(255,255,255,0.8);
+            background: rgba(255,255,255,0.05);
+        }
+
+        .landing-features {
+            position: relative;
+            z-index: 1;
+            padding: 20px 20px 40px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 16px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .landing-feature {
+            background: rgba(255,255,255,0.06);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 20px;
+            padding: 24px;
+            text-align: center;
+            transition: all 0.3s ease;
+            animation: featureUp 0.6s ease both;
+        }
+        .landing-feature:nth-child(1) { animation-delay: 0.1s; }
+        .landing-feature:nth-child(2) { animation-delay: 0.2s; }
+        .landing-feature:nth-child(3) { animation-delay: 0.3s; }
+        .landing-feature:nth-child(4) { animation-delay: 0.4s; }
+        @keyframes featureUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .landing-feature:hover {
+            background: rgba(255,255,255,0.1);
+            transform: translateY(-4px);
+            box-shadow: 0 8px 30px rgba(0,0,0,0.2);
+        }
+        .landing-feature .lf-icon {
+            width: 52px;
+            height: 52px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            margin: 0 auto 14px;
+            color: #fff;
+        }
+        .landing-feature h3 {
+            color: #fff;
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+        .landing-feature p {
+            color: rgba(255,255,255,0.5);
+            font-size: 13px;
+            line-height: 1.5;
+        }
+
+        .landing-stats {
+            position: relative;
+            z-index: 1;
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            padding: 30px 20px;
+            flex-wrap: wrap;
+        }
+        .landing-stat {
+            text-align: center;
+        }
+        .landing-stat .ls-num {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-size: 32px;
+            font-weight: 800;
+            color: #dda23a;
+        }
+        .landing-stat .ls-label {
+            font-size: 13px;
+            color: rgba(255,255,255,0.45);
+            margin-top: 4px;
+        }
+
+        .landing-footer {
+            position: relative;
+            z-index: 1;
+            text-align: center;
+            padding: 20px;
+            color: rgba(255,255,255,0.25);
+            font-size: 12px;
+        }
+
+        @media (max-width: 480px) {
+            .landing-title { font-size: 28px; }
+            .landing-hero { padding: 40px 16px 30px; min-height: 45vh; }
+            .landing-features { grid-template-columns: 1fr; padding: 10px 16px 30px; }
+            .landing-stats { gap: 24px; }
+        }
     </style>
 </head>
 
@@ -2978,6 +3213,68 @@
             </div>
             <!-- Google Sign-In container (hidden, used by Google Identity Services) -->
             <div id="googleSignInContainer" style="display:none;"></div>
+        </div>
+    </div>
+
+    <!-- ============ LANDING PAGE ============ -->
+    <div id="landingPage">
+        <div class="landing-particles" id="landingParticles"></div>
+        <div class="landing-hero">
+            <div class="landing-logo"><i class="fa-solid fa-star"></i></div>
+            <div class="landing-title">O'zbekistonni <span>AI bilan</span> kashf eting</div>
+            <div class="landing-desc">Shaxsiy sayohat rejangizni sun'iy intellekt yordamida yarating. Vaqt, byudjet va qiziqishlaringiz asosida mukammal kunlik marshrutlar — hech qanday forma to'ldirmasdan.</div>
+            <button class="landing-cta" onclick="openAuthFromLanding()">
+                <i class="fa-solid fa-rocket"></i> Sayohatni boshlash
+            </button>
+            <button class="landing-skip" onclick="skipLanding()">
+                <i class="fa-solid fa-eye"></i> Avval ko'rib chiqaman
+            </button>
+        </div>
+
+        <div class="landing-features">
+            <div class="landing-feature">
+                <div class="lf-icon" style="background:linear-gradient(135deg,#1f6d4c,#3fae7c);"><i class="fa-solid fa-robot"></i></div>
+                <h3>AI Yordamchi</h3>
+                <p>Sun'iy intellekt sizga eng yaxshi sayohat rejasini tavsiya qiladi</p>
+            </div>
+            <div class="landing-feature">
+                <div class="lf-icon" style="background:linear-gradient(135deg,#dda23a,#e6b458);"><i class="fa-solid fa-map-location-dot"></i></div>
+                <h3>Interaktiv xarita</h3>
+                <p>Barcha diqqatga sazovor joylarni xaritada ko'ring va sayohatingizni rejalashtiring</p>
+            </div>
+            <div class="landing-feature">
+                <div class="lf-icon" style="background:linear-gradient(135deg,#c96b3e,#e8956a);"><i class="fa-solid fa-route"></i></div>
+                <h3>Shaxsiy marshrut</h3>
+                <p>Vaqt va byudjetingizga mos kunlik sayohat rejasi avtomatik tuziladi</p>
+            </div>
+            <div class="landing-feature">
+                <div class="lf-icon" style="background:linear-gradient(135deg,#667eea,#764ba2);"><i class="fa-solid fa-trophy"></i></div>
+                <h3>Yutuqlar tizimi</h3>
+                <p>Sayohat qilib yulduzlar yig'ing, darajangizni oshiring va mukofotlar oling</p>
+            </div>
+        </div>
+
+        <div class="landing-stats">
+            <div class="landing-stat">
+                <div class="ls-num">50+</div>
+                <div class="ls-label">Shaharlar</div>
+            </div>
+            <div class="landing-stat">
+                <div class="ls-num">200+</div>
+                <div class="ls-label">Joylar</div>
+            </div>
+            <div class="landing-stat">
+                <div class="ls-num">AI</div>
+                <div class="ls-label">Aqlli tizim</div>
+            </div>
+            <div class="landing-stat">
+                <div class="ls-num">24/7</div>
+                <div class="ls-label">Yordam</div>
+            </div>
+        </div>
+
+        <div class="landing-footer">
+            <i class="fa-solid fa-heart" style="color:#c96b3e;"></i> O'zbekiston uchun yaratilgan — YO'LCHI &copy; 2026
         </div>
     </div>
 
@@ -3477,20 +3774,72 @@
 
         function checkAuth() {
             const overlay = document.getElementById('authOverlay');
+            const landing = document.getElementById('landingPage');
             if (!overlay) return;
             if (state.user && state.user.name) {
                 overlay.classList.add('hidden');
                 setTimeout(() => { overlay.style.display = 'none'; }, 500);
+                if (landing) { landing.style.display = 'none'; landing.classList.remove('visible'); }
                 const profileName = document.querySelector('.profile-top h3');
                 if (profileName) profileName.textContent = state.user.name;
                 const profileEmail = document.querySelector('.profile-top p');
                 if (profileEmail) profileEmail.textContent = state.user.phone || state.user.email || 'mehmon@yolchi.uz';
                 return;
             }
-            overlay.style.display = 'flex';
-            overlay.classList.remove('hidden');
-            authStep = 'phone';
-            renderAuthStep('phone');
+            // Show landing page instead of auth directly
+            if (landing) {
+                landing.classList.add('visible');
+                generateLandingParticles();
+            }
+        }
+
+        function generateLandingParticles() {
+            const c = document.getElementById('landingParticles');
+            if (!c || c.children.length > 0) return;
+            const colors = ['#1f6d4c','#dda23a','#3fae7c','#e6b458','#667eea'];
+            for (let i = 0; i < 20; i++) {
+                const p = document.createElement('div');
+                p.className = 'landing-particle';
+                const s = 6 + Math.random() * 20;
+                p.style.width = s + 'px';
+                p.style.height = s + 'px';
+                p.style.left = Math.random() * 100 + '%';
+                p.style.top = Math.random() * 100 + '%';
+                p.style.background = colors[Math.floor(Math.random() * colors.length)];
+                p.style.animationDuration = (5 + Math.random() * 8) + 's';
+                p.style.animationDelay = (Math.random() * 5) + 's';
+                c.appendChild(p);
+            }
+        }
+
+        function openAuthFromLanding() {
+            const landing = document.getElementById('landingPage');
+            if (landing) {
+                landing.classList.add('hiding');
+                setTimeout(() => {
+                    landing.style.display = 'none';
+                    landing.classList.remove('visible', 'hiding');
+                    // Now show auth
+                    const overlay = document.getElementById('authOverlay');
+                    if (overlay) {
+                        overlay.style.display = 'flex';
+                        overlay.classList.remove('hidden');
+                        authStep = 'phone';
+                        renderAuthStep('phone');
+                    }
+                }, 600);
+            }
+        }
+
+        function skipLanding() {
+            const landing = document.getElementById('landingPage');
+            if (landing) {
+                landing.classList.add('hiding');
+                setTimeout(() => {
+                    landing.style.display = 'none';
+                    landing.classList.remove('visible', 'hiding');
+                }, 600);
+            }
         }
 
         // Format phone input as XX XXX XX XX
