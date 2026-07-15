@@ -8,7 +8,13 @@ const CITY_COORDS = {
     "Buxoro": [39.7682, 64.4219],
     "Xiva": [41.3785, 60.3639],
     "Namangan": [41.0011, 71.6726],
-    "Farg'ona": [40.3864, 71.7864]
+    "Farg'ona": [40.3864, 71.7864],
+    "Andijon": [40.7833, 72.3333],
+    "Nukus": [42.4667, 59.6000],
+    "Shahrisabz": [39.0500, 66.8333],
+    "Termiz": [37.2242, 67.2783],
+    "Jizzax": [40.1000, 67.8333],
+    "Guliston": [40.4833, 68.7833]
 };
 
 // Store maps by container ID for multi-map support

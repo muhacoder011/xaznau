@@ -13,6 +13,8 @@
         href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap"
         rel="stylesheet">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#1f6d4c">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -91,7 +93,7 @@
 
         .app-shell {
             width: 100%;
-            max-width: 430px;
+            max-width: 100%;
             min-height: 100vh;
             background: var(--bg);
             position: relative;
@@ -99,6 +101,67 @@
             box-shadow: 0 0 60px rgba(0, 0, 0, 0.06);
             display: flex;
             flex-direction: column;
+        }
+
+        /* Desktop responsive: full-width layout */
+        @media (min-width: 768px) {
+            body {
+                background: var(--surface-3);
+            }
+            .app-shell {
+                max-width: 900px;
+                margin: 0 auto;
+                min-height: 100vh;
+                box-shadow: 0 0 40px rgba(0,0,0,0.08);
+                border-left: 1px solid var(--line);
+                border-right: 1px solid var(--line);
+                padding: 0 40px;
+            }
+            .screen {
+                padding: 0 20px 90px;
+            }
+            .city-grid {
+                grid-template-columns: 1fr 1fr 1fr;
+                gap: 16px;
+            }
+            .shop-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+        @media (min-width: 1200px) {
+            body {
+                background: var(--surface-3);
+            }
+            .app-shell {
+                max-width: 1100px;
+                border-radius: 0;
+                margin: 0 auto;
+                min-height: 100vh;
+                max-height: none;
+                overflow-y: visible;
+                box-shadow: 0 8px 40px rgba(0,0,0,0.1);
+                border-left: 1px solid var(--line);
+                border-right: 1px solid var(--line);
+                padding: 0 60px;
+            }
+            .app-shell::-webkit-scrollbar { width: 6px; }
+            .app-shell::-webkit-scrollbar-thumb { background: var(--line); border-radius: 10px; }
+            .city-grid {
+                grid-template-columns: 1fr 1fr 1fr 1fr;
+                gap: 18px;
+            }
+            .shop-grid {
+                grid-template-columns: 1fr 1fr 1fr;
+            }
+            .why-grid {
+                grid-template-columns: 1fr 1fr 1fr 1fr;
+            }
+        }
+        /* Override previous phone-frame styles */
+        @media (min-width: 768px) {
+            .screen {
+                padding-bottom: 90px;
+            }
         }
 
         /* ---------- shared topbar ---------- */
@@ -152,30 +215,75 @@
 
         .screen {
             display: none;
-            padding: 0 20px 100px;
-            flex: 1;
-        }
-
-        .screen {
-            display: none;
-            padding: 0 20px 100px;
-            flex: 1;
+            padding: 0 20px 80px;
+            flex: 1 1 auto;
+            align-self: flex-start;
+            width: 100%;
         }
 
         .screen.active {
             display: block;
-            animation: slide-up 0.45s cubic-bezier(.2,1.4,.4,1) both;
+            animation: screen-enter 0.45s cubic-bezier(.2,1.4,.4,1) both;
         }
 
-        @keyframes slide-up {
-            from {
-                opacity: 0;
-                transform: translateY(24px) scale(0.97);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0) scale(1);
-            }
+        /* Ensure screen content starts from top */
+        .screen > *:first-child { margin-top: 0; }
+        .screen > *:last-child { margin-bottom: 0; }
+
+        @keyframes screen-enter {
+            from { opacity: 0; transform: translateY(24px) scale(0.97); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+        @keyframes screen-leave {
+            from { opacity: 1; transform: translateY(0) scale(1); }
+            to { opacity: 0; transform: translateY(-12px) scale(0.98); }
+        }
+
+        /* ---------- page loader shimmer ---------- */
+        .shimmer-block {
+            background: linear-gradient(90deg, var(--surface-2) 25%, var(--surface) 50%, var(--surface-2) 75%);
+            background-size: 200% 100%;
+            animation: shimmer-move 1.5s ease-in-out infinite;
+            border-radius: 12px;
+        }
+        @keyframes shimmer-move {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+
+        /* ---------- FAB scroll-to-top ---------- */
+        .fab-top {
+            position: fixed;
+            bottom: 90px;
+            right: 16px;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: var(--green);
+            color: #fff;
+            border: none;
+            font-size: 20px;
+            cursor: pointer;
+            box-shadow: 0 4px 16px var(--green-glow);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 50;
+            opacity: 0;
+            transform: scale(0.6);
+            pointer-events: none;
+            transition: opacity 0.3s ease, transform 0.3s cubic-bezier(.2,1.4,.4,1);
+        }
+        .fab-top.visible {
+            opacity: 1;
+            transform: scale(1);
+            pointer-events: auto;
+        }
+        .fab-top:active {
+            transform: scale(0.85);
+        }
+        @media (min-width: 768px) {
+            .fab-top { right: 20px; }
         }
 
         /* ---------- bottom nav — ULTRA ---------- */
@@ -187,10 +295,16 @@
             background: var(--surface);
             border-top: 1px solid var(--line);
             display: flex;
-            padding: 6px 6px 16px;
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
+            padding: 6px 4px 16px;
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
             position: relative;
+            z-index: 100;
+            box-shadow: 0 -4px 20px rgba(0,0,0,0.04);
+            justify-content: space-around;
+        }
+        html[data-theme="dark"] .bottom-nav {
+            box-shadow: 0 -4px 20px rgba(0,0,0,0.15);
         }
 
         .bottom-nav .nav-indicator {
@@ -206,22 +320,36 @@
         }
 
         .bottom-nav button {
-            flex: 1;
+            flex: 1 1 0;
             background: none;
             border: none;
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 2px;
+            justify-content: center;
+            gap: 1px;
             font-family: 'Inter', sans-serif;
-            font-size: 10.5px;
+            font-size: 9.5px;
             color: var(--ink-soft);
             cursor: pointer;
-            padding: 8px 2px 4px;
+            padding: 6px 2px 4px;
             font-weight: 600;
-            transition: color 0.3s ease;
+            transition: color 0.3s ease, transform 0.2s ease;
             position: relative;
             z-index: 1;
+            min-width: 0;
+            overflow: visible;
+            -webkit-tap-highlight-color: transparent;
+            outline: none;
+            min-height: 48px;
+        }
+        .bottom-nav button:focus-visible {
+            outline: 2px solid var(--green);
+            outline-offset: -2px;
+            border-radius: 8px;
+        }
+        .bottom-nav button:active {
+            transform: scale(0.92);
         }
 
         .bottom-nav button.active {
@@ -232,10 +360,53 @@
             font-size: 20px;
             transition: transform 0.3s cubic-bezier(.2,1.4,.4,1);
             display: block;
+            flex-shrink: 0;
+            line-height: 1;
         }
 
         .bottom-nav button.active .ic {
             transform: scale(1.2) translateY(-1px);
+        }
+
+        .bottom-nav .nav-label {
+            display: block;
+            max-width: 100%;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            line-height: 1.15;
+            font-size: 9px;
+            letter-spacing: -0.01em;
+            margin-top: 1px;
+        }
+
+        /* Desktop nav labels - better size */
+        @media (min-width: 768px) {
+            .bottom-nav button {
+                padding: 8px 6px 4px;
+            }
+            .bottom-nav .nav-label {
+                font-size: 10px;
+                letter-spacing: 0;
+            }
+            .bottom-nav button .ic {
+                font-size: 22px;
+            }
+        }
+
+        /* On very small screens, hide nav labels and show only icons */
+        @media (max-width: 360px) {
+            .bottom-nav button {
+                font-size: 8px;
+                padding: 6px 1px 4px;
+            }
+            .bottom-nav button .ic {
+                font-size: 17px;
+            }
+            .bottom-nav .nav-label {
+                font-size: 8px;
+                letter-spacing: -0.02em;
+            }
         }
 
         /* ---------- SPLASH SCREEN — ULTRA ---------- */
@@ -248,43 +419,72 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            transition: opacity 0.6s ease, transform 0.6s ease;
+            transition: opacity 0.5s ease, transform 0.5s ease;
         }
         #splashScreen.hidden {
             opacity: 0;
-            transform: scale(1.05);
+            transform: scale(1.08);
             pointer-events: none;
         }
         #splashScreen .splash-star {
-            font-size: 48px;
-            animation: splash-pulse 1.2s ease-in-out infinite;
+            font-size: 52px;
+            display: inline-block;
+            animation: splash-star 1.6s ease-in-out infinite;
+            filter: drop-shadow(0 0 20px var(--gold-glow));
         }
-        @keyframes splash-pulse {
-            0%, 100% { transform: scale(1); opacity: 1; }
-            50% { transform: scale(1.15); opacity: 0.8; }
+        @keyframes splash-star {
+            0%, 100% { transform: scale(1) rotate(0deg); opacity: 1; }
+            25% { transform: scale(1.18) rotate(-8deg); opacity: 0.9; }
+            75% { transform: scale(1.18) rotate(8deg); opacity: 0.9; }
+        }
+        #splashScreen .splash-icon-row {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 6px;
+        }
+        #splashScreen .splash-icon-row span {
+            font-size: 28px;
+            animation: splash-icon 2s ease-in-out infinite;
+            opacity: 0;
+        }
+        #splashScreen .splash-icon-row span:nth-child(1) { animation-delay: 0.1s; }
+        #splashScreen .splash-icon-row span:nth-child(2) { animation-delay: 0.3s; }
+        #splashScreen .splash-icon-row span:nth-child(3) { animation-delay: 0.5s; }
+        #splashScreen .splash-icon-row span:nth-child(4) { animation-delay: 0.7s; }
+        @keyframes splash-icon {
+            0%, 100% { opacity: 0; transform: translateY(10px); }
+            25%, 75% { opacity: 1; transform: translateY(0); }
         }
         #splashScreen .splash-brand {
             font-family: 'Plus Jakarta Sans', sans-serif;
-            font-size: 28px;
+            font-size: 32px;
             font-weight: 800;
-            margin-top: 12px;
+            margin-top: 10px;
             background: linear-gradient(135deg, var(--green), var(--gold));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
+            letter-spacing: -0.5px;
+            animation: splash-fade-in 0.8s ease 0.2s both;
         }
         #splashScreen .splash-sub {
             font-size: 13px;
             color: var(--ink-soft);
             margin-top: 6px;
+            animation: splash-fade-in 0.8s ease 0.4s both;
+        }
+        @keyframes splash-fade-in {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
         }
         #splashScreen .splash-loader {
             margin-top: 30px;
-            width: 160px;
-            height: 3px;
+            width: 180px;
+            height: 4px;
             background: var(--line);
             border-radius: 10px;
             overflow: hidden;
+            animation: splash-fade-in 0.8s ease 0.6s both;
         }
         #splashScreen .splash-loader-bar {
             height: 100%;
@@ -295,7 +495,26 @@
         }
         @keyframes splash-load {
             0% { transform: translateX(-100%); }
-            100% { transform: translateX(400%); }
+            100% { transform: translateX(430%); }
+        }
+        /* Splash decorative circles */
+        #splashScreen::before,
+        #splashScreen::after {
+            content: '';
+            position: absolute;
+            border-radius: 50%;
+            opacity: 0.06;
+            pointer-events: none;
+        }
+        #splashScreen::before {
+            width: 300px; height: 300px;
+            background: var(--green);
+            top: -80px; right: -80px;
+        }
+        #splashScreen::after {
+            width: 250px; height: 250px;
+            background: var(--gold);
+            bottom: -60px; left: -60px;
         }
 
         /* ---------- PARTICLES — ULTRA ---------- */
@@ -336,12 +555,21 @@
             margin-bottom: 16px;
             position: relative;
             z-index: 1;
+            animation: hero-fade 0.8s ease 0.1s both;
+        }
+        @keyframes hero-fade {
+            from { opacity: 0; transform: translateY(12px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         .hero-title span {
             color: var(--green);
             position: relative;
             display: inline-block;
+            background: linear-gradient(135deg, var(--green), var(--gold));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
         .hero-title span::after {
             content: '';
@@ -353,28 +581,30 @@
             background: var(--green-glow);
             border-radius: 10px;
             z-index: -1;
+            display: none;
         }
 
         .search-box {
             background: var(--surface);
-            border: 1px solid var(--line);
-            border-radius: 16px;
+            border: 1.5px solid var(--line);
+            border-radius: 18px;
             padding: 14px 16px;
             display: flex;
             align-items: center;
             gap: 10px;
             margin-bottom: 16px;
             cursor: pointer;
-            transition: all 0.25s ease;
+            transition: all 0.3s cubic-bezier(.2,1.4,.4,1);
             position: relative;
             z-index: 1;
         }
         .search-box:hover {
             border-color: var(--green);
-            box-shadow: 0 4px 20px var(--green-glow);
+            box-shadow: 0 6px 24px var(--green-glow);
+            transform: translateY(-1px);
         }
         .search-box:active {
-            transform: scale(0.98);
+            transform: scale(0.97);
         }
 
         .search-box .ph {
@@ -416,7 +646,7 @@
         .chip {
             flex-shrink: 0;
             background: var(--surface);
-            border: 1px solid var(--line);
+            border: 1.5px solid var(--line);
             border-radius: 20px;
             padding: 8px 14px;
             font-size: 13px;
@@ -426,13 +656,23 @@
             display: flex;
             align-items: center;
             gap: 6px;
-            transition: all .15s ease;
+            transition: all 0.2s cubic-bezier(.2,1.4,.4,1);
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .chip:active {
+            transform: scale(0.93);
         }
 
         .chip.active {
             background: var(--green);
             color: #fff;
             border-color: var(--green);
+            transform: scale(1.04);
+        }
+        .chip.active:active {
+            transform: scale(0.98);
         }
 
         .sec-title {
@@ -446,6 +686,16 @@
             grid-template-columns: 1fr 1fr;
             gap: 12px;
         }
+        @media (min-width: 600px) {
+            .city-grid {
+                grid-template-columns: 1fr 1fr 1fr;
+            }
+        }
+        @media (min-width: 900px) {
+            .city-grid {
+                grid-template-columns: 1fr 1fr 1fr 1fr;
+            }
+        }
 
         .city-card {
             border-radius: 16px;
@@ -458,15 +708,26 @@
             padding: 14px;
             color: #fff;
             border: 1px solid var(--line);
-            transition: transform .2s ease, box-shadow .2s ease;
+            transition: transform 0.3s cubic-bezier(.2,1.4,.4,1), box-shadow 0.3s ease;
+            will-change: transform;
         }
 
+        .city-card::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to top, rgba(0,0,0,0.5) 0%, transparent 60%);
+            pointer-events: none;
+        }
+        .city-card > * { position: relative; z-index: 1; }
+
         .city-card:hover {
-            transform: scale(1.02);
+            transform: translateY(-4px) scale(1.02);
+            box-shadow: 0 8px 30px rgba(0,0,0,0.12);
         }
 
         .city-card:active {
-            transform: scale(0.97);
+            transform: scale(0.95);
         }
 
         .city-card .cname {
@@ -489,6 +750,7 @@
             display: grid;
             grid-template-columns: repeat(3, 1fr);
             gap: 10px;
+            animation: fade-in 0.6s ease 0.2s both;
         }
 
         .stats-card .stat {
@@ -499,6 +761,10 @@
             font-size: 19px;
             font-weight: 800;
             color: var(--green);
+            transition: transform 0.3s ease;
+        }
+        .stats-card .stat:hover .num {
+            transform: scale(1.15);
         }
 
         .stats-card .stat .lbl {
@@ -511,6 +777,18 @@
             grid-template-columns: 1fr 1fr;
             gap: 12px;
             margin-top: 12px;
+            overflow: hidden;
+            transition: max-height 0.4s ease, opacity 0.3s ease;
+        }
+        .why-grid.collapsed {
+            max-height: 0 !important;
+            opacity: 0;
+            margin-top: 0;
+            padding-top: 0;
+        }
+        .why-grid:not(.collapsed) {
+            max-height: 500px;
+            opacity: 1;
         }
 
         .why-card {
@@ -518,11 +796,21 @@
             border: 1px solid var(--line);
             border-radius: 14px;
             padding: 14px;
+            transition: transform 0.25s cubic-bezier(.2,1.4,.4,1), box-shadow 0.25s ease;
+        }
+        .why-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.06);
         }
 
         .why-card .ic {
             font-size: 20px;
             margin-bottom: 8px;
+            display: inline-block;
+            transition: transform 0.3s ease;
+        }
+        .why-card:hover .ic {
+            transform: scale(1.2);
         }
 
         .why-card h4 {
@@ -551,16 +839,40 @@
             align-items: center;
             justify-content: center;
             gap: 8px;
-            transition: transform .15s ease;
+            transition: transform 0.2s cubic-bezier(.2,1.4,.4,1), box-shadow 0.2s ease;
+            box-shadow: 0 4px 14px var(--green-glow);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-btn::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to bottom, rgba(255,255,255,0.1), transparent);
+            pointer-events: none;
         }
 
         .cta-btn:hover {
-            transform: translateY(-1px);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px var(--green-glow);
+        }
+
+        .cta-btn:active {
+            transform: scale(0.96);
+            box-shadow: 0 2px 8px var(--green-glow);
         }
 
         .cta-btn.ghost {
             background: var(--surface-2);
             color: var(--ink);
+            box-shadow: none;
+        }
+        .cta-btn.ghost::after { display: none; }
+        .cta-btn.ghost:hover {
+            background: var(--surface-3);
+            box-shadow: none;
+            transform: translateY(-1px);
         }
 
         /* ---------- chat ---------- */
@@ -568,7 +880,7 @@
             display: flex;
             flex-direction: column;
             gap: 12px;
-            padding-top: 6px;
+            padding: 6px 0 70px;
         }
 
         .bubble-row {
@@ -606,47 +918,42 @@
             background: var(--surface);
             border: 1px solid var(--line);
             border-bottom-left-radius: 4px;
+            animation: msg-in 0.35s ease both;
         }
 
         .bubble.user {
             background: var(--green);
             color: #fff;
             border-bottom-right-radius: 4px;
+            animation: msg-in 0.35s ease both;
+        }
+
+        @keyframes msg-in {
+            from { opacity: 0; transform: translateY(8px) scale(0.96); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
         }
 
         .typing {
             display: flex;
-            gap: 3px;
-            padding: 4px 2px;
+            gap: 4px;
+            padding: 6px 2px;
+            align-items: center;
         }
 
         .typing span {
-            width: 5px;
-            height: 5px;
+            width: 7px;
+            height: 7px;
             border-radius: 50%;
             background: var(--ink-soft);
             animation: blink 1.2s infinite ease-in-out;
         }
 
-        .typing span:nth-child(2) {
-            animation-delay: .2s;
-        }
-
-        .typing span:nth-child(3) {
-            animation-delay: .4s;
-        }
+        .typing span:nth-child(2) { animation-delay: .2s; }
+        .typing span:nth-child(3) { animation-delay: .4s; }
 
         @keyframes blink {
-
-            0%,
-            80%,
-            100% {
-                opacity: .25;
-            }
-
-            40% {
-                opacity: 1;
-            }
+            0%, 80%, 100% { opacity: .25; transform: scale(0.8); }
+            40% { opacity: 1; transform: scale(1); }
         }
 
         .option-wrap {
@@ -688,6 +995,76 @@
             font-weight: 700;
             cursor: pointer;
             margin-top: 2px;
+        }
+
+        /* ---------- chat input bar — klaviaturada yozish ---------- */
+        .chat-input-bar {
+            position: sticky;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: var(--surface);
+            border-top: 1px solid var(--line);
+            padding: 12px 16px;
+            display: none;
+            gap: 10px;
+            align-items: center;
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            z-index: 10;
+            margin-top: auto;
+        }
+        .chat-input-bar input {
+            flex: 1;
+            padding: 12px 16px;
+            border-radius: 14px;
+            border: 1.5px solid var(--line);
+            background: var(--surface-2);
+            font-family: 'Inter', sans-serif;
+            font-size: 14px;
+            color: var(--ink);
+            outline: none;
+            transition: border-color 0.2s ease;
+        }
+        .chat-input-bar input:focus {
+            border-color: var(--green);
+        }
+        .chat-input-bar input::placeholder {
+            color: var(--ink-soft);
+        }
+        .chat-input-bar .send-btn {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: var(--green);
+            color: #fff;
+            border: none;
+            font-size: 18px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            box-shadow: 0 4px 12px var(--green-glow);
+        }
+        .chat-input-bar .send-btn:active {
+            transform: scale(0.9);
+        }
+        .chat-input-bar .send-btn:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        @media (min-width: 768px) {
+            .chat-input-bar {
+                padding: 14px 20px;
+            }
+            .chat-input-bar input {
+                font-size: 15px;
+                padding: 14px 18px;
+            }
         }
 
         /* ---------- itinerary (plan) ---------- */
@@ -1268,6 +1645,14 @@
             padding: 14px;
             margin-bottom: 10px;
             cursor: pointer;
+            transition: transform 0.2s cubic-bezier(.2,1.4,.4,1), box-shadow 0.2s ease;
+        }
+        .list-row:hover {
+            transform: translateX(3px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.04);
+        }
+        .list-row:active {
+            transform: scale(0.98);
         }
 
         .list-row .lic {
@@ -1378,7 +1763,13 @@
         /* ---------- shop / do'kon ---------- */
         .shop-grid {
             display: grid;
+            grid-template-columns: 1fr;
             gap: 14px;
+        }
+        @media (min-width: 600px) {
+            .shop-grid {
+                grid-template-columns: 1fr 1fr;
+            }
         }
         .shop-card {
             background: var(--surface);
@@ -1387,6 +1778,8 @@
             overflow: hidden;
             display: flex;
             flex-direction: column;
+            transition: transform 0.3s cubic-bezier(.2,1.4,.4,1), box-shadow 0.3s ease;
+            will-change: transform;
         }
         .shop-card .scover {
             width: 100%;
@@ -1395,6 +1788,7 @@
             align-items: flex-end;
             justify-content: flex-start;
             padding: 14px;
+            transition: transform 0.5s ease;
         }
         .shop-card .scover-icon {
             font-size: 32px;
@@ -1443,6 +1837,10 @@
             background: var(--gold);
             color: #3a2708;
             width: calc(100% - 32px);
+            transition: transform 0.15s ease, opacity 0.2s ease;
+        }
+        .shop-card button:not(:disabled):active {
+            transform: scale(0.95);
         }
         .shop-card button:disabled {
             opacity: 0.4;
@@ -1453,17 +1851,11 @@
             color: var(--ink-soft);
         }
         .shop-card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+            transform: translateY(-3px);
+            box-shadow: 0 12px 32px rgba(0,0,0,0.1);
         }
         .shop-card:hover .scover {
-            transform: scale(1.04);
-        }
-        .shop-card {
-            transition: transform 0.25s ease, box-shadow 0.25s ease;
-        }
-        .shop-card .scover {
-            transition: transform 0.4s ease;
+            transform: scale(1.06);
         }
         .sub-banner {
             background: linear-gradient(135deg, var(--gold), var(--gold-deep));
@@ -1506,11 +1898,18 @@
         .empty-state {
             text-align: center;
             padding: 50px 20px;
+            animation: fade-in 0.5s ease both;
         }
 
         .empty-state .eic {
-            font-size: 38px;
+            font-size: 42px;
             margin-bottom: 10px;
+            display: inline-block;
+            animation: float 3s ease-in-out infinite;
+        }
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-8px); }
         }
 
         .empty-state h3 {
@@ -1534,6 +1933,14 @@
             gap: 12px;
             margin-bottom: 10px;
             cursor: pointer;
+            transition: transform 0.25s cubic-bezier(.2,1.4,.4,1), box-shadow 0.25s ease;
+        }
+        .trip-item:hover {
+            transform: translateX(4px);
+            box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+        }
+        .trip-item:active {
+            transform: scale(0.98);
         }
 
         .trip-item .tphoto {
@@ -2311,6 +2718,52 @@
         }
         .toast-item .toast-icon { font-size: 24px; flex-shrink: 0; }
 
+        /* ---------- OVERCROWDING FIXES — prevent layout shift and improve spacing ---------- */
+        .city-grid {
+            min-height: 140px;
+        }
+        .stats-card {
+            min-height: 80px;
+        }
+        #homeSchedulerWidget {
+            min-height: 60px;
+        }
+        .why-grid {
+            min-height: 0;
+        }
+        .screen > * + * {
+            margin-top: 4px;
+        }
+        .hero-title {
+            margin-bottom: 12px;
+        }
+        .sec-title {
+            margin: 18px 0 10px;
+        }
+        /* Better spacing on desktop */
+        @media (min-width: 768px) {
+            .hero-title {
+                font-size: 32px;
+            }
+            .screen > * + * {
+                margin-top: 6px;
+            }
+            .sec-title {
+                margin: 24px 0 14px;
+                font-size: 18px;
+            }
+            .city-grid {
+                min-height: 160px;
+            }
+            .stats-card {
+                min-height: 90px;
+                padding: 20px;
+            }
+            .greet {
+                font-size: 14px;
+            }
+        }
+
         /* Smooth loading shimmer */
         .shimmer {
             background: linear-gradient(90deg, var(--surface-2) 25%, var(--surface) 50%, var(--surface-2) 75%);
@@ -2322,16 +2775,220 @@
             100% { background-position: -200% 0; }
         }
 
-        /* AI Voice badge */
-        .ai-voice-badge { display: inline-block; font-size: 10px; font-weight: 700; background: var(--green); color: #fff; padding: 2px 8px; border-radius: 20px; margin-left: 6px; vertical-align: middle; animation: pulse-voice 2s infinite; }
-        @keyframes pulse-voice { 0%,100% { opacity: 1; } 50% { opacity: 0.6; } }
+        /* ================= AUTH SCREEN ================= */
+        .auth-overlay {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            z-index: 10000;
+            background: var(--bg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+        .auth-overlay.hidden {
+            opacity: 0;
+            transform: scale(0.95);
+            pointer-events: none;
+        }
+        .auth-box {
+            width: 100%;
+            max-width: 380px;
+            text-align: center;
+        }
+        .auth-brand {
+            font-size: 32px;
+            font-weight: 900;
+            background: linear-gradient(135deg, var(--gold), #e6b458);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 4px;
+        }
+        .auth-sub {
+            font-size: 13px;
+            color: var(--ink-soft);
+            margin-bottom: 32px;
+        }
+        .auth-title {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+        .auth-desc {
+            font-size: 13px;
+            color: var(--ink-soft);
+            margin-bottom: 24px;
+        }
+        .auth-input {
+            width: 100%;
+            padding: 14px 16px;
+            border-radius: 14px;
+            border: 1.5px solid var(--line);
+            background: var(--surface-2);
+            color: var(--ink);
+            font-size: 15px;
+            outline: none;
+            transition: border-color 0.2s;
+            box-sizing: border-box;
+            text-align: center;
+            font-weight: 600;
+            letter-spacing: 1px;
+        }
+        .auth-input:focus {
+            border-color: var(--green);
+        }
+        .auth-input::placeholder {
+            font-weight: 400;
+            letter-spacing: 0;
+            color: var(--ink-soft);
+        }
+        .auth-btn {
+            width: 100%;
+            padding: 14px;
+            border-radius: 14px;
+            border: none;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: opacity 0.2s, transform 0.15s;
+            margin-top: 12px;
+        }
+        .auth-btn:active {
+            transform: scale(0.97);
+        }
+        .auth-btn-primary {
+            background: var(--green);
+            color: #fff;
+        }
+        .auth-btn-primary:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        .auth-btn-google {
+            background: #fff;
+            color: #333;
+            border: 1.5px solid #ddd;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        .auth-btn-google img {
+            width: 20px;
+            height: 20px;
+        }
+        .auth-divider {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin: 20px 0;
+            color: var(--ink-soft);
+            font-size: 12px;
+        }
+        .auth-divider::before,
+        .auth-divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: var(--line);
+        }
+        .auth-phone-wrap {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+        .auth-phone-prefix {
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--ink);
+            padding: 14px 0 14px 16px;
+            background: var(--surface-2);
+            border: 1.5px solid var(--line);
+            border-radius: 14px;
+            border-right: none;
+            border-top-right-radius: 0;
+            border-bottom-right-radius: 0;
+        }
+        .auth-phone-wrap .auth-input {
+            border-top-left-radius: 0;
+            border-bottom-left-radius: 0;
+        }
+        .auth-error {
+            font-size: 12px;
+            color: var(--danger, #e74c3c);
+            margin-top: 8px;
+            min-height: 18px;
+        }
+        .auth-back {
+            background: none;
+            border: none;
+            color: var(--ink-soft);
+            font-size: 13px;
+            cursor: pointer;
+            padding: 8px;
+            margin-top: 8px;
+        }
+        .auth-back:hover {
+            color: var(--ink);
+        }
+        .auth-pin-input {
+            letter-spacing: 6px;
+            font-size: 22px;
+        }
+        .auth-avatar {
+            width: 72px;
+            height: 72px;
+            border-radius: 50%;
+            background: var(--surface-2);
+            margin: 0 auto 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+        }
+        .auth-success {
+            animation: authPop 0.4s ease;
+        }
+        @keyframes authPop {
+            0% { transform: scale(0.8); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            10%, 30%, 50%, 70%, 90% { transform: translateX(-4px); }
+            20%, 40%, 60%, 80% { transform: translateX(4px); }
+        }
+        .google-account:active {
+            transform: scale(0.97) !important;
+        }
     </style>
 </head>
 
 <body>
 
+    <!-- ============ AUTH SCREEN ============ -->
+    <div class="auth-overlay" id="authOverlay">
+        <div class="auth-box" id="authBox">
+            <div class="auth-brand">YO'LCHI</div>
+            <div class="auth-sub">AI sayohat hamrohi</div>
+            <div id="authContent">
+                <!-- Dynamic content rendered by JS -->
+            </div>
+            <!-- Google Sign-In container (hidden, used by Google Identity Services) -->
+            <div id="googleSignInContainer" style="display:none;"></div>
+        </div>
+    </div>
+
     <!-- ============ SPLASH SCREEN — ULTRA ============ -->
     <div id="splashScreen">
+        <div class="splash-icon-row">
+            <span>🏔️</span>
+            <span>🕌</span>
+            <span>⭐</span>
+            <span>🚀</span>
+        </div>
         <div class="splash-star">⭐</div>
         <div class="splash-brand">YO'LCHI</div>
         <div class="splash-sub">AI sayohat hamrohi</div>
@@ -2351,8 +3008,8 @@
                     YO'LCHI
                 </div>
                 <div style="display:flex;gap:6px;">
-                    <button class="icon-btn" onclick="openScanner()" title="QR Skanner" style="font-size:15px;">📷</button>
-                    <button class="icon-btn" onclick="toggleDark()">🌙</button>
+                    <button class="icon-btn" onclick="openScanner()" title="QR Skanner"><i class="fa-solid fa-qrcode"></i></button>
+                    <button class="icon-btn" onclick="toggleDark()"><i class="fa-solid fa-moon"></i></button>
                 </div>
             </div>
             <div style="padding-top:6px;position:relative;">
@@ -2361,7 +3018,7 @@
                 <div class="hero-title" data-tr="hero">O'zbekistonni <span>AI bilan</span> kashf eting</div>
 
                 <div class="search-box" onclick="startChat()">
-                    <span>🔍</span>
+                    <span><i class="fa-solid fa-search" style="color:var(--ink-soft);font-size:15px;"></i></span>
                     <span class="ph" data-tr="search_ph">Ideal kuningizni tasvirlab bering...</span>
                     <span class="ai-pill">✨ AI</span>
                 </div>
@@ -2384,15 +3041,18 @@
                     <div style="display:flex;align-items:center;gap:12px;">
                         <div style="font-size:28px;" id="homeSchedulerIcon">🤖</div>
                         <div style="flex:1;">
-                            <div style="font-size:13px;font-weight:700;">🎯 Kunlik Missiya <span id="aiVoiceIndicator" style="display:none;font-size:10px;font-weight:700;background:var(--green);color:#fff;padding:1px 7px;border-radius:20px;vertical-align:middle;">🔊 AI</span></div>
+                            <div style="font-size:13px;font-weight:700;">🎯 Kunlik Missiya</div>
                             <div id="homeSchedulerPreview" style="font-size:12px;color:var(--ink-soft);margin-top:2px;">Bugungi vazifalarni ko'rish</div>
                         </div>
                         <span style="font-size:16px;">›</span>
                     </div>
                 </div>
 
-                <div class="sec-title" data-tr="sec_why">Nega YO'LCHI?</div>
-                <div class="why-grid">
+                <div class="sec-title" style="cursor:pointer;display:flex;align-items:center;justify-content:space-between;" onclick="toggleWhySection()" id="whySectionToggle">
+                    <span data-tr="sec_why">Nega YO'LCHI?</span>
+                    <span id="whyToggleIcon" style="font-size:14px;color:var(--ink-soft);transition:transform 0.3s ease;">▼</span>
+                </div>
+                <div class="why-grid" id="whyGrid">
                     <div class="why-card">
                         <div class="ic">🤖</div>
                         <h4 data-tr="why_ai_title">AI reja tuzish</h4>
@@ -2408,7 +3068,7 @@
                         <h4 data-tr="why_key_title">Kalit yig'ish</h4>
                         <p data-tr="why_key_desc">Har bir joydan sovg'a ol</p>
                     </div>
-                    <div class="why-card">
+                    <div class="why-card" onclick="shareApp()" style="cursor:pointer;">
                         <div class="ic">📤</div>
                         <h4 data-tr="why_share_title">Ulashish</h4>
                         <p data-tr="why_share_desc">Rejani do'stlaringga yubor</p>
@@ -2422,7 +3082,7 @@
         <!-- ============ DISCOVER ============ -->
         <section class="screen" data-screen="discover">
             <div class="topbar">
-                <h2 data-tr="discover_title">Kashfiyot</h2><button class="icon-btn" onclick="toggleDark()">🌙</button>
+                <h2 data-tr="discover_title">Kashfiyot</h2><button class="icon-btn" onclick="toggleDark()"><i class="fa-solid fa-moon"></i></button>
             </div>
             <div class="chip-row">
                 <div class="chip active" data-chip="all" data-tr="discover_all">🏛️ Tarixiy joylar</div>
@@ -2437,7 +3097,7 @@
         <!-- ============ TRIPS ============ -->
         <section class="screen" data-screen="trips">
             <div class="topbar">
-                <h2 data-tr="trips_title">Sayohatlarim</h2><button class="icon-btn" onclick="toggleDark()">🌙</button>
+                <h2 data-tr="trips_title">Sayohatlarim</h2><button class="icon-btn" onclick="toggleDark()"><i class="fa-solid fa-moon"></i></button>
             </div>
             <div id="tripsList"></div>
         </section>
@@ -2445,14 +3105,14 @@
         <!-- ============ PROFILE ============ -->
         <section class="screen" data-screen="profile">
             <div class="topbar">
-                <h2 data-tr="profile_title">Profil</h2><button class="icon-btn" onclick="toggleDark()">🌙</button>
+                <h2 data-tr="profile_title">Profil</h2><button class="icon-btn" onclick="toggleDark()"><i class="fa-solid fa-moon"></i></button>
             </div>
             <div class="profile-hero">
                 <div class="profile-top">
                     <div class="avatar">ME</div>
                     <div>
-                        <h3 data-tr="profile_guest">Mehmon</h3>
-                        <p data-tr="profile_guest_mail">mehmon@yolchi.uz</p>
+                        <h3>Mehmon</h3>
+                        <p>mehmon@yolchi.uz</p>
                         <span class="loc-tag" id="profileCity">📍 Toshkent</span>
                         <span class="loc-tag" id="profileSub" style="background:var(--gold);color:#3a2708;margin-left:4px;">⭐ Basic</span>
                     </div>
@@ -2464,13 +3124,13 @@
             <div class="ach-row" id="achRow"></div>
 
             <div style="margin-top:20px;">
-                <div class="list-row">
+                <div class="list-row" onclick="goTab('trips')">
                     <div class="lic">📑</div><span class="name" data-tr="profile_saved">Saqlangan sayohatlar</span><span class="chev">›</span>
                 </div>
-                <div class="list-row">
+                <div class="list-row" onclick="goTab('trips')">
                     <div class="lic">❤️</div><span class="name" data-tr="profile_fav">Sevimlilar</span><span class="chev">›</span>
                 </div>
-                <div class="list-row">
+                <div class="list-row" onclick="document.querySelector('.sec-title').scrollIntoView({behavior:'smooth',block:'start'})">
                     <div class="lic">🏆</div><span class="name" data-tr="profile_ach2">Yutuqlar</span><span class="count"
                         id="achCount">0</span>
                 </div>
@@ -2484,29 +3144,35 @@
                     <div class="knob"></div>
                 </div>
             </div>
-            <button class="cta-btn ghost" style="margin-top:6px;" data-tr="profile_share">📤 YO'LCHI'ni do'stlarga ulashish</button>
-            <button class="cta-btn" style="margin-top:10px;" onclick="openScanner()" data-tr="profile_scanner">📷 QR Skanner</button>
-            <button class="cta-btn ghost" style="margin-top:10px;" onclick="goTab('shop')" data-tr="profile_shop">⭐ Do'kon</button>
+            <button class="cta-btn ghost" style="margin-top:6px;" onclick="shareApp()"><i class="fa-solid fa-share-nodes"></i> YO'LCHI'ni do'stlarga ulashish</button>
+            <button class="cta-btn" style="margin-top:10px;" onclick="openScanner()"><i class="fa-solid fa-qrcode"></i> QR Skanner</button>
+            <button id="guideBtn" class="cta-btn ghost" style="margin-top:10px;display:none;" onclick="showGuide()"><i class="fa-solid fa-book"></i> Shahar qo'llanmasi</button>
+            <button class="cta-btn ghost" style="margin-top:10px;" onclick="goTab('shop')"><i class="fa-solid fa-store"></i> Do'kon</button>
+            <button class="cta-btn" style="margin-top:10px;background:var(--danger,#e74c3c);color:#fff;" onclick="logoutUser()"><i class="fa-solid fa-right-from-bracket"></i> Chiqish</button>
         </section>
 
         <!-- ============ CHAT ============ -->
         <section class="screen" data-screen="chat">
             <div class="topbar">
-                <div class="topbar-left"><button class="back-btn" onclick="goHome()">←</button>
+                <div class="topbar-left"><button class="back-btn" onclick="goHome()"><i class="fa-solid fa-arrow-left"></i></button>
                     <h2 data-tr="chat_greeting">AI Sayohat Yordamchisi</h2>
                 </div>
-                <button class="icon-btn" onclick="toggleDark()">🌙</button>
+                <button class="icon-btn" onclick="toggleDark()"><i class="fa-solid fa-moon"></i></button>
             </div>
             <div class="chat-body" id="chatBody"></div>
+            <div class="chat-input-bar" id="chatInputBar">
+                <input type="text" id="chatInput" placeholder="AI ga yozing..." autocomplete="off">
+                <button class="send-btn" id="chatSendBtn" onclick="sendChatMessage()"><i class="fa-solid fa-paper-plane"></i></button>
+            </div>
         </section>
 
         <!-- ============ ITINERARY (PLAN) ============ -->
         <section class="screen" data-screen="itinerary">
             <div class="topbar">
-                <div class="topbar-left"><button class="back-btn" onclick="goHome()">←</button>
+                <div class="topbar-left"><button class="back-btn" onclick="goHome()"><i class="fa-solid fa-arrow-left"></i></button>
                     <h2 data-tr="nav_trips">Sayohat Rejasi</h2>
                 </div>
-                <button class="icon-btn" onclick="toggleDark()">🌙</button>
+                <button class="icon-btn" onclick="toggleDark()"><i class="fa-solid fa-moon"></i></button>
             </div>
             <div id="itineraryBody"></div>
         </section>
@@ -2514,10 +3180,10 @@
         <!-- ============ LIVE TRIP ============ -->
         <section class="screen" data-screen="livetrip">
             <div class="topbar">
-                <div class="topbar-left"><button class="back-btn" onclick="goHome()">←</button>
+                <div class="topbar-left"><button class="back-btn" onclick="goHome()"><i class="fa-solid fa-arrow-left"></i></button>
                     <h2 data-tr="live_current">Jonli Sayohat</h2>
                 </div>
-                <button class="icon-btn" onclick="toggleDark()">🌙</button>
+                <button class="icon-btn" onclick="toggleDark()"><i class="fa-solid fa-moon"></i></button>
             </div>
             <div id="liveBody"></div>
         </section>
@@ -2525,10 +3191,10 @@
         <!-- ============ DO'KON (SHOP) ============ -->
         <section class="screen" data-screen="shop">
             <div class="topbar">
-                <div class="topbar-left"><button class="back-btn" onclick="goHome()">←</button>
+                <div class="topbar-left"><button class="back-btn" onclick="goHome()"><i class="fa-solid fa-arrow-left"></i></button>
                     <h2 data-tr="shop_title">⭐ Do'kon</h2>
                 </div>
-                <button class="icon-btn" onclick="toggleDark()">🌙</button>
+                <button class="icon-btn" onclick="toggleDark()"><i class="fa-solid fa-moon"></i></button>
             </div>
             <div id="shopBody"></div>
         </section>
@@ -2536,8 +3202,8 @@
         <!-- ============ ADMIN PANEL ============ -->
         <section class="screen" data-screen="admin">
             <div class="topbar">
-                <h2 data-tr="admin_title">🛠 Admin Panel</h2>
-                <button class="icon-btn" onclick="goHome()">🏠</button>
+                <h2 data-tr="admin_title"><i class="fa-solid fa-screwdriver-wrench"></i> Admin Panel</h2>
+                <button class="icon-btn" onclick="goHome()"><i class="fa-solid fa-house"></i></button>
             </div>
 
             <div id="adminLogin">
@@ -2593,10 +3259,10 @@
         <!-- ============ KUNLIK MISSIYA ============ -->
         <section class="screen" data-screen="scheduler">
             <div class="topbar">
-                <div class="topbar-left"><button class="back-btn" onclick="goHome()">←</button>
-                    <h2>🎯 Kunlik Missiya</h2>
+                <div class="topbar-left"><button class="back-btn" onclick="goHome()"><i class="fa-solid fa-arrow-left"></i></button>
+                    <h2><i class="fa-solid fa-bullseye"></i> Kunlik Missiya</h2>
                 </div>
-                <button class="icon-btn" onclick="toggleDark()">🌙</button>
+                <button class="icon-btn" onclick="toggleDark()"><i class="fa-solid fa-moon"></i></button>
             </div>
             <div id="aiSchedulerContainer"></div>
         </section>
@@ -2604,12 +3270,15 @@
         <!-- ============ BOTTOM NAV — ULTRA ============ -->
         <div class="bottom-nav" id="bottomNav">
             <div class="nav-indicator" id="navIndicator"></div>
-            <button data-tab="home" class="active" onclick="goTab('home')" data-tr="nav_home"><span class="ic">🏠</span><span class="nav-label">Bosh sahifa</span></button>
-            <button data-tab="scheduler" onclick="goTab('scheduler');setTimeout(()=>initScheduler('aiSchedulerContainer'),300);" data-tr="nav_scheduler"><span class="ic">🎯</span><span class="nav-label">Missiya</span></button>
-            <button data-tab="shop" onclick="goTab('shop')" data-tr="nav_shop"><span class="ic">⭐</span><span class="nav-label">Do'kon</span></button>
-            <button data-tab="trips" onclick="goTab('trips')" data-tr="nav_trips"><span class="ic">📑</span><span class="nav-label">Sayohatlar</span></button>
-            <button data-tab="profile" onclick="goTab('profile')" data-tr="nav_profile"><span class="ic">👤</span><span class="nav-label">Profil</span></button>
+            <button data-tab="home" class="active" onclick="goTab('home')" data-tr="nav_home"><span class="ic"><i class="fa-solid fa-house"></i></span><span class="nav-label">Bosh sahifa</span></button>
+            <button data-tab="scheduler" onclick="goTab('scheduler');setTimeout(()=>initScheduler('aiSchedulerContainer'),300);" data-tr="nav_scheduler"><span class="ic"><i class="fa-solid fa-bullseye"></i></span><span class="nav-label">Missiya</span></button>
+            <button data-tab="shop" onclick="goTab('shop')" data-tr="nav_shop"><span class="ic"><i class="fa-solid fa-store"></i></span><span class="nav-label">Do'kon</span></button>
+            <button data-tab="trips" onclick="goTab('trips')" data-tr="nav_trips"><span class="ic"><i class="fa-solid fa-map"></i></span><span class="nav-label">Sayohatlar</span></button>
+            <button data-tab="profile" onclick="goTab('profile')" data-tr="nav_profile"><span class="ic"><i class="fa-solid fa-user"></i></span><span class="nav-label">Profil</span></button>
         </div>
+
+        <!-- Scroll to top FAB -->
+        <button class="fab-top" id="fabTop" onclick="window.scrollTo({top:0,behavior:'smooth'})" title="Tepaga chiqish"><i class="fa-solid fa-arrow-up"></i></button>
 
         <div class="toast" id="toast"><span class="tic">🔑</span><span id="toastText">Kalit topildi! +1</span></div>
         <div id="toastContainer"></div>
@@ -2664,14 +3333,15 @@
 
         /* ================= STATE ================= */
         const state = {
+            user: JSON.parse(localStorage.getItem('yolchi_user')) || null, // {name, phone, method, avatar}
             stars: parseInt(localStorage.getItem('yolchi_stars')) || 0,
-            subscription: localStorage.getItem('yolchi_sub') || 'none', // none, basic, premium, vip
+            subscription: localStorage.getItem('yolchi_sub') || 'none',
             subscriptionExpiry: localStorage.getItem('yolchi_sub_expiry') || null,
             ownedItems: JSON.parse(localStorage.getItem('yolchi_items')) || [],
             usedPlaces: JSON.parse(localStorage.getItem('yolchi_used')) || [],
-            trips: [],   // {id, city, stops:[{...,status}], currentIndex, completed}
+            trips: JSON.parse(localStorage.getItem('yolchi_trips')) || [],
             activeTripId: null,
-            pendingVerification: null, // {tripId, stopIndex, placeId, placeName}
+            pendingVerification: null,
             chatStep: 0,
             chatAnswers: {},
             history: ['home'],
@@ -2682,6 +3352,8 @@
         function saveSub() { localStorage.setItem('yolchi_sub', state.subscription); localStorage.setItem('yolchi_sub_expiry', state.subscriptionExpiry); }
         function saveItems() { localStorage.setItem('yolchi_items', JSON.stringify(state.ownedItems)); }
         function saveUsed() { localStorage.setItem('yolchi_used', JSON.stringify(state.usedPlaces)); }
+        function saveTrips() { localStorage.setItem('yolchi_trips', JSON.stringify(state.trips)); }
+        function saveUser() { localStorage.setItem('yolchi_user', JSON.stringify(state.user)); }
 
         /* Check and clean up expired subscriptions, boosts, etc. */
         function cleanExpired() {
@@ -2720,6 +3392,550 @@
             });
         }
         // cleanExpired() is called later after SHOP_ITEMS is defined
+
+        /* ================= SHARE / ULASHISH ================= */
+        function shareApp() {
+            const shareData = {
+                title: 'YO\'LCHI — AI sayohat hamrohi',
+                text: 'YO\'LCHI — O\'zbekiston bo\'ylab sayohat qilish uchun eng yaxshi AI yordamchi! Kunlik missiyalar, shaharlar bo\'ylab yo\'lko\'rsatkich va yulduzlar yig\'ish tizimi.',
+                url: window.location.href
+            };
+            if (navigator.share) {
+                navigator.share(shareData).catch(() => {});
+            } else {
+                // Fallback: copy link to clipboard
+                const textarea = document.createElement('textarea');
+                textarea.value = shareData.text + '\n' + shareData.url;
+                document.body.appendChild(textarea);
+                textarea.select();
+                try {
+                    document.execCommand('copy');
+                    if (typeof showToast === 'function') {
+                        showToast('📤', t('share_copied') || 'Havola nusxalandi!');
+                    } else {
+                        alert('📤 Havola nusxalandi!');
+                    }
+                } catch(e) {
+                    alert('📤 YO\'LCHI\'ni do\'stlaringizga ulashing!\n\n' + shareData.url);
+                }
+                document.body.removeChild(textarea);
+            }
+        }
+
+        /* ================= GUIDE / QO'LLANMA ================= */
+        function showGuide() {
+            const allCities = getAllCities();
+            if (allCities.length === 0) {
+                if (typeof showToast === 'function') {
+                    showToast('📖', t('guide_no_cities') || 'Hali shaharlar qo\'shilmagan');
+                } else {
+                    alert('📖 Hali shaharlar qo\'shilmagan');
+                }
+                return;
+            }
+            const guideContent = allCities.map(c => {
+                return `<div style="padding:12px;border-bottom:1px solid var(--border);">
+                    <div style="font-size:24px;margin-bottom:4px;">${c.emoji}</div>
+                    <div style="font-weight:700;font-size:15px;">${c.name}</div>
+                    <div style="font-size:12px;color:var(--ink-soft);">${c.desc || ''}</div>
+                </div>`;
+            }).join('');
+            
+            // Show guide as an overlay
+            const overlay = document.createElement('div');
+            overlay.style.cssText = 'position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.6);z-index:9999;display:flex;align-items:center;justify-content:center;padding:20px;';
+            overlay.onclick = function(e) { if (e.target === overlay) overlay.remove(); };
+            
+            const box = document.createElement('div');
+            box.style.cssText = 'background:var(--surface);border-radius:16px;max-width:400px;width:100%;max-height:80vh;overflow-y:auto;padding:20px;box-shadow:0 10px 40px rgba(0,0,0,0.3);';
+            
+            const title = document.createElement('h3');
+            title.textContent = '📖 ' + (t('guide_title') || 'Shahar qo\'llanmasi');
+            title.style.cssText = 'margin:0 0 16px;font-size:17px;';
+            
+            const closeBtn = document.createElement('button');
+            closeBtn.textContent = '✕';
+            closeBtn.style.cssText = 'float:right;background:none;border:none;font-size:18px;cursor:pointer;color:var(--ink-soft);padding:4px 8px;';
+            closeBtn.onclick = function() { overlay.remove(); };
+            
+            const content = document.createElement('div');
+            content.innerHTML = guideContent;
+            
+            box.appendChild(closeBtn);
+            box.appendChild(title);
+            box.appendChild(content);
+            overlay.appendChild(box);
+            document.body.appendChild(overlay);
+        }
+
+        /* ================= AUTH / RO'YXATDAN O'TISH (100%) ================= */
+        // Auth state
+        let authStep = 'phone'; // 'phone' | 'pin' | 'success' | 'google'
+        let authGeneratedCode = null;
+        let authCodeExpiry = null;
+        let authResendTimer = null;
+
+        function checkAuth() {
+            const overlay = document.getElementById('authOverlay');
+            if (!overlay) return;
+            if (state.user && state.user.name) {
+                overlay.classList.add('hidden');
+                setTimeout(() => { overlay.style.display = 'none'; }, 500);
+                const profileName = document.querySelector('.profile-top h3');
+                if (profileName) profileName.textContent = state.user.name;
+                const profileEmail = document.querySelector('.profile-top p');
+                if (profileEmail) profileEmail.textContent = state.user.phone || state.user.email || 'mehmon@yolchi.uz';
+                return;
+            }
+            overlay.style.display = 'flex';
+            overlay.classList.remove('hidden');
+            authStep = 'phone';
+            renderAuthStep('phone');
+        }
+
+        // Format phone input as XX XXX XX XX
+        function formatPhoneInput(value) {
+            const digits = value.replace(/\D/g, '');
+            if (digits.length <= 2) return digits;
+            if (digits.length <= 5) return digits.slice(0, 2) + ' ' + digits.slice(2);
+            if (digits.length <= 7) return digits.slice(0, 2) + ' ' + digits.slice(2, 5) + ' ' + digits.slice(5);
+            return digits.slice(0, 2) + ' ' + digits.slice(2, 5) + ' ' + digits.slice(5, 7) + ' ' + digits.slice(7, 9);
+        }
+
+        // Mask phone number — show only last 2 digits
+        function maskPhone(phone) {
+            const digits = phone.replace(/\D/g, '');
+            if (digits.length < 9) return '+998 ** *** ** **';
+            const lastTwo = digits.slice(-2);
+            return `+998 ** *** ** ${lastTwo}`;
+        }
+
+        function renderAuthStep(step) {
+            const container = document.getElementById('authContent');
+            if (!container) return;
+            authStep = step;
+            
+            if (step === 'phone') {
+                container.innerHTML = `
+                    <div class="auth-title">Xush kelibsiz! 👋</div>
+                    <div class="auth-desc">Davom etish uchun telefon raqamingizni kiriting yoki Google orqali kiring</div>
+                    <div class="auth-phone-wrap">
+                        <span class="auth-phone-prefix">🇺🇿 +998</span>
+                        <input class="auth-input" id="authPhoneInput" type="tel" maxlength="12" placeholder="XX XXX XX XX" inputmode="numeric" autocomplete="tel">
+                    </div>
+                    <div class="auth-error" id="authError"></div>
+                    <button class="auth-btn auth-btn-primary" id="authSendBtn" onclick="sendPhoneCode()">Kodni yuborish</button>
+                    <div class="auth-divider">yoki</div>
+                    <button class="auth-btn auth-btn-google" id="googleBtn" onclick="loginWithGoogle()">
+                        <svg width="20" height="20" viewBox="0 0 48 48"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.54 28.59A14.5 14.5 0 0 1 9.5 24c0-1.59.28-3.14.76-4.59l-7.98-6.19A23.99 23.99 0 0 0 0 24c0 3.77.87 7.35 2.56 10.56l7.98-5.97z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 5.97C6.51 42.62 14.62 48 24 48z"/></svg>
+                        Google bilan kirish
+                    </button>
+                `;
+                setTimeout(() => {
+                    const inp = document.getElementById('authPhoneInput');
+                    if (inp) {
+                        inp.focus();
+                        inp.addEventListener('input', function(e) {
+                            const start = e.target.selectionStart;
+                            const end = e.target.selectionEnd;
+                            const prevLen = e.target.value.length;
+                            const formatted = formatPhoneInput(e.target.value);
+                            e.target.value = formatted;
+                            // Adjust cursor position
+                            const diff = formatted.length - prevLen;
+                            try { e.target.setSelectionRange(start + diff, end + diff); } catch(ex) {}
+                        });
+                        inp.addEventListener('keydown', function(e) {
+                            if (e.key === 'Enter') sendPhoneCode();
+                        });
+                    }
+                }, 300);
+            } 
+            else if (step === 'pin') {
+                const maskedPhone = maskPhone(state.authPhone || '+998 XX XXX XX XX');
+                const expiryTime = authCodeExpiry ? Math.max(0, Math.floor((authCodeExpiry - Date.now()) / 1000)) : 60;
+                container.innerHTML = `
+                    <div class="auth-title">SMS kodni kiriting</div>
+                    <div class="auth-desc">${maskedPhone} raqamiga 4 xonali kod yuborildi</div>
+                    <input class="auth-input auth-pin-input" id="authPinInput" type="text" maxlength="4" placeholder="0000" inputmode="numeric" autocomplete="one-time-code">
+                    <div class="auth-error" id="authError"></div>
+                    <div style="font-size:11px;color:var(--ink-soft);margin-top:4px;" id="authTimer">
+                        Kod <span id="authTimerCount">${expiryTime}</span> soniya amal qiladi
+                    </div>
+                    <button class="auth-btn auth-btn-primary" id="authVerifyBtn" onclick="verifyPhoneCode()">Tasdiqlash</button>
+                    <button class="auth-back" id="authResendBtn" onclick="resendCode()" style="display:none;">Qayta yuborish</button>
+                    <button class="auth-back" onclick="renderAuthStep('phone');clearAuthTimer();">← Ortga</button>
+                `;
+                setTimeout(() => {
+                    const inp = document.getElementById('authPinInput');
+                    if (inp) {
+                        inp.focus();
+                        inp.addEventListener('input', function(e) {
+                            e.target.value = e.target.value.replace(/\D/g, '').slice(0, 4);
+                            // Auto-submit when 4 digits entered
+                            if (e.target.value.length === 4) {
+                                setTimeout(verifyPhoneCode, 200);
+                            }
+                        });
+                        inp.addEventListener('keydown', function(e) {
+                            if (e.key === 'Enter') verifyPhoneCode();
+                        });
+                    }
+                    startAuthTimer();
+                }, 300);
+            }
+            else if (step === 'name') {
+                container.innerHTML = `
+                    <div class="auth-title">Ismingizni kiriting 👤</div>
+                    <div class="auth-desc">SMS orqali muvaffaqiyatli tasdiqlandi! Endi profilingizni yaratamiz.</div>
+                    <input class="auth-input" id="authNameInput" type="text" placeholder="Ismingiz..." autocomplete="name" style="text-align:center;letter-spacing:0;font-weight:600;">
+                    <div class="auth-error" id="authError"></div>
+                    <button class="auth-btn auth-btn-primary" id="authNameBtn" onclick="submitName()">Davom etish</button>
+                    <button class="auth-back" onclick="renderAuthStep('pin')">← Ortga</button>
+                `;
+                setTimeout(() => {
+                    const inp = document.getElementById('authNameInput');
+                    if (inp) {
+                        inp.focus();
+                        inp.addEventListener('keydown', function(e) {
+                            if (e.key === 'Enter') submitName();
+                        });
+                    }
+                }, 300);
+            }
+            else if (step === 'success') {
+                container.innerHTML = `
+                    <div class="auth-success">
+                        <div class="auth-avatar">${state.user.avatar || '👤'}</div>
+                        <div class="auth-title">Xush kelibsiz, ${state.user.name}! 🎉</div>
+                        <div class="auth-desc">YO'LCHI — AI sayohat hamrohiga muvaffaqiyatli kirdingiz</div>
+                        <button class="auth-btn auth-btn-primary" onclick="hideAuth()">Boshlaymiz!</button>
+                    </div>
+                `;
+            }
+            else if (step === 'google') {
+                // Directly show email/password form for Google login
+                container.innerHTML = `
+                    <div class="auth-title">Google akkaunt bilan kirish</div>
+                    <div class="auth-desc" style="margin-bottom:16px;">
+                        <input class="auth-input" id="googleEmailInput" type="email" placeholder="Email manzilingiz" autocomplete="email" style="margin-bottom:10px;">
+                        <input class="auth-input" id="googlePassInput" type="password" placeholder="Parolingiz" autocomplete="current-password" style="margin-bottom:10px;">
+                        <div class="auth-error" id="authError"></div>
+                        <button class="auth-btn auth-btn-primary" onclick="submitGoogleLogin()">Kirish</button>
+                        <div style="margin-top:12px;font-size:11px;color:var(--ink-soft);">Bu demo versiya. Haqiqiy Google login uchun Google Identity Services kerak.</div>
+                    </div>
+                    <button class="auth-back" onclick="renderAuthStep('phone')">← Ortga</button>
+                `;
+                setTimeout(() => {
+                    const emailInp = document.getElementById('googleEmailInput');
+                    if (emailInp) {
+                        emailInp.focus();
+                        emailInp.addEventListener('keydown', function(e) {
+                            if (e.key === 'Enter') {
+                                const passInp = document.getElementById('googlePassInput');
+                                if (passInp && passInp.value) submitGoogleLogin();
+                                else if (passInp) passInp.focus();
+                            }
+                        });
+                    }
+                    const passInp = document.getElementById('googlePassInput');
+                    if (passInp) {
+                        passInp.addEventListener('keydown', function(e) {
+                            if (e.key === 'Enter') submitGoogleLogin();
+                        });
+                    }
+                }, 300);
+            }
+        }
+
+        function sendPhoneCode() {
+            const inp = document.getElementById('authPhoneInput');
+            const err = document.getElementById('authError');
+            if (!inp || !err) return;
+            const phone = inp.value.replace(/\D/g, '');
+            if (phone.length < 9) {
+                err.textContent = '❌ Iltimos, to\'liq telefon raqamini kiriting (9 ta raqam)';
+                inp.focus();
+                return;
+            }
+            err.textContent = '';
+            state.authPhone = '+998 ' + phone.replace(/(\d{2})(\d{3})(\d{2})(\d{2})/, '$1 $2 $3 $4');
+            
+            // Generate random 4-digit code
+            authGeneratedCode = String(Math.floor(1000 + Math.random() * 9000));
+            authCodeExpiry = Date.now() + 60000; // 60 seconds
+            
+            const btn = document.getElementById('authSendBtn');
+            if (btn) { btn.textContent = '⏳ Yuborilmoqda...'; btn.disabled = true; }
+            
+            // Simulate sending SMS (800ms delay)
+            setTimeout(() => {
+                renderAuthStep('pin');
+                // Show toast with the actual code (like a real SMS)
+                if (typeof showToast === 'function') {
+                    showToast('📱', `Tasdiqlash kodi: ${authGeneratedCode}`);
+                }
+                console.log('📱 SMS Code for ' + state.authPhone + ': ' + authGeneratedCode);
+            }, 1000);
+        }
+
+        function resendCode() {
+            // Generate new random code
+            authGeneratedCode = String(Math.floor(1000 + Math.random() * 9000));
+            authCodeExpiry = Date.now() + 60000;
+            
+            const timerEl = document.getElementById('authTimer');
+            const resendBtn = document.getElementById('authResendBtn');
+            
+            if (timerEl) {
+                timerEl.innerHTML = 'Kod <span id="authTimerCount">60</span> soniya amal qiladi';
+            }
+            if (resendBtn) resendBtn.style.display = 'none';
+            
+            if (typeof showToast === 'function') {
+                showToast('📱', `Yangi kod yuborildi: ${authGeneratedCode}`);
+            }
+            console.log('📱 New SMS Code: ' + authGeneratedCode);
+            
+            startAuthTimer();
+        }
+
+        function startAuthTimer() {
+            if (authResendTimer) clearInterval(authResendTimer);
+            
+            authResendTimer = setInterval(() => {
+                const countEl = document.getElementById('authTimerCount');
+                const resendBtn = document.getElementById('authResendBtn');
+                if (!countEl) { clearInterval(authResendTimer); return; }
+                const remaining = authCodeExpiry ? Math.max(0, Math.floor((authCodeExpiry - Date.now()) / 1000)) : 0;
+                countEl.textContent = remaining;
+                if (remaining <= 0) {
+                    clearInterval(authResendTimer);
+                    if (resendBtn) {
+                        resendBtn.style.display = 'inline-block';
+                        countEl.parentElement.innerHTML = 'Kod muddati tugadi';
+                    }
+                }
+            }, 1000);
+        }
+
+        function clearAuthTimer() {
+            if (authResendTimer) {
+                clearInterval(authResendTimer);
+                authResendTimer = null;
+            }
+        }
+
+        function verifyPhoneCode() {
+            const inp = document.getElementById('authPinInput');
+            const err = document.getElementById('authError');
+            if (!inp || !err) return;
+            const code = inp.value.replace(/\D/g, '');
+            if (code.length < 4) {
+                err.textContent = '❌ 4 xonali kodni kiriting';
+                inp.focus();
+                return;
+            }
+            err.textContent = '';
+            
+            // Check if code is expired
+            if (authCodeExpiry && Date.now() > authCodeExpiry) {
+                err.textContent = '❌ Kod muddati tugagan. Qayta yuborish tugmasini bosing.';
+                inp.value = '';
+                return;
+            }
+            
+            // Check if code matches
+            if (authGeneratedCode && code !== authGeneratedCode) {
+                err.textContent = '❌ Noto\'g\'ri kod. Qayta urinib ko\'ring.';
+                inp.value = '';
+                inp.focus();
+                // Shake animation
+                inp.style.animation = 'shake 0.4s ease';
+                setTimeout(() => inp.style.animation = '', 500);
+                return;
+            }
+            
+            // Code is correct
+            const btn = document.getElementById('authVerifyBtn');
+            if (btn) { btn.textContent = '⏳ Tekshirilmoqda...'; btn.disabled = true; }
+            
+            clearAuthTimer();
+            
+            // Show name input instead of prompt (prompt not supported in all environments)
+            setTimeout(() => {
+                renderAuthStep('name');
+            }, 400);
+        }
+
+        // Submit name after SMS verification
+        function submitName() {
+            const inp = document.getElementById('authNameInput');
+            const err = document.getElementById('authError');
+            if (!inp) return;
+            let name = inp.value.trim();
+            if (!name) {
+                if (err) err.textContent = '❌ Iltimos, ismingizni kiriting';
+                inp.focus();
+                return;
+            }
+            if (err) err.textContent = '';
+            
+            const btn = document.getElementById('authNameBtn');
+            if (btn) { btn.textContent = '⏳ Saqlanmoqda...'; btn.disabled = true; }
+            
+            const phoneDisplay = state.authPhone || '+998 XX XXX XX XX';
+            
+            setTimeout(() => {
+                state.user = {
+                    name: name,
+                    phone: phoneDisplay,
+                    method: 'phone',
+                    avatar: '👤',
+                    joinedAt: new Date().toISOString()
+                };
+                saveUser();
+                renderAuthStep('success');
+            }, 500);
+        }
+
+        function selectGoogleAccount(type) {
+            // Not used anymore — Google login now shows email/password form directly
+        }
+
+        function submitGoogleLogin() {
+            const email = document.getElementById('googleEmailInput')?.value?.trim();
+            const pass = document.getElementById('googlePassInput')?.value?.trim();
+            const err = document.getElementById('authError');
+            
+            if (!email || !email.includes('@')) {
+                if (err) err.textContent = '❌ To\'g\'ri email manzilini kiriting';
+                return;
+            }
+            if (!pass || pass.length < 3) {
+                if (err) err.textContent = '❌ Parolingizni kiriting';
+                return;
+            }
+            
+            const container = document.getElementById('authContent');
+            if (!container) return;
+            
+            container.innerHTML = `
+                <div class="auth-title">Google orqali kirish</div>
+                <div class="auth-desc" style="margin-bottom:16px;">
+                    <div style="font-size:48px;margin:8px 0;">🔄</div>
+                    <div style="font-size:13px;color:var(--ink-soft);">${email} akkaunti tekshirilmoqda...</div>
+                </div>
+            `;
+            
+            setTimeout(() => {
+                state.user = {
+                    name: email.split('@')[0] || 'Foydalanuvchi',
+                    email: email,
+                    method: 'google',
+                    avatar: '🧑‍✈️',
+                    joinedAt: new Date().toISOString()
+                };
+                saveUser();
+                renderAuthStep('success');
+            }, 1000);
+        }
+
+        // Google Identity Services configuration
+        // To enable REAL Google Sign-In, set your Google OAuth 2.0 Client ID below
+        // Get one at: https://console.cloud.google.com/apis/credentials
+        const GOOGLE_CLIENT_ID = ''; // ← Haqiqiy Google Client ID ni shu yerga qo'ying
+
+        function handleGoogleCredentialResponse(response) {
+            // Decode the JWT token to get user info
+            try {
+                const payload = JSON.parse(atob(response.credential.split('.')[1]));
+                state.user = {
+                    name: payload.name || 'Google Foydalanuvchi',
+                    email: payload.email || '',
+                    method: 'google',
+                    avatar: payload.picture || '🧑‍✈️',
+                    joinedAt: new Date().toISOString(),
+                    googleId: payload.sub,
+                    googlePayload: payload
+                };
+                saveUser();
+                renderAuthStep('success');
+            } catch(e) {
+                console.error('Google login error:', e);
+                // Fallback to simulated flow
+                state.user = {
+                    name: 'Google Foydalanuvchi',
+                    email: 'google@user.com',
+                    method: 'google',
+                    avatar: '🧑‍✈️',
+                    joinedAt: new Date().toISOString()
+                };
+                saveUser();
+                renderAuthStep('success');
+            }
+        }
+
+        function initGoogleSignIn() {
+            // Check if Google Identity Services is loaded and a client ID is configured
+            if (typeof google !== 'undefined' && google.accounts && GOOGLE_CLIENT_ID) {
+                try {
+                    google.accounts.id.initialize({
+                        client_id: GOOGLE_CLIENT_ID,
+                        callback: handleGoogleCredentialResponse,
+                        auto_select: false,
+                        cancel_on_tap_outside: false
+                    });
+                    return true;
+                } catch(e) {
+                    console.warn('Google Identity Services initialization failed:', e);
+                    return false;
+                }
+            }
+            return false;
+        }
+
+        function loginWithGoogle() {
+            // Directly show email/password form for Google login
+            renderAuthStep('google');
+        }
+
+        function hideAuth() {
+            const overlay = document.getElementById('authOverlay');
+            if (!overlay) return;
+            overlay.classList.add('hidden');
+            setTimeout(() => { overlay.style.display = 'none'; }, 500);
+            
+            const profileName = document.querySelector('.profile-top h3');
+            if (profileName) profileName.textContent = state.user.name;
+            const profileEmail = document.querySelector('.profile-top p');
+            if (profileEmail) profileEmail.textContent = state.user.phone || state.user.email || 'mehmon@yolchi.uz';
+            
+            if (typeof renderAll === 'function') renderAll();
+        }
+
+        function logoutUser() {
+            if (!confirm('Haqiqatan ham chiqmoqchimisiz?')) return;
+            state.user = null;
+            saveUser();
+            localStorage.removeItem('yolchi_stars');
+            localStorage.removeItem('yolchi_sub');
+            localStorage.removeItem('yolchi_items');
+            localStorage.removeItem('yolchi_used');
+            localStorage.removeItem('yolchi_trips');
+            state.stars = 0;
+            state.subscription = 'none';
+            state.ownedItems = [];
+            state.usedPlaces = [];
+            state.trips = [];
+            const overlay = document.getElementById('authOverlay');
+            if (overlay) {
+                overlay.style.display = 'flex';
+                overlay.classList.remove('hidden');
+                renderAuthStep('phone');
+            }
+            if (typeof renderAll === 'function') renderAll();
+        }
 
         /* ================= HELPERS ================= */
         function grad(i) { return GRADIENTS[i % GRADIENTS.length]; }
@@ -2783,6 +3999,8 @@
                 profile_share: "📤 YO'LCHI'ni do'stlarga ulashish",
                 profile_scanner: "📷 QR Skanner",
                 profile_shop: "⭐ Do'kon",
+                guide_title: "Shahar qo'llanmasi",
+                guide_no_cities: "Hali shaharlar qo'shilmagan",
                 sub_none: "Obuna yo'q",
                 sub_basic: "⭐ Basic",
                 sub_premium: "💎 Premium",
@@ -2878,7 +4096,8 @@
                 chat_finish: 'Zo\'r! {city} bo\'yicha {hours} sayohatingizni tayyorladim ✨',
                 chat_confirm: "Davom etish",
                 map_open: "📍 Xaritada ko'rish",
-                toast_key: "Kalit topildi! +1"
+                toast_key: "Kalit topildi! +1",
+                share_copied: "Havola nusxalandi!"
             },
             en: {
                 welcome: "Welcome 👋",
@@ -2926,6 +4145,8 @@
                 profile_share: "📤 Share YO'LCHI with friends",
                 profile_scanner: "📷 QR Scanner",
                 profile_shop: "⭐ Shop",
+                guide_title: "City Guide",
+                guide_no_cities: "No cities added yet",
                 sub_none: "No subscription",
                 sub_basic: "⭐ Basic",
                 sub_premium: "💎 Premium",
@@ -3020,7 +4241,8 @@
                 chat_finish: 'Great! I\'ve prepared your {hours} trip to {city} ✨',
                 chat_confirm: "Continue",
                 map_open: "📍 View on map",
-                toast_key: "Key found! +1"
+                toast_key: "Key found! +1",
+                share_copied: "Link copied!"
             },
             ru: {
                 welcome: "Добро пожаловать 👋",
@@ -3068,6 +4290,8 @@
                 profile_share: "📤 Поделиться YO'LCHI с друзьями",
                 profile_scanner: "📷 QR Сканер",
                 profile_shop: "⭐ Магазин",
+                guide_title: "Гид по городам",
+                guide_no_cities: "Города ещё не добавлены",
                 sub_none: "Нет подписки",
                 sub_basic: "⭐ Базовая",
                 sub_premium: "💎 Премиум",
@@ -3162,7 +4386,8 @@
                 chat_finish: 'Отлично! Я подготовил вашу {hours} поездку в {city} ✨',
                 chat_confirm: "Продолжить",
                 map_open: "📍 Смотреть на карте",
-                toast_key: "Ключ найден! +1"
+                toast_key: "Ключ найден! +1",
+                share_copied: "Ссылка скопирована!"
             }
         };
         function t(key) {
@@ -3171,7 +4396,10 @@
         }
         function applyLang() {
             // Apply translations to static elements with data-tr attribute
+            // Skip bottom nav buttons — they have special structure with icons
             document.querySelectorAll('[data-tr]').forEach(el => {
+                // Skip bottom nav buttons — they have icon structure
+                if (el.closest('.bottom-nav')) return;
                 const key = el.dataset.tr;
                 const translated = t(key);
                 if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') {
@@ -3180,12 +4408,15 @@
                     el.innerHTML = translated;
                 }
             });
-            // Update bottom nav — find the text node after the icon span
+            // Update bottom nav — preserve icon structure, only update label text
             document.querySelectorAll('.bottom-nav button').forEach(btn => {
                 const key = btn.dataset.tr;
                 if (key) {
                     const iconSpan = btn.querySelector('.ic');
-                    if (iconSpan && iconSpan.nextSibling) {
+                    const labelSpan = btn.querySelector('.nav-label');
+                    if (labelSpan) {
+                        labelSpan.textContent = t(key);
+                    } else if (iconSpan && iconSpan.nextSibling) {
                         iconSpan.nextSibling.textContent = t(key);
                     }
                 }
@@ -3276,6 +4507,11 @@
             if (name === 'scheduler') {
                 setTimeout(() => initScheduler('aiSchedulerContainer'), 200);
             }
+            // Show/hide chat input bar
+            const chatInputBar = document.getElementById('chatInputBar');
+            if (chatInputBar) {
+                chatInputBar.style.display = name === 'chat' ? 'flex' : 'none';
+            }
             window.scrollTo({ top: 0 });
         }
         function goTab(name) { 
@@ -3295,6 +4531,68 @@
             showScreen('home'); 
             renderAll(); 
         }
+        
+        // Toggle "Why YO'LCHI?" section to reduce overcrowding
+        let whyCollapsed = true;
+        function toggleWhySection() {
+            const grid = document.getElementById('whyGrid');
+            const icon = document.getElementById('whyToggleIcon');
+            if (!grid || !icon) return;
+            whyCollapsed = !whyCollapsed;
+            grid.classList.toggle('collapsed', whyCollapsed);
+            icon.style.transform = whyCollapsed ? 'rotate(0deg)' : 'rotate(180deg)';
+        }
+        // Initialize collapsed on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            const grid = document.getElementById('whyGrid');
+            const icon = document.getElementById('whyToggleIcon');
+            if (grid && icon) {
+                grid.classList.add('collapsed');
+                whyCollapsed = true;
+            }
+        });
+
+        /* ================= FAB SCROLL TO TOP ================= */
+        document.addEventListener('scroll', function() {
+            const fab = document.getElementById('fabTop');
+            if (!fab) return;
+            fab.classList.toggle('visible', window.scrollY > 300);
+        }, { passive: true });
+
+        /* ================= NOTIFICATION BADGES ON BOTTOM NAV ================= */
+        function updateNavBadges() {
+            const navBtns = document.querySelectorAll('.bottom-nav button');
+            navBtns.forEach(btn => {
+                // Remove existing badge
+                const oldBadge = btn.querySelector('.nav-badge');
+                if (oldBadge) oldBadge.remove();
+                
+                const tab = btn.dataset.tab;
+                let count = 0;
+                // Add badge for trips if there are active trips
+                if (tab === 'trips') {
+                    count = state.trips.filter(t => t.started && !t.completed).length;
+                }
+                // Add badge for shop if there are new items
+                if (tab === 'shop') {
+                    // No specific count for now
+                }
+                if (count > 0) {
+                    const badge = document.createElement('span');
+                    badge.className = 'nav-badge';
+                    badge.textContent = count > 9 ? '9+' : count;
+                    badge.style.cssText = 'position:absolute;top:4px;right:4px;background:var(--danger);color:#fff;font-size:9px;font-weight:800;min-width:16px;height:16px;border-radius:8px;display:flex;align-items:center;justify-content:center;padding:0 4px;box-shadow:0 2px 6px rgba(0,0,0,0.2);z-index:2;';
+                    btn.style.position = 'relative';
+                    btn.appendChild(badge);
+                }
+            });
+        }
+        // Update badges after renderAll
+        const originalRenderAll = renderAll;
+        renderAll = function() {
+            originalRenderAll();
+            updateNavBadges();
+        };
         function goScreen(name) { 
             closeScannerOverlay();
             state.history.push(name); 
@@ -3302,7 +4600,7 @@
         }
 
         /* ================= ULTRA JS — SPLASH, PARTICLES, 3D TILT, RIPPLE ================= */
-        // Splash screen auto-hide
+        // Splash screen auto-hide + Auth check
         document.addEventListener('DOMContentLoaded', function() {
             // Register Service Worker for PWA
             if ('serviceWorker' in navigator) {
@@ -3313,6 +4611,10 @@
                 if (splash) {
                     splash.classList.add('hidden');
                     setTimeout(() => { splash.style.display = 'none'; }, 700);
+                }
+                // Check if user is logged in
+                if (typeof checkAuth === 'function') {
+                    setTimeout(checkAuth, 900);
                 }
             }, 1800);
             generateParticles();
@@ -3456,7 +4758,14 @@
             state.chatStep = 0;
             state.chatAnswers = {};
             document.getElementById('chatBody').innerHTML = '';
+            // Show input bar and focus it
+            const inputBar = document.getElementById('chatInputBar');
+            if (inputBar) inputBar.style.display = 'flex';
             goScreen('chat');
+            setTimeout(() => {
+                const input = document.getElementById('chatInput');
+                if (input) input.focus();
+            }, 400);
             askStep(0);
         }
 
@@ -3473,7 +4782,19 @@
 
         function askStep(i) {
             if (i >= CHAT_STEPS.length) { finishChat(); return; }
+            state.chatStep = i;
             let step = getChatStep(i);
+            
+            // Enable input field — foydalanuvchi klaviaturada yozishi mumkin
+            const input = document.getElementById('chatInput');
+            const sendBtn = document.getElementById('chatSendBtn');
+            if (input) {
+                input.disabled = false;
+                input.placeholder = step.field === 'city' ? 'Shahar nomini yozing...' : 'Javobingizni yozing...';
+                input.value = '';
+                setTimeout(() => input.focus(), 300);
+            }
+            if (sendBtn) sendBtn.disabled = false;
             
             const typingRow = appendBubble(`<div class="typing"><span></span><span></span><span></span></div>`, 'ai');
             setTimeout(() => {
@@ -3481,13 +4802,16 @@
                 const optsHTML = step.type === 'multi'
                     ? `<div class="option-wrap" id="optWrap">${step.options.map(o => `<div class="option-chip" data-val="${o.value}">${o.label}</div>`).join('')}<div class="confirm-btn" id="confirmBtn" style="display:none;" onclick="submitMulti(${i})">${t('chat_confirm')}</div></div>`
                     : `<div class="option-wrap" id="optWrap">${step.options.map(o => `<div class="option-chip" data-val="${o.value}">${o.label}</div>`).join('')}</div>`;
-                appendBubble(step.ai + optsHTML, 'ai');
+                const hintText = '<div style="font-size:11px;color:var(--ink-soft);margin-top:6px;opacity:0.7;">💡 Javobni yozing yoki tugmalardan tanlang</div>';
+                appendBubble(step.ai + optsHTML + hintText, 'ai');
                 if (step.type === 'single') {
                     document.querySelectorAll('#optWrap .option-chip').forEach(chip => {
                         chip.onclick = () => {
                             document.getElementById('optWrap').querySelectorAll('.option-chip').forEach(c => c.style.pointerEvents = 'none');
                             appendBubble(chip.textContent, 'user');
                             if (step.field) state.chatAnswers[step.field] = chip.dataset.val;
+                            if (input) input.disabled = true;
+                            if (sendBtn) sendBtn.disabled = true;
                             setTimeout(() => askStep(i + 1), 450);
                         };
                     });
@@ -3508,10 +4832,67 @@
             document.querySelectorAll('#optWrap .option-chip, #confirmBtn').forEach(c => c.style.pointerEvents = 'none');
             appendBubble(selected.join(', '), 'user');
             state.chatAnswers[CHAT_STEPS[i].field] = selected;
+            const input = document.getElementById('chatInput');
+            const sendBtn = document.getElementById('chatSendBtn');
+            if (input) input.disabled = true;
+            if (sendBtn) sendBtn.disabled = true;
             setTimeout(() => askStep(i + 1), 450);
         }
 
+        function sendChatMessage() {
+            const input = document.getElementById('chatInput');
+            if (!input || input.disabled) return;
+            const text = input.value.trim();
+            if (!text) return;
+            
+            const i = state.chatStep;
+            if (i >= CHAT_STEPS.length) return;
+            const step = getChatStep(i);
+            
+            // Disable options (if any)
+            const optWrap = document.getElementById('optWrap');
+            if (optWrap) {
+                optWrap.querySelectorAll('.option-chip, .confirm-btn').forEach(c => c.style.pointerEvents = 'none');
+            }
+            
+            // Append user message
+            appendBubble(text, 'user');
+            
+            // Save answer
+            if (step.field) {
+                state.chatAnswers[step.field] = text;
+            }
+            
+            // Clear and disable input
+            input.value = '';
+            input.disabled = true;
+            const sendBtn = document.getElementById('chatSendBtn');
+            if (sendBtn) sendBtn.disabled = true;
+            
+            // Next step
+            setTimeout(() => askStep(i + 1), 450);
+        }
+
+        // Enter key to send — chat input
+        (function() {
+            const input = document.getElementById('chatInput');
+            if (input) {
+                input.addEventListener('keydown', function(e) {
+                    if (e.key === 'Enter' && !e.shiftKey) {
+                        e.preventDefault();
+                        sendChatMessage();
+                    }
+                });
+            }
+        })();
+
         function finishChat() {
+            // Disable input bar — chat yakunlandi
+            const input = document.getElementById('chatInput');
+            const sendBtn = document.getElementById('chatSendBtn');
+            if (input) input.disabled = true;
+            if (sendBtn) sendBtn.disabled = true;
+            
             const allCities = getAllCities();
             const defaultCity = allCities.length > 0 ? allCities[0].name : 'Toshkent';
             const city = state.chatAnswers.city || defaultCity;
@@ -3815,6 +5196,19 @@
                 subEl.style.background = state.subscription !== 'none' ? 'var(--gold)' : 'var(--surface-2)';
                 subEl.style.color = state.subscription !== 'none' ? '#3a2708' : 'var(--ink-soft)';
             }
+            // Update user avatar and name
+            const avatarEl = document.querySelector('.profile-top .avatar');
+            const nameEl = document.querySelector('.profile-top h3');
+            const emailEl = document.querySelector('.profile-top p');
+            if (state.user && state.user.name) {
+                if (avatarEl) avatarEl.textContent = state.user.avatar || '👤';
+                if (nameEl) nameEl.textContent = state.user.name;
+                if (emailEl) emailEl.textContent = state.user.phone || state.user.email || 'mehmon@yolchi.uz';
+            } else {
+                if (avatarEl) avatarEl.textContent = 'ME';
+                if (nameEl) nameEl.textContent = t('profile_guest') || 'Mehmon';
+                if (emailEl) emailEl.textContent = t('profile_guest_mail') || 'mehmon@yolchi.uz';
+            }
             document.getElementById('profileStats').innerHTML = `
     <div class="st"><div class="n">${state.trips.length}</div><div class="l">Sayohatlar</div></div>
     <div class="st"><div class="n">${state.stars}</div><div class="l">⭐ Yulduzlar</div></div>
@@ -3833,6 +5227,12 @@
     <div class="lang-item ${state.lang === l.code ? 'selected' : ''}" onclick="setLang('${l.code}')">
       <span>${l.label}</span>${state.lang === l.code ? '<span class="chk">✓</span>' : ''}
     </div>`).join('');
+
+            // Show guide button if user owns it
+            const guideBtn = document.getElementById('guideBtn');
+            if (guideBtn) {
+                guideBtn.style.display = state.ownedItems.includes('guide') ? '' : 'none';
+            }
         }
         function setLang(code) { 
             state.lang = code; 
@@ -3848,7 +5248,7 @@
             { id: 'sub_vip', name: '👑 VIP obuna', desc: 'Cheksiz joylar, barcha imkoniyatlar', icon: '👑', color: '#a86b1f', price: 60, type: 'subscription', value: 'vip', dur: 30, image: 'https://picsum.photos/id/30/400/250' },
             { id: 'boost', name: '🚀 Tezlatkich', desc: '2x yulduz yig\'ish (7 kun)', icon: '🚀', color: '#c96b3e', price: 20, type: 'boost', dur: 7, image: 'https://picsum.photos/id/40/400/250' },
             { id: 'theme_dark', name: '🔮 Glassmorphism dizayn', desc: 'Shishasimon premium dizayn — barcha kartalar shaffof oyna effektida', icon: '🔮', color: '#667eea', price: 10, type: 'theme', value: 'glass', image: 'https://picsum.photos/id/50/400/250' },
-            { id: 'guide', name: '📖 Audio gid', desc: 'Shaharlar bo\'ylab audio qo\'llanma', icon: '🎧', color: '#2f8f6a', price: 25, type: 'guide', image: 'https://picsum.photos/id/60/400/250' }
+            { id: 'guide', name: '📖 Shahar qo\'llanmasi', desc: 'Shaharlar bo\'ylab to\'liq ma\'lumotnoma', icon: '📖', color: '#2f8f6a', price: 25, type: 'guide', image: 'https://picsum.photos/id/60/400/250' }
         ];
         cleanExpired();
 
@@ -4262,10 +5662,6 @@
             if (!widget) return;
             const preview = document.getElementById('homeSchedulerPreview');
             if (!preview) return;
-            const voiceIndicator = document.getElementById('aiVoiceIndicator');
-            if (voiceIndicator && 'speechSynthesis' in window) {
-                voiceIndicator.style.display = 'inline';
-            }
             // Show mission info if ai-scheduler is loaded
             if (typeof getTodayMission === 'function') {
                 const mission = getTodayMission();

@@ -137,7 +137,7 @@ export interface AppUser {
 
 // --- Do'kon (Shop) turlari ---
 
-export type ShopItemCategory = 'transport' | 'food' | 'guide' | 'souvenir' | 'boost'
+export type ShopItemCategory = 'guide' | 'souvenir' | 'boost'
 
 export interface ShopItem {
   id: string
@@ -204,8 +204,6 @@ export interface ShareData {
 }
 
 export const SHOP_ITEM_CATEGORY_LABELS: Record<ShopItemCategory, string> = {
-  transport: '🚗 Transport',
-  food: '🍽️ Oziq-ovqat',
   guide: '🧭 Gid xizmati',
   souvenir: '🎁 Suvenir',
   boost: '⚡ Kuchaytirish',

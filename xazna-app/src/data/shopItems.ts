@@ -1,102 +1,11 @@
 import type { ShopItem } from '../types'
 
 export const SHOP_ITEMS: ShopItem[] = [
-  // ========== TRANSPORT ==========
-  {
-    id: 'shop-1',
-    name: 'Velosiped ijarasi',
-    description: 'Shahar bo\'ylab velosipedda sayohat qilish imkoniyati',
-    price: 50,
-    category: 'transport',
-    icon: '🚲',
-    color: 'from-blue-400 to-blue-600',
-    benefits: ['Tezroq harakatlanish', 'Ekologik toza', '2 soat vaqtni tejaydi'],
-  },
-  {
-    id: 'shop-5',
-    name: 'VIP Transport',
-    description: 'Shaxsiy haydovchi bilan qulay sayohat',
-    price: 200,
-    category: 'transport',
-    icon: '🚗',
-    color: 'from-purple-400 to-purple-600',
-    benefits: ['Qulaylik', 'Tez yetib borish', 'Konditsioner'],
-    isPopular: true,
-  },
-  {
-    id: 'shop-9',
-    name: 'Elektro skuter',
-    description: 'Zamonaviy elektro skuterda shahar bo\'ylab tez va qulay harakatlanish',
-    price: 80,
-    originalPrice: 120,
-    category: 'transport',
-    icon: '🛴',
-    color: 'from-cyan-400 to-cyan-600',
-    benefits: ['Tezlik 25 km/soat', '1 soatlik to\'lov', 'Batareya 40 km'],
-    isNew: true,
-  },
-  {
-    id: 'shop-10',
-    name: 'Avtobus chiptasi (kunlik)',
-    description: 'Shahar avtobuslarida bir kunlik cheksiz sayohat',
-    price: 25,
-    category: 'transport',
-    icon: '🚌',
-    color: 'from-sky-400 to-sky-600',
-    benefits: ['Cheksiz qatnov', 'Barcha yo\'nalishlar', '20% tejamkorlik'],
-  },
-
-  // ========== FOOD ==========
-  {
-    id: 'shop-3',
-    name: 'Milliy taomlar to\'plami',
-    description: '5 xil milliy taomdan iborat maxsus to\'plam',
-    price: 80,
-    category: 'food',
-    icon: '🍽️',
-    color: 'from-orange-400 to-red-500',
-    benefits: ['Halol taomlar', 'Mahalliy retseptlar', 'Eslab qolarli ta\'m'],
-    isPopular: true,
-  },
-  {
-    id: 'shop-8',
-    name: '5 kunlik oziq-ovqat paketi',
-    description: '5 kunlik to\'yimli va mazali taomlar to\'plami',
-    price: 250,
-    originalPrice: 350,
-    category: 'food',
-    icon: '🥘',
-    color: 'from-red-400 to-red-600',
-    benefits: ['Halol sertifikatlangan', 'Vitaminlarga boy', 'Bepul yetkazish'],
-    stock: 10,
-  },
-  {
-    id: 'shop-11',
-    name: 'Choyxona kartasi',
-    description: '10 xil milliy choy va shirinliklar uchun maxsus karta',
-    price: 40,
-    category: 'food',
-    icon: '🫖',
-    color: 'from-amber-400 to-amber-600',
-    benefits: ['10 xil choy', 'Milliy shirinliklar', 'Esdalik sovg\'a'],
-    isNew: true,
-  },
-  {
-    id: 'shop-12',
-    name: 'Nonushta to\'plami',
-    description: 'Ertalabki nonushta uchun maxsus tayyorlangan milliy taomlar',
-    price: 35,
-    category: 'food',
-    icon: '🥐',
-    color: 'from-yellow-400 to-yellow-600',
-    benefits: ['Sog\'lom nonushta', 'Tez tayyor', 'Energiya beradi'],
-  },
-
   // ========== GUIDE ==========
   {
     id: 'shop-2',
     name: 'Premium gid xizmati',
-    description: 'Shaxsiy professional gid bilan sayohat',
+    description: 'Shaxsiy professional gid bilan sayohat qiling. Eng yaxshi marshrut va tarixiy joylar.',
     price: 150,
     category: 'guide',
     icon: '🧭',
@@ -107,7 +16,7 @@ export const SHOP_ITEMS: ShopItem[] = [
   {
     id: 'shop-13',
     name: 'Audio gid',
-    description: 'Shaxsiy quloqchin bilan avtomatik sayohat qo\'llanmasi',
+    description: 'Shaxsiy quloqchin bilan avtomatik sayohat qo\'llanmasi. Internet kerak emas!',
     price: 45,
     category: 'guide',
     icon: '🎧',
@@ -118,7 +27,7 @@ export const SHOP_ITEMS: ShopItem[] = [
   {
     id: 'shop-14',
     name: 'Virtual gid (AR)',
-    description: 'Kamera orqali joylarni avtomatik tanish va ma\'lumot olish',
+    description: 'Kamera orqali joylarni avtomatik tanish va 3D ma\'lumot olish',
     price: 120,
     originalPrice: 180,
     category: 'guide',
@@ -132,7 +41,7 @@ export const SHOP_ITEMS: ShopItem[] = [
   {
     id: 'shop-4',
     name: 'Xazina suveniri',
-    description: 'Xazina logotibi tushirilgan eksklyuziv magnit',
+    description: 'Xazina logotibi tushirilgan eksklyuziv magnit va nishonlar',
     price: 30,
     category: 'souvenir',
     icon: '🎁',
@@ -142,7 +51,7 @@ export const SHOP_ITEMS: ShopItem[] = [
   {
     id: 'shop-7',
     name: 'Foto albom',
-    description: 'Sayohat rasmlaridan maxsus foto albom tayyorlash',
+    description: 'Sayohat rasmlaridan maxsus foto albom tayyorlash xizmati',
     price: 60,
     category: 'souvenir',
     icon: '📸',
@@ -152,7 +61,7 @@ export const SHOP_ITEMS: ShopItem[] = [
   {
     id: 'shop-15',
     name: 'Milliy kiyim to\'plami',
-    description: 'An\'anaviy o\'zbek milliy kiyimlari to\'plami',
+    description: 'An\'anaviy o\'zbek milliy kiyimlari to\'plami. Qo\'l ishi, tabiiy mato.',
     price: 180,
     category: 'souvenir',
     icon: '👘',
@@ -163,7 +72,7 @@ export const SHOP_ITEMS: ShopItem[] = [
   {
     id: 'shop-16',
     name: 'Qo\'lyozma kitob',
-    description: 'O\'zbekiston tarixi haqida qo\'lyozma kitob',
+    description: 'O\'zbekiston tarixi haqida noyob qo\'lyozma kitob, muallif imzosi bilan',
     price: 90,
     category: 'souvenir',
     icon: '📖',
@@ -176,7 +85,7 @@ export const SHOP_ITEMS: ShopItem[] = [
   {
     id: 'shop-6',
     name: 'Tezkor marshrut',
-    description: 'AI marshrut yaratishni 2x tezlashtirish',
+    description: 'AI marshrut yaratishni 2x tezlashtirish imkoniyati',
     price: 100,
     category: 'boost',
     icon: '⚡',
@@ -186,7 +95,7 @@ export const SHOP_ITEMS: ShopItem[] = [
   {
     id: 'shop-17',
     name: 'Double XP',
-    description: '48 soat davomida ikki barobar tajriba olish imkoniyati',
+    description: '48 soat davomida ikki barobar tajriba oling va tezroq daraja oshiring',
     price: 75,
     category: 'boost',
     icon: '🌟',
@@ -197,7 +106,7 @@ export const SHOP_ITEMS: ShopItem[] = [
   {
     id: 'shop-18',
     name: 'Tanga magniti',
-    description: '24 soat davomida tangalarni 50% ko\'proq yig\'ish',
+    description: '24 soat davomida tangalarni 50% ko\'proq yig\'ish imkoniyati',
     price: 65,
     originalPrice: 90,
     category: 'boost',
@@ -209,7 +118,7 @@ export const SHOP_ITEMS: ShopItem[] = [
   {
     id: 'shop-19',
     name: 'Premium tag',
-    description: 'Profilingizda maxsus premium nishoni va imtiyozlar',
+    description: 'Profilingizda maxsus premium nishoni va barcha imtiyozlar abadiy',
     price: 300,
     category: 'boost',
     icon: '👑',

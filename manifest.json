@@ -2,7 +2,7 @@
   "name": "YO'LCHI - AI Sayohat Hamrohi",
   "short_name": "YO'LCHI",
   "description": "O'zbekiston bo'ylab AI yordamida sayohat rejalashtirish",
-  "start_url": "/xazna%201/index.html",
+  "start_url": "./index.html",
   "display": "standalone",
   "orientation": "portrait-primary",
   "background_color": "#f6f2e8",

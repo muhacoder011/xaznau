@@ -20,33 +20,6 @@ function schedulerToast(icon, text, duration) {
     setTimeout(() => { toast.style.opacity = '0'; toast.style.transform = 'translate(-50%,-50%) scale(0.8)'; setTimeout(() => toast.remove(), 300); }, duration);
 }
 
-/* ---------- Voice/Speech Synthesis — AI o'zi gapirsin ---------- */
-function speakAI(text, callback) {
-    if (!('speechSynthesis' in window)) {
-        if (callback) callback();
-        return;
-    }
-    window.speechSynthesis.cancel();
-    
-    const utterance = new SpeechSynthesisUtterance(text);
-    const voices = window.speechSynthesis.getVoices();
-    const uzVoice = voices.find(v => v.lang && (v.lang.startsWith('uz') || v.lang.startsWith('tr') || v.lang.startsWith('az')));
-    const enVoice = voices.find(v => v.lang && v.lang.startsWith('en'));
-    utterance.voice = uzVoice || enVoice || voices[0];
-    utterance.lang = uzVoice ? 'uz-UZ' : 'en-US';
-    utterance.rate = 0.9;
-    utterance.pitch = 1.0;
-    utterance.volume = 1.0;
-    
-    if (callback) {
-        utterance.onend = callback;
-        utterance.onerror = callback;
-    }
-    
-    window.speechSynthesis.speak(utterance);
-    console.log('🔊 AI gapirdi:', text);
-}
-
 /* ---------- Mission Database — sayohat missiyalari ---------- */
 const MISSION_POOL = {
     general: [
@@ -192,14 +165,6 @@ function completeMission() {
         if (typeof renderAll === 'function') renderAll();
         
         schedulerToast('⭐', '+' + awarded + ' yulduz! Missiya bajarildi! 🎉', 3000);
-        
-        const msgs = [
-            'Tabriklayman! Missiyani muvaffaqiyatli bajardingiz!',
-            'Ajoyib! Siz haqiqiy sarguzashtchisiz!',
-            'Barakalla! Kunlik missiya bajarildi!',
-            'Zo\'r! Shu bilan bugungi sarguzasht yakunlandi!'
-        ];
-        speakAI(pickRandom(msgs));
     } else {
         schedulerToast('⭐', '+' + starAmount + ' yulduz! Missiya bajarildi! 🎉', 3000);
     }
@@ -216,30 +181,7 @@ function refreshMission() {
     missionState = generateMission();
     localStorage.setItem('yolchi_mission', JSON.stringify(missionState));
     renderMissionContainer('aiSchedulerContainer');
-    speakAIMission();
     if (typeof updateHomeSchedulerWidget === 'function') updateHomeSchedulerWidget();
-}
-
-/* ---------- AI Speaks the Mission ---------- */
-function speakAIMission() {
-    if (!missionState || missionState.completed) return;
-    
-    let greeting = '';
-    const hour = new Date().getHours();
-    if (hour < 12) greeting = 'Xayrli tong! ';
-    else if (hour < 18) greeting = 'Xayrli kun! ';
-    else greeting = 'Xayrli kech! ';
-    
-    const tripInfo = getActiveTripInfo();
-    let locationPhrase = '';
-    if (tripInfo.active) {
-        locationPhrase = tripInfo.city + ' shahrida ';
-    }
-    
-    const missionText = missionState.title.replace(/[^\w\s\u0600-\u06FF\u0400-\u04FF]/g, '').trim();
-    const speech = greeting + 'Bugungi kunlik missiya! ' + locationPhrase + missionText + '. ' + missionState.desc.replace(/[^\w\s\u0600-\u06FF\u0400-\u04FF]/g, '').trim();
-    
-    speakAI(speech);
 }
 
 /* ---------- Active Trip Mission Override ---------- */
@@ -262,7 +204,6 @@ function setTripMission(tripCity, stopName) {
     localStorage.setItem('yolchi_mission', JSON.stringify(missionState));
     
     renderMissionContainer('aiSchedulerContainer');
-    speakAIMission();
     if (typeof updateHomeSchedulerWidget === 'function') updateHomeSchedulerWidget();
 }
 
@@ -277,7 +218,8 @@ function renderMissionContainer(containerId) {
     const isSleepTime = hour >= 22 || hour < 5;
     const isW = isWeekend();
     
-    const speechSupported = ('speechSynthesis' in window);
+    // Time-based greeting
+    const timeGreeting = hour < 12 ? 'Xayrli tong 🌅' : hour < 18 ? 'Xayrli kun ☀️' : 'Xayrli kech 🌆';
     
     let html = '<div class="mission-container">';
     
@@ -346,9 +288,6 @@ function renderMissionContainer(containerId) {
         html += '<div class="mission-actions">';
         if (!isDone) {
             html += '<button class="cta-btn mission-complete-btn" onclick="completeMission()">✅ Missiyani bajarildi deb belgilash</button>';
-            if (speechSupported) {
-                html += '<button class="cta-btn ghost mission-speak-btn" onclick="speakAIMission()">🔊 AI gapirsin</button>';
-            }
             html += '<button class="cta-btn ghost mission-refresh-btn" onclick="if(confirm(\'Yangi missiya generatsiya qilinsinmi?\'))refreshMission()">🔄 Yangi missiya</button>';
         } else {
             html += '<div class="mission-done-message">';
@@ -416,18 +355,9 @@ function initAIScheduler(containerId) {
     }
     missionInitialized = true;
     
-    if ('speechSynthesis' in window) {
-        window.speechSynthesis.getVoices();
-    }
-    
     renderMissionContainer(containerId);
     
-    setTimeout(() => {
-        const mission = getTodayMission();
-        if (mission && !mission.completed) {
-            speakAIMission();
-        }
-    }, 1500);
+    // AI o'zi taklif qilmaydi — faqat foydalanuvchi yozganda javob beradi
     
     if (typeof updateHomeSchedulerWidget === 'function') updateHomeSchedulerWidget();
 }
@@ -435,9 +365,7 @@ function initAIScheduler(containerId) {
 /* ---------- Export for global use ---------- */
 window.initScheduler = initAIScheduler;
 window.renderScheduler = renderMissionContainer;
-window.speakAI = speakAI;
 window.completeMission = completeMission;
 window.refreshMission = refreshMission;
-window.speakAIMission = speakAIMission;
 window.setTripMission = setTripMission;
 window.getTodayMission = getTodayMission;

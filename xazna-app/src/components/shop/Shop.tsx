@@ -14,7 +14,7 @@ const Shop: React.FC = () => {
   const [purchaseMessage, setPurchaseMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null)
   const [sortBy, setSortBy] = useState<SortOption>('default')
 
-  const categories: (ShopItemCategory | 'all')[] = ['all', 'transport', 'food', 'guide', 'souvenir', 'boost']
+  const categories: (ShopItemCategory | 'all')[] = ['all', 'guide', 'souvenir', 'boost']
 
   // Daily deals - items with discounts
   const dailyDeals = useMemo(() => SHOP_ITEMS.filter(item => item.originalPrice), [])

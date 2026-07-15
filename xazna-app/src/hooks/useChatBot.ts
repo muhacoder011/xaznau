@@ -2,7 +2,7 @@
 // ChatBot AI — Yaxshilangan, aqlli va jonli suhbat
 // ============================================
 
-import { useState, useCallback, useRef } from 'react'
+import { useState, useCallback, useRef, useEffect } from 'react'
 import type {
   ChatMessage,
   ItineraryRequest,
@@ -14,6 +14,46 @@ interface BotState {
   step: 'city' | 'duration' | 'budget' | 'transport' | 'prayer' | 'food' | 'done'
   answers: Partial<ItineraryRequest>
   history: string[] // oldingi qadamlar (orqaga qaytish uchun)
+}
+
+// ==================== LOCALSTORAGE (chat xotirasi) ====================
+
+const STORAGE_KEY = 'xazina_chat_history'
+
+function loadChatHistory(): { messages: ChatMessage[]; state: BotState | null } {
+  try {
+    const saved = localStorage.getItem(STORAGE_KEY)
+    if (saved) {
+      const parsed = JSON.parse(saved)
+      // Parse timestamps
+      if (parsed.messages) {
+        parsed.messages = parsed.messages.map((m: any) => ({
+          ...m,
+          timestamp: new Date(m.timestamp)
+        }))
+      }
+      return { messages: parsed.messages || [], state: parsed.state || null }
+    }
+  } catch (e) {
+    console.warn('Chat xotirasini yuklashda xatolik:', e)
+  }
+  return { messages: [], state: null }
+}
+
+function saveChatHistory(messages: ChatMessage[], state: BotState) {
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify({ messages, state }))
+  } catch (e) {
+    console.warn('Chat xotirasini saqlashda xatolik:', e)
+  }
+}
+
+function clearChatHistory() {
+  try {
+    localStorage.removeItem(STORAGE_KEY)
+  } catch (e) {
+    console.warn('Chat xotirasini tozalashda xatolik:', e)
+  }
 }
 
 // ==================== MATN TAHLILI (kengaytirilgan) ====================
@@ -173,10 +213,32 @@ function getFoodResponse(food: string): string {
 function getSmallTalkResponse(text: string): string | null {
   const lower = text.toLowerCase()
   if (/\b(salom|assalomu alaykum|salom alejkum|hayrli)\b/i.test(lower)) return getGreeting()
-  if (/\brahmat|tashakkur|thanks|thank you|minnatdor\b/i.test(lower)) return 'Arzimaydi! 😊 Sizga yordam berishdan xursandman. Sayohatni rejalashtirishni davom ettiramizmi?'
-  if (/\b(xayr|hayr|ko'rishguncha|bye|goodbye)\b/i.test(lower)) return 'Xayr! Sayohatlaringiz muborak bo\'lsin! 🧳 Qaytganingizda yangi marshrut yaratamiz.'
-  if (/\b(yordam|help|yordam ber|qanday ishlaydi|nima qila olasiz)\b/i.test(lower)) return 'Men sayohat rejalashtirishga yordam beraman! 🧭 Shahar, vaqt, byudjet va boshqa ma\'lumotlarni so\'rab, sizga eng yaxshi marshrutni tuzib beraman. Faqat savollarga javob bering!'
-  if (/\b(qanday|yaxshimisiz|ishlar|gap)\b/i.test(lower) && (/\b(siz|sen)\b/i.test(lower) || /\bqaley\b/i.test(lower))) return 'Men ajoyibman, rahmat! 🚀 Sizga sayohat rejalashtirishga yordam berishga tayyorman. Qaysi shaharga bormoqchisiz?'
+  if (/\brahmat|tashakkur|thanks|thank you|minnatdor|savolingiz uchun tashakkur\b/i.test(lower)) return 'Arzimaydi! 😊 Sizga yordam berishdan xursandman. Sayohatni rejalashtirishni davom ettiramizmi?'
+  if (/\b(xayr|hayr|ko\'rishguncha|bye|goodbye|xayr salomat)\b/i.test(lower)) return 'Xayr! Sayohatlaringiz muborak bo\'lsin! 🧳 Qaytganingizda yangi marshrut yaratamiz.'
+  if (/\b(yordam|help|yordam ber|qanday ishlaydi|nima qila olasiz|imkoniyatlar)\b/i.test(lower)) return 'Men sayohat rejalashtirishga yordam beraman! 🧭 \n\n**Mening imkoniyatlarim:**\n📍 Shahar bo\'yicha marshrut tuzish\n⏳ Vaqtni hisobga olish\n💰 Byudjetga mos joylar tanlash\n🚶 Transport turini tanlash\n🕌 Namoz vaqtlarini hisobga olish\n🍽 Ovqat afzalliklarini inobatga olish\n\nFaqat savollarga javob bering, men eng yaxshi marshrutni tuzib beraman! ✨'
+  if (/\b(qanday|yaxshimisiz|ishlar|gap|ahvol)\b/i.test(lower) && (/\b(siz|sen)\b/i.test(lower) || /\bqaley\b/i.test(lower))) return 'Men ajoyibman, rahmat! 🚀 Sizga sayohat rejalashtirishga yordam berishga tayyorman. Qaysi shaharga bormoqchisiz?'
+  
+  // "Mashhur joylar" yoki "nima qilish mumkin"
+  if (/\b(mashhur|tavsiya|nima qilish mumkin|qiziqarli|ko\'rishga arziydi|eng zo\'r|bormoqchi)\b/i.test(lower)) {
+    return "O'zbekistonning eng mashhur joylari: 🌟\n\n" +
+      "🏛 **Samarqand** — Registon, Bibixonim, Shohizinda\n" +
+      "🕌 **Buxoro** — Minorai Kalon, Ark qal'asi, Labi Hovuz\n" +
+      "🏰 **Xiva** — Ichan Qal'a, Muhammad Aminxon madrasasi\n" +
+      "🏙 **Toshkent** — Hazrati Imom, Chorsu bozori, TV minora\n" +
+      "🎨 **Nukus** — Savitskiy muzeyi (O'zbekiston Louvri)\n\n" +
+      "Qaysi shahar sizni ko'proq qiziqtirdi? 🏙"
+  }
+  
+  // Ob-havo so'rash
+  if (/\b(ob-havo|ob havo|havo|harorat|issiq|sovuq)\b/i.test(lower)) {
+    return 'Ob-havo haqida aniq ma\'lumotni Google yoki AccuWeather orqali bilib olishingiz mumkin. 🌤 Ammo men sizga eng yaxshi marshrutni tuzib beraman! Qaysi shaharga bormoqchisiz? 🏙'
+  }
+  
+  // Pul/valyuta so'rash
+  if (/\b(pul|valyuta|so\'m|dollar|ayirboshlash|narx)\b/i.test(lower)) {
+    return 'Valyuta kurslari doimiy o\'zgarib turadi. Eng so\'nggi kursni banking ilovalari yoki Google orqali tekshiring. 💰 Men sizga sayohat marshrutini tuzishda yordam bera olaman! 🧭'
+  }
+  
   return null
 }
 
@@ -206,23 +268,35 @@ function getDurationSuggestion(): string {
 // ==================== ASOSIY HOOK ====================
 
 export function useChatBot() {
-  const [messages, setMessages] = useState<ChatMessage[]>([
-    {
-      id: 'welcome',
-      type: 'bot',
-      text: `${getGreeting()} Men **Xazina AI** yordamchisiman. 🧭 Sayohat rejalashtirishga yordam beraman.\n\nQaysi shaharga sayohat qilmoqchisiz? 🏙\n\n_${getCitySuggestion()}_`,
-      timestamp: new Date(),
-    },
-  ])
+  // Load saved chat history or create new
+  const savedHistory = loadChatHistory()
+  const initialMessages: ChatMessage[] = savedHistory.messages.length > 0
+    ? savedHistory.messages
+    : [{
+        id: 'welcome',
+        type: 'bot',
+        text: `${getGreeting()} Men **Xazina AI** yordamchisiman. 🧭 Sayohat rejalashtirishga yordam beraman.\n\nQaysi shaharga sayohat qilmoqchisiz? 🏙\n\n_${getCitySuggestion()}_`,
+        timestamp: new Date(),
+      }]
 
+  const initialStep = savedHistory.state?.step || 'city'
+  const initialAnswers = savedHistory.state?.answers || {}
+  const initialHistory = savedHistory.state?.history || []
+
+  const [messages, setMessages] = useState<ChatMessage[]>(initialMessages)
   const [state, setState] = useState<BotState>({
-    step: 'city',
-    answers: {},
-    history: [],
+    step: initialStep as BotState['step'],
+    answers: initialAnswers,
+    history: initialHistory,
   })
   const [isLoading, setIsLoading] = useState(false)
   const [itinerary, setItinerary] = useState<Itinerary | null>(null)
   const messagesEndRef = useRef<HTMLDivElement>(null)
+
+  // Auto-save chat history when messages or state change
+  useEffect(() => {
+    saveChatHistory(messages, state)
+  }, [messages, state])
 
   const advanceStep = useCallback(async (answers: Partial<ItineraryRequest>) => {
     const steps = ['city', 'duration', 'budget', 'transport', 'prayer', 'food'] as const
@@ -394,7 +468,7 @@ export function useChatBot() {
             responseText = getCityResponse(city)
           } else {
             detected = false
-            responseText = `Shahar nomini aniqlay olmadim. 😕\n\nIltimos, quyidagilardan birini yozing:\n${getCitySuggestion()}`
+            responseText = `Shahar nomini aniqlay olmadim. 😕\n\nIltimos, quyidagi shaharlardan birini yozing:\n${getCitySuggestion()}\n\nYoki "mashhur joylar" deb yozib, O'zbekistondagi eng qiziqarli joylar haqida bilib oling! 👀`
           }
           break
         }
@@ -405,7 +479,7 @@ export function useChatBot() {
             responseText = getDurationResponse(duration)
           } else {
             detected = false
-            responseText = `Vaqtni tushunmadim. 😕\n\n${getDurationSuggestion()}`
+            responseText = `Vaqtni tushunmadim. 😕\n\nMisol uchun:\n• "2 soat" — tezkor sayohat ⚡\n• "4 soat" — yarim kunlik 🕐\n• "8 soat" — to'liq kun 🎉\n• "2 kun" — ikki kunlik 📆\n\nQancha vaqt ajrata olasiz?`
           }
           break
         }
@@ -416,7 +490,7 @@ export function useChatBot() {
             responseText = getBudgetResponse(budget)
           } else {
             detected = false
-            responseText = 'Byudjetingizni tushunmadim. 😕\n\n"Iqtisodiy" yoki "Premium" deb yozing. Yoki "O\'rtacha" — bu eng yaxshi variant!'
+            responseText = 'Byudjetingizni tushunmadim. 😕\n\nQuyidagilardan birini tanlang:\n• "O\'rtacha" — sifatli va tejamkor 💰\n• "Premium" — eng yaxshi, hashamatli 💎\n\nQaysi byudjet sizga mos keladi?'
           }
           break
         }
@@ -427,7 +501,7 @@ export function useChatBot() {
             responseText = getTransportResponse(transport)
           } else {
             detected = false
-            responseText = 'Transport turini tushunmadim. 😕\n\n"Piyoda" 🚶‍♂, "Taksi" 🚗 yoki "Aralash" 🔄 deb yozing.'
+            responseText = 'Transport turini tushunmadim. 😕\n\nQuyidagilardan birini yozing:\n• "Piyoda" — shaharni his qilish uchun 🚶‍♂\n• "Taksi" — tez va qulay 🚗\n• "Aralash" — eng optimal 🔄\n\nQaysi tur sizga mos?'
           }
           break
         }
@@ -438,7 +512,7 @@ export function useChatBot() {
             responseText = getPrayerResponse(prayer)
           } else {
             detected = false
-            responseText = 'Tushunmadim. 😕\n\nNamoz vaqtlarini hisobga olish kerakmi? "Ha" yoki "Yo\'q" deb yozing.'
+            responseText = 'Tushunmadim. 😕\n\nNamoz vaqtlarini hisobga olish kerakmi?\n• "Ha" — barcha namoz vaqtlarini hisobga olaman 🕌\n• "Yo\'q" — kerakmas, vaqtni tejaymiz ⏰\n\nIltimos, "Ha" yoki "Yo\'q" deb javob bering.'
           }
           break
         }
@@ -449,7 +523,7 @@ export function useChatBot() {
             responseText = getFoodResponse(food)
           } else {
             detected = false
-            responseText = 'Taom afzalligingizni tushunmadim. 😕\n\n"Halol" 🥩, "Vegetarian" 🥗 yoki "Har qanday" 🍲 deb yozing.'
+            responseText = 'Taom afzalligingizni tushunmadim. 😕\n\nQuyidagilardan birini tanlang:\n• "Halol" — halol sertifikatli taomlar 🥩\n• "Vegetarian" — sabzavotli taomlar 🥗\n• "Har qanday" — barcha turdagi taomlar 🍲\n\nQaysi biri sizga mos?'
           }
           break
         }
@@ -485,6 +559,7 @@ export function useChatBot() {
   )
 
   const resetChat = useCallback(() => {
+    clearChatHistory()
     setMessages([
       {
         id: 'welcome',

@@ -8,7 +8,7 @@ const Inventory: React.FC = () => {
   const [selectedCategory, setSelectedCategory] = useState<ShopItemCategory | 'all'>('all')
   const [selectedItem, setSelectedItem] = useState<InventoryItem | null>(null)
 
-  const categories: (ShopItemCategory | 'all')[] = ['all', 'transport', 'food', 'guide', 'souvenir', 'boost']
+  const categories: (ShopItemCategory | 'all')[] = ['all', 'guide', 'souvenir', 'boost']
 
   const filteredItems = selectedCategory === 'all'
     ? inventory

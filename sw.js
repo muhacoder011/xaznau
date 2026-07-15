@@ -1,4 +1,4 @@
-const CACHE = 'yolchi-v1';
+const CACHE = 'yolchi-v2';
 const ASSETS = [
   './',
   './index.html',
@@ -10,6 +10,9 @@ const ASSETS = [
   './kalit.js',
   './ai-scheduler.js'
 ];
+
+// Additional assets to cache on install
+const RUNTIME_CACHE = 'yolchi-runtime';
 
 // Install: cache core assets
 self.addEventListener('install', e => {

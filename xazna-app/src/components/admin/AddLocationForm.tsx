@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react'
+import React, { useState, useCallback, useEffect } from 'react'
 import { Input } from '../ui/Input'
 import { TextArea } from '../ui/TextArea'
 import { Select } from '../ui/Select'
@@ -28,17 +28,36 @@ const CITY_OPTIONS = [
   { value: 'Nukus', label: 'Nukus' },
 ]
 
+interface StoredLocation extends LocationFormData {
+  id: string
+  createdAt: string
+}
+
 interface Props {
   onSubmit?: (data: LocationFormData) => void
 }
 
+function loadLocations(): StoredLocation[] {
+  try {
+    const data = localStorage.getItem('admin_locations')
+    return data ? JSON.parse(data) : []
+  } catch { return [] }
+}
+
+function saveLocations(locations: StoredLocation[]) {
+  localStorage.setItem('admin_locations', JSON.stringify(locations))
+}
+
 export const AddLocationForm: React.FC<Props> = ({ onSubmit }) => {
+  // Auth state
   const [isAdminAuth, setIsAdminAuth] = useState(false)
   const [adminLogin, setAdminLogin] = useState('')
   const [adminPassword, setAdminPassword] = useState('')
   const [adminError, setAdminError] = useState('')
   const [showPassword, setShowPassword] = useState(false)
+  const [activeTab, setActiveTab] = useState<'add' | 'list' | 'stats'>('add')
 
+  // Form state
   const [formData, setFormData] = useState<LocationFormData>({
     name: '',
     description: '',
@@ -48,9 +67,22 @@ export const AddLocationForm: React.FC<Props> = ({ onSubmit }) => {
     longitude: null,
     city: 'Toshkent',
   })
-
+  const [editingId, setEditingId] = useState<string | null>(null)
   const [errors, setErrors] = useState<Partial<Record<keyof LocationFormData, string>>>({})
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [submitMessage, setSubmitMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null)
+
+  // Location list
+  const [locations, setLocations] = useState<StoredLocation[]>([])
+  const [filterCity, setFilterCity] = useState<string>('all')
+  const [filterCategory, setFilterCategory] = useState<string>('all')
+
+  // Load locations on mount
+  useEffect(() => {
+    setLocations(loadLocations())
+    const saved = localStorage.getItem('admin_auth')
+    if (saved === 'true') setIsAdminAuth(true)
+  }, [])
 
   const handleAdminLogin = (e: React.FormEvent) => {
     e.preventDefault()
@@ -70,13 +102,94 @@ export const AddLocationForm: React.FC<Props> = ({ onSubmit }) => {
     localStorage.removeItem('admin_auth')
   }
 
-  // Auto-login from localStorage
-  React.useEffect(() => {
-    const saved = localStorage.getItem('admin_auth')
-    if (saved === 'true') setIsAdminAuth(true)
+  // ===== ALL HOOKS MUST BE BEFORE CONDITIONAL RETURN =====
+  const handleInputChange = useCallback((e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+    const { name, value } = e.target
+    setFormData((prev) => ({ ...prev, [name]: name === 'averageTimeMinutes' ? Number(value) : value }))
+    setErrors((prev) => ({ ...prev, [name]: undefined }))
   }, [])
 
-  // Agar admin autentifikatsiyadan otmagan bolsa, login formani korsatish
+  const handleCoordinateChange = useCallback((lat: number, lng: number) => {
+    setFormData((prev) => ({ ...prev, latitude: lat, longitude: lng }))
+    setErrors((prev) => ({ ...prev, latitude: undefined, longitude: undefined }))
+  }, [])
+
+  const validate = (): boolean => {
+    const newErrors: Partial<Record<keyof LocationFormData, string>> = {}
+    if (!formData.name.trim()) newErrors.name = 'Joy nomi majburiy'
+    if (!formData.description.trim()) newErrors.description = 'Ta\'rif majburiy'
+    if (!formData.city) newErrors.city = 'Shaharni tanlang'
+    if (formData.averageTimeMinutes < 1) newErrors.averageTimeMinutes = 'Vaqt 1 daqiqadan kam bo\'lmasligi kerak'
+    if (formData.latitude === null || formData.longitude === null) newErrors.latitude = 'Xaritada joyni belgilang'
+    setErrors(newErrors)
+    return Object.keys(newErrors).length === 0
+  }
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    if (!validate()) return
+    setIsSubmitting(true)
+    await new Promise((resolve) => setTimeout(resolve, 600))
+
+    try {
+      const allLocations = loadLocations()
+      const now = new Date().toISOString()
+
+      if (editingId) {
+        const idx = allLocations.findIndex(l => l.id === editingId)
+        if (idx >= 0) {
+          allLocations[idx] = { ...formData, id: editingId, createdAt: allLocations[idx].createdAt } as StoredLocation
+          setSubmitMessage({ type: 'success', text: '✅ Joy muvaffaqiyatli yangilandi!' })
+        }
+      } else {
+        allLocations.push({ ...formData, id: crypto.randomUUID(), createdAt: now } as StoredLocation)
+        setSubmitMessage({ type: 'success', text: '✅ Joy muvaffaqiyatli qo\'shildi!' })
+      }
+
+      saveLocations(allLocations)
+      setLocations(allLocations)
+      onSubmit?.(formData)
+
+      setFormData({ name: '', description: '', category: 'historical', averageTimeMinutes: 30, latitude: null, longitude: null, city: 'Toshkent' })
+      setEditingId(null)
+      setTimeout(() => setSubmitMessage(null), 3000)
+    } catch {
+      setSubmitMessage({ type: 'error', text: '❌ Xatolik yuz berdi' })
+    } finally {
+      setIsSubmitting(false)
+    }
+  }
+
+  const handleEdit = (loc: StoredLocation) => {
+    setFormData({
+      name: loc.name,
+      description: loc.description,
+      category: loc.category,
+      averageTimeMinutes: loc.averageTimeMinutes,
+      latitude: loc.latitude,
+      longitude: loc.longitude,
+      city: loc.city,
+    })
+    setEditingId(loc.id)
+    setActiveTab('add')
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+  }
+
+  const handleDelete = (id: string) => {
+    if (!confirm('Bu joyni ochirishni xohlaysizmi?')) return
+    const allLocations = loadLocations().filter(l => l.id !== id)
+    saveLocations(allLocations)
+    setLocations(allLocations)
+    setSubmitMessage({ type: 'success', text: '🗑 Joy ochirildi!' })
+    setTimeout(() => setSubmitMessage(null), 3000)
+  }
+
+  const handleCancelEdit = () => {
+    setFormData({ name: '', description: '', category: 'historical', averageTimeMinutes: 30, latitude: null, longitude: null, city: 'Toshkent' })
+    setEditingId(null)
+  }
+
+  // ===== CONDITIONAL RETURN — Login form =====
   if (!isAdminAuth) {
     return (
       <div className="min-h-[60vh] flex items-center justify-center">
@@ -88,280 +201,245 @@ export const AddLocationForm: React.FC<Props> = ({ onSubmit }) => {
             <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Admin Panel</h2>
             <p className="text-gray-500 dark:text-gray-400 mt-1">Faqat adminlar uchun</p>
           </div>
-
           <form onSubmit={handleAdminLogin} className="bg-white dark:bg-gray-800 rounded-3xl p-8 shadow-xl border border-gray-100 dark:border-gray-700 space-y-5">
             <div className="space-y-2">
               <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Login</label>
               <div className="relative">
                 <span className="absolute left-3 top-1/2 -translate-y-1/2 text-lg">👤</span>
-                <input
-                  type="text"
-                  value={adminLogin}
-                  onChange={(e) => setAdminLogin(e.target.value)}
-                  placeholder="Admin logini kiriting"
-                  className="w-full pl-10 pr-4 py-3 rounded-xl border border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white text-sm focus:ring-2 focus:ring-emerald-500 focus:border-transparent outline-none transition-all"
-                />
+                <input type="text" value={adminLogin} onChange={(e) => setAdminLogin(e.target.value)} placeholder="Admin logini kiriting"
+                  className="w-full pl-10 pr-4 py-3 rounded-xl border border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white text-sm focus:ring-2 focus:ring-emerald-500 focus:border-transparent outline-none transition-all" />
               </div>
             </div>
-
             <div className="space-y-2">
               <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Parol</label>
               <div className="relative">
                 <span className="absolute left-3 top-1/2 -translate-y-1/2 text-lg">🔑</span>
-                <input
-                  type={showPassword ? 'text' : 'password'}
-                  value={adminPassword}
-                  onChange={(e) => setAdminPassword(e.target.value)}
-                  placeholder="Parolni kiriting"
-                  className="w-full pl-10 pr-12 py-3 rounded-xl border border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white text-sm focus:ring-2 focus:ring-emerald-500 focus:border-transparent outline-none transition-all"
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
-                >
-                  {showPassword ? '🙈' : '👁️'}
-                </button>
+                <input type={showPassword ? 'text' : 'password'} value={adminPassword} onChange={(e) => setAdminPassword(e.target.value)} placeholder="Parolni kiriting"
+                  className="w-full pl-10 pr-12 py-3 rounded-xl border border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white text-sm focus:ring-2 focus:ring-emerald-500 focus:border-transparent outline-none transition-all" />
+                <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600">{showPassword ? '🙈' : '👁️'}</button>
               </div>
             </div>
-
-            {adminError && (
-              <div className="p-4 bg-red-50 dark:bg-red-900/30 border border-red-200 dark:border-red-800 rounded-xl text-sm text-red-600 dark:text-red-400 text-center font-medium animate-shake">
-                ❌ {adminError}
-              </div>
-            )}
-
-            <button
-              type="submit"
-              disabled={!adminLogin || !adminPassword}
-              className="w-full py-3.5 bg-gradient-to-r from-emerald-500 to-emerald-700 hover:from-emerald-600 hover:to-emerald-800 disabled:from-gray-300 disabled:to-gray-300 text-white rounded-xl font-semibold text-sm transition-all disabled:cursor-not-allowed active:scale-[0.98] shadow-lg hover:shadow-xl"
-            >
-              🔓 Kirish
-            </button>
-
-            <p className="text-xs text-gray-400 dark:text-gray-500 text-center">
-              Admin panelga kirish uchun maxsus login va parol talab qilinadi
-            </p>
+            {adminError && <div className="p-4 bg-red-50 dark:bg-red-900/30 border border-red-200 dark:border-red-800 rounded-xl text-sm text-red-600 dark:text-red-400 text-center font-medium">❌ {adminError}</div>}
+            <button type="submit" disabled={!adminLogin || !adminPassword}
+              className="w-full py-3.5 bg-gradient-to-r from-emerald-500 to-emerald-700 hover:from-emerald-600 hover:to-emerald-800 disabled:from-gray-300 disabled:to-gray-300 text-white rounded-xl font-semibold text-sm transition-all disabled:cursor-not-allowed active:scale-[0.98] shadow-lg hover:shadow-xl">🔓 Kirish</button>
+            <p className="text-xs text-gray-400 dark:text-gray-500 text-center">Admin panelga kirish uchun maxsus login va parol talab qilinadi</p>
           </form>
         </div>
       </div>
     )
   }
 
-  const handleInputChange = useCallback((
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
-  ) => {
-    const { name, value } = e.target
-    setFormData((prev) => ({
-      ...prev,
-      [name]: name === 'averageTimeMinutes' ? Number(value) : value,
-    }))
-    // Xatoni tozalash
-    setErrors((prev) => ({ ...prev, [name]: undefined }))
-  }, [])
+  // ===== STATS & FILTERS =====
+  const totalLocations = locations.length
+  const cityCount = new Set(locations.map(l => l.city)).size
+  const categoryCounts = locations.reduce((acc, l) => { acc[l.category] = (acc[l.category] || 0) + 1; return acc }, {} as Record<string, number>)
 
-  const handleCoordinateChange = useCallback((lat: number, lng: number) => {
-    setFormData((prev) => ({ ...prev, latitude: lat, longitude: lng }))
-    setErrors((prev) => ({ ...prev, latitude: undefined, longitude: undefined }))
-  }, [])
-
-  const validate = (): boolean => {
-    const newErrors: Partial<Record<keyof LocationFormData, string>> = {}
-
-    if (!formData.name.trim()) newErrors.name = 'Joy nomi majburiy'
-    if (!formData.description.trim()) newErrors.description = 'Ta\'rif majburiy'
-    if (!formData.city) newErrors.city = 'Shaharni tanlang'
-    if (formData.averageTimeMinutes < 1) newErrors.averageTimeMinutes = 'Vaqt 1 daqiqadan kam bo\'lmasligi kerak'
-    if (formData.latitude === null || formData.longitude === null) {
-      newErrors.latitude = 'Xaritada joyni belgilang'
-    }
-
-    setErrors(newErrors)
-    return Object.keys(newErrors).length === 0
-  }
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-
-    if (!validate()) return
-
-    setIsSubmitting(true)
-
-    try {
-      // Backendga yuborish simulyatsiyasi
-      await new Promise((resolve) => setTimeout(resolve, 800))
-      onSubmit?.(formData)
-      alert('✅ Joy muvaffaqiyatli qo\'shildi!')
-
-      // Formani tozalash
-      setFormData({
-        name: '',
-        description: '',
-        category: 'historical',
-        averageTimeMinutes: 30,
-        latitude: null,
-        longitude: null,
-        city: 'Toshkent',
-      })
-    } catch (err) {
-      alert('❌ Xatolik yuz berdi')
-    } finally {
-      setIsSubmitting(false)
-    }
-  }
+  // Filtered locations
+  const filteredLocations = locations.filter(l => {
+    if (filterCity !== 'all' && l.city !== filterCity) return false
+    if (filterCategory !== 'all' && l.category !== filterCategory) return false
+    return true
+  })
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6">
-      {/* Sarlavha */}
+    <div className="space-y-6">
+      {/* Header */}
       <div className="flex items-center justify-between flex-wrap gap-3">
         <div>
           <h2 className="text-2xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
-            <span className="text-3xl">📍</span>
-            Yangi joy qo'shish
+            <span className="text-3xl">⚙️</span>
+            Admin Panel
           </h2>
           <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
-            Marshrutlar bazasiga yangi lokatsiya qo'shing
+            Joylarni boshqarish va statistika
           </p>
         </div>
-        <button
-          type="button"
-          onClick={handleAdminLogout}
-          className="px-4 py-2 bg-red-50 dark:bg-red-900/30 hover:bg-red-100 dark:hover:bg-red-900/50 text-red-600 dark:text-red-400 rounded-xl text-sm font-medium transition-all flex items-center gap-1.5"
-        >
-          🚪 Chiqish
-        </button>
-      </div>
-
-      {/* Asosiy ma'lumotlar */}
-      <div className="bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 p-6 shadow-sm space-y-5">
-        <h3 className="text-sm font-semibold text-gray-800 dark:text-gray-200 uppercase tracking-wider">
-          Asosiy ma'lumotlar
-        </h3>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-          <Input
-            label="Joy nomi"
-            name="name"
-            value={formData.name}
-            onChange={handleInputChange}
-            placeholder="Masalan: Minor masjidi"
-            error={errors.name}
-          />
-
-          <Select
-            label="Kategoriya"
-            name="category"
-            value={formData.category}
-            onChange={handleInputChange}
-            options={CATEGORY_OPTIONS}
-          />
-
-          <Select
-            label="Shahar"
-            name="city"
-            value={formData.city}
-            onChange={handleInputChange}
-            options={CITY_OPTIONS}
-            error={errors.city}
-          />
-
-          <Input
-            label="O'rtacha vaqt (daqiqa)"
-            name="averageTimeMinutes"
-            type="number"
-            min={1}
-            max={480}
-            value={formData.averageTimeMinutes}
-            onChange={handleInputChange}
-            error={errors.averageTimeMinutes}
-          />
-        </div>
-
-        <TextArea
-          label="Ta'rif"
-          name="description"
-          value={formData.description}
-          onChange={handleInputChange}
-          placeholder="Joy haqida qisqacha ma'lumot..."
-          error={errors.description}
-        />
-      </div>
-
-      {/* Xarita qismi */}
-      <div className="bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 p-6 shadow-sm space-y-4">
-        <h3 className="text-sm font-semibold text-gray-800 dark:text-gray-200 uppercase tracking-wider">
-          🗺️ Xaritada joylashuv
-        </h3>
-
-        <MapPicker
-          latitude={formData.latitude}
-          longitude={formData.longitude}
-          onCoordinateChange={handleCoordinateChange}
-        />
-
-        {errors.latitude && (
-          <p className="text-xs text-red-500 mt-1">{errors.latitude}</p>
-        )}
-
-        {/* Koordinata inputlari (manual kiritish uchun) */}
-        <div className="grid grid-cols-2 gap-4">
-          <Input
-            label="Kenglik (Latitude)"
-            type="number"
-            step="any"
-            value={formData.latitude ?? ''}
-            onChange={(e) => {
-              const val = e.target.value ? parseFloat(e.target.value) : null
-              setFormData((prev) => ({ ...prev, latitude: val }))
-            }}
-            placeholder="Masalan: 41.3186"
-          />
-          <Input
-            label="Uzunlik (Longitude)"
-            type="number"
-            step="any"
-            value={formData.longitude ?? ''}
-            onChange={(e) => {
-              const val = e.target.value ? parseFloat(e.target.value) : null
-              setFormData((prev) => ({ ...prev, longitude: val }))
-            }}
-            placeholder="Masalan: 69.2502"
-          />
-        </div>
-        <p className="text-xs text-gray-400">
-          💡 Xaritani bosib yoki markerni sudrab koordinatalarni avtomatik to'ldiring
-        </p>
-      </div>
-
-      {/* Submit */}
-      <div className="flex items-center justify-end gap-3">
-        <Button
-          type="button"
-          variant="secondary"
-          onClick={() => {
-            setFormData({
-              name: '',
-              description: '',
-              category: 'historical',
-              averageTimeMinutes: 30,
-              latitude: null,
-              longitude: null,
-              city: 'Toshkent',
-            })
-            setErrors({})
-          }}
-        >
-          Tozalash
-        </Button>
-        <Button type="submit" variant="primary" isLoading={isSubmitting} size="lg">
-          <span className="flex items-center gap-2">
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-            </svg>
-            Joyni qo'shish
+        <div className="flex items-center gap-2">
+          <span className="text-xs px-3 py-1.5 bg-emerald-50 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400 rounded-full font-medium">
+            📍 {totalLocations} ta joy
           </span>
-        </Button>
+          <button onClick={handleAdminLogout} className="px-4 py-2 bg-red-50 dark:bg-red-900/30 hover:bg-red-100 dark:hover:bg-red-900/50 text-red-600 dark:text-red-400 rounded-xl text-sm font-medium transition-all flex items-center gap-1.5">
+            🚪 Chiqish
+          </button>
+        </div>
       </div>
-    </form>
+
+      {/* Success/Error message */}
+      {submitMessage && (
+        <div className={`p-4 rounded-xl text-sm font-medium animate-slide-down ${submitMessage.type === 'success' ? 'bg-emerald-50 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300 border border-emerald-200' : 'bg-red-50 dark:bg-red-900/30 text-red-700 dark:text-red-300 border border-red-200'}`}>
+          {submitMessage.text}
+        </div>
+      )}
+
+      {/* Tabs */}
+      <div className="flex gap-2 overflow-x-auto pb-1">
+        {[
+          { id: 'add' as const, label: '➕ Qo\'shish', desc: 'Yangi joy qo\'shish' },
+          { id: 'list' as const, label: '📋 Joylar', desc: 'Barcha joylar ro\'yxati' },
+          { id: 'stats' as const, label: '📊 Statistika', desc: 'Ma\'lumotlar tahlili' },
+        ].map(tab => (
+          <button key={tab.id} onClick={() => setActiveTab(tab.id)}
+            className={`px-5 py-3 rounded-xl text-sm font-medium transition-all whitespace-nowrap ${activeTab === tab.id ? 'bg-emerald-600 text-white shadow-md scale-105' : 'bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-300 border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700'}`}>
+            <span className="flex items-center gap-2">{tab.label}</span>
+          </button>
+        ))}
+      </div>
+
+      {/* TAB: ADD / EDIT */}
+      {activeTab === 'add' && (
+        <form onSubmit={handleSubmit} className="space-y-5">
+          <div className="bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 p-6 shadow-sm">
+            <div className="flex items-center justify-between mb-5">
+              <h3 className="text-sm font-semibold text-gray-800 dark:text-gray-200 uppercase tracking-wider">
+                {editingId ? '✏️ Joyni tahrirlash' : '📍 Yangi joy qo\'shish'}
+              </h3>
+              {editingId && (
+                <button type="button" onClick={handleCancelEdit} className="text-xs text-red-500 hover:text-red-700 font-medium">Bekor qilish</button>
+              )}
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+              <Input label="Joy nomi" name="name" value={formData.name} onChange={handleInputChange} placeholder="Masalan: Minor masjidi" error={errors.name} />
+              <Select label="Kategoriya" name="category" value={formData.category} onChange={handleInputChange} options={CATEGORY_OPTIONS} />
+              <Select label="Shahar" name="city" value={formData.city} onChange={handleInputChange} options={CITY_OPTIONS} error={errors.city} />
+              <Input label="O'rtacha vaqt (daqiqa)" name="averageTimeMinutes" type="number" min={1} max={480} value={formData.averageTimeMinutes} onChange={handleInputChange} error={errors.averageTimeMinutes} />
+            </div>
+            <TextArea label="Ta'rif" name="description" value={formData.description} onChange={handleInputChange} placeholder="Joy haqida qisqacha ma'lumot..." error={errors.description} />
+          </div>
+
+          <div className="bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 p-6 shadow-sm">
+            <h3 className="text-sm font-semibold text-gray-800 dark:text-gray-200 uppercase tracking-wider mb-4">🗺️ Xaritada joylashuv</h3>
+            <MapPicker latitude={formData.latitude} longitude={formData.longitude} onCoordinateChange={handleCoordinateChange} />
+            {errors.latitude && <p className="text-red-500 text-xs mt-2">{errors.latitude}</p>}
+          </div>
+
+          <Button type="submit" variant="primary" size="lg" disabled={isSubmitting} className="w-full">
+            {isSubmitting ? '⏳ Saqlanmoqda...' : editingId ? '💾 Yangilash' : '✅ Qo\'shish'}
+          </Button>
+        </form>
+      )}
+
+      {/* TAB: LOCATION LIST */}
+      {activeTab === 'list' && (
+        <div className="space-y-4">
+          <div className="flex flex-col sm:flex-row gap-3">
+            <select value={filterCity} onChange={(e) => setFilterCity(e.target.value)}
+              className="flex-1 px-4 py-2.5 rounded-xl border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-800 text-sm text-gray-600 dark:text-gray-300 outline-none focus:ring-2 focus:ring-emerald-500">
+              <option value="all">🏙 Barcha shaharlar</option>
+              {CITY_OPTIONS.map(c => <option key={c.value} value={c.value}>{c.label}</option>)}
+            </select>
+            <select value={filterCategory} onChange={(e) => setFilterCategory(e.target.value)}
+              className="flex-1 px-4 py-2.5 rounded-xl border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-800 text-sm text-gray-600 dark:text-gray-300 outline-none focus:ring-2 focus:ring-emerald-500">
+              <option value="all">🏷 Barcha kategoriyalar</option>
+              {CATEGORY_OPTIONS.map(c => <option key={c.value} value={c.value}>{c.label}</option>)}
+            </select>
+            <span className="text-sm text-gray-400 flex items-center px-3">{filteredLocations.length} ta joy</span>
+          </div>
+
+          {filteredLocations.length === 0 ? (
+            <div className="text-center py-12 text-gray-400">
+              <span className="text-5xl block mb-3">📭</span>
+              <p className="font-medium">Joylar topilmadi</p>
+              <p className="text-sm mt-1">Yangi joy qo'shish uchin "Qo'shish" bo'limiga o'ting</p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 gap-3">
+              {filteredLocations.map(loc => (
+                <div key={loc.id} className="bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 p-4 shadow-sm hover:shadow-md transition-all">
+                  <div className="flex items-start justify-between gap-3">
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <h4 className="font-bold text-gray-800 dark:text-white">{loc.name}</h4>
+                        <span className="text-xs px-2 py-0.5 rounded-full bg-gray-100 dark:bg-gray-700 text-gray-500 dark:text-gray-400">{loc.city}</span>
+                        <span className="text-xs px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-600 dark:bg-emerald-900/30 dark:text-emerald-400">{CATEGORY_OPTIONS.find(c => c.value === loc.category)?.label || loc.category}</span>
+                      </div>
+                      <p className="text-sm text-gray-500 dark:text-gray-400 mt-1 line-clamp-2">{loc.description}</p>
+                      <div className="flex items-center gap-3 mt-2 text-xs text-gray-400">
+                        <span>⏱ {loc.averageTimeMinutes} daq</span>
+                        <span>📍 {loc.latitude?.toFixed(4)}, {loc.longitude?.toFixed(4)}</span>
+                        <span>📅 {new Date(loc.createdAt).toLocaleDateString('uz-UZ')}</span>
+                      </div>
+                    </div>
+                    <div className="flex gap-1.5 flex-shrink-0">
+                      <button onClick={() => handleEdit(loc)} className="p-2 rounded-lg bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 hover:bg-blue-100 dark:hover:bg-blue-900/50 transition-colors" title="Tahrirlash">✏️</button>
+                      <button onClick={() => handleDelete(loc.id)} className="p-2 rounded-lg bg-red-50 dark:bg-red-900/30 text-red-600 dark:text-red-400 hover:bg-red-100 dark:hover:bg-red-900/50 transition-colors" title="O'chirish">🗑</button>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* TAB: STATISTICS */}
+      {activeTab === 'stats' && (
+        <div className="space-y-5">
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+            <div className="bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 p-5 shadow-sm text-center">
+              <span className="text-3xl block mb-2">📍</span>
+              <p className="text-2xl font-bold text-gray-800 dark:text-white">{totalLocations}</p>
+              <p className="text-xs text-gray-500 mt-0.5">Jami joylar</p>
+            </div>
+            <div className="bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 p-5 shadow-sm text-center">
+              <span className="text-3xl block mb-2">🏙</span>
+              <p className="text-2xl font-bold text-gray-800 dark:text-white">{cityCount}</p>
+              <p className="text-xs text-gray-500 mt-0.5">Shaharlar</p>
+            </div>
+            <div className="bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 p-5 shadow-sm text-center">
+              <span className="text-3xl block mb-2">🏷</span>
+              <p className="text-2xl font-bold text-gray-800 dark:text-white">{Object.keys(categoryCounts).length}</p>
+              <p className="text-xs text-gray-500 mt-0.5">Kategoriyalar</p>
+            </div>
+            <div className="bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 p-5 shadow-sm text-center">
+              <span className="text-3xl block mb-2">⏱</span>
+              <p className="text-2xl font-bold text-gray-800 dark:text-white">
+                {locations.reduce((sum, l) => sum + l.averageTimeMinutes, 0)}
+              </p>
+              <p className="text-xs text-gray-500 mt-0.5">Jami daqiqa</p>
+            </div>
+          </div>
+
+          {/* Category breakdown */}
+          <div className="bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 p-6 shadow-sm">
+            <h3 className="font-bold text-gray-800 dark:text-white mb-4">📊 Kategoriyalar bo'yicha</h3>
+            <div className="space-y-3">
+              {CATEGORY_OPTIONS.map(cat => {
+                const count = categoryCounts[cat.value] || 0
+                const maxCount = Math.max(...Object.values(categoryCounts), 1)
+                const percent = (count / maxCount) * 100
+                return (
+                  <div key={cat.value}>
+                    <div className="flex justify-between text-sm mb-1">
+                      <span className="text-gray-600 dark:text-gray-300">{cat.label}</span>
+                      <span className="text-gray-500 font-medium">{count} ta</span>
+                    </div>
+                    <div className="w-full h-2.5 bg-gray-100 dark:bg-gray-700 rounded-full overflow-hidden">
+                      <div className="h-full bg-gradient-to-r from-emerald-400 to-emerald-600 rounded-full transition-all duration-500" style={{ width: `${percent}%` }} />
+                    </div>
+                  </div>
+                )
+              })}
+            </div>
+          </div>
+
+          {/* City breakdown */}
+          <div className="bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 p-6 shadow-sm">
+            <h3 className="font-bold text-gray-800 dark:text-white mb-4">🏙 Shaharlar bo'yicha</h3>
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+              {CITY_OPTIONS.map(city => {
+                const count = locations.filter(l => l.city === city.value).length
+                if (count === 0) return null
+                return (
+                  <div key={city.value} className="bg-gray-50 dark:bg-gray-700/50 rounded-xl p-3 text-center">
+                    <p className="text-lg font-bold text-gray-800 dark:text-white">{count}</p>
+                    <p className="text-xs text-gray-500 mt-0.5">{city.label}</p>
+                  </div>
+                )
+              })}
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
   )
 }
