@@ -5192,7 +5192,7 @@
             const subLabels = { 'none': 'Obuna yo\'q', 'basic': '<i class="fa-solid fa-star"></i> Basic', 'premium': '<i class="fa-solid fa-gem"></i> Premium', 'vip': '<i class="fa-solid fa-crown"></i> VIP' };
             const subEl = document.getElementById('profileSub');
             if (subEl) {
-                subEl.textContent = subLabels[state.subscription] || 'Obuna yo\'q';
+                subEl.innerHTML = subLabels[state.subscription] || 'Obuna yo\'q';
                 subEl.style.background = state.subscription !== 'none' ? 'var(--gold)' : 'var(--surface-2)';
                 subEl.style.color = state.subscription !== 'none' ? '#3a2708' : 'var(--ink-soft)';
             }
@@ -5201,11 +5201,20 @@
             const nameEl = document.querySelector('.profile-top h3');
             const emailEl = document.querySelector('.profile-top p');
             if (state.user && state.user.name) {
-                if (avatarEl) avatarEl.textContent = state.user.avatar || '<i class="fa-solid fa-user"></i>';
+                if (avatarEl) {
+                    const av = state.user.avatar || '<i class="fa-solid fa-user"></i>';
+                    if (av.startsWith('http') || av.startsWith('/') || av.startsWith('data:')) {
+                        avatarEl.innerHTML = `<img src="${av}" alt="Avatar" style="width:100%; height:100%; border-radius:50%; object-fit:cover;">`;
+                    } else if (av.includes('<')) {
+                        avatarEl.innerHTML = av;
+                    } else {
+                        avatarEl.textContent = av;
+                    }
+                }
                 if (nameEl) nameEl.textContent = state.user.name;
                 if (emailEl) emailEl.textContent = state.user.phone || state.user.email || 'mehmon@yolchi.uz';
             } else {
-                if (avatarEl) avatarEl.textContent = 'ME';
+                if (avatarEl) avatarEl.innerHTML = '<i class="fa-solid fa-user"></i>';
                 if (nameEl) nameEl.textContent = t('profile_guest') || 'Mehmon';
                 if (emailEl) emailEl.textContent = t('profile_guest_mail') || 'mehmon@yolchi.uz';
             }
