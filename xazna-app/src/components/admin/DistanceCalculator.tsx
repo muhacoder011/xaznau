@@ -49,7 +49,7 @@ export const DistanceCalculator: React.FC = () => {
   return (
     <div className="bg-white rounded-2xl border border-gray-100 p-6 shadow-sm">
       <h3 className="text-lg font-bold text-gray-900 mb-1">
-        📏 Masofa kalkulyatori
+        <i className="fa-solid fa-ruler"></i> Masofa kalkulyatori
       </h3>
       <p className="text-sm text-gray-500 mb-5">
         Haversine formulasi orqali ikki joy orasidagi masofani hisoblang

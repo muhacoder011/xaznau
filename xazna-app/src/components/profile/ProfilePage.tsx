@@ -24,14 +24,14 @@ const ProfilePage: React.FC = () => {
 
   return (
     <div className="space-y-6">
-      <h2 className="text-2xl font-bold text-gray-800 dark:text-white">👤 Profil</h2>
+      <h2 className="text-2xl font-bold text-gray-800 dark:text-white"><i className="fa-solid fa-user"></i> Profil</h2>
 
       {/* Tablar */}
       <div className="flex gap-1 bg-gray-100 dark:bg-gray-800 p-1 rounded-xl">
         {[
-          { key: 'profile', label: 'Profil', icon: '👤' },
-          { key: 'stats', label: 'Statistika', icon: '📊' },
-          { key: 'settings', label: 'Sozlamalar', icon: '⚙️' },
+          { key: 'profile', label: 'Profil', icon: '<i className="fa-solid fa-user"></i>' },
+          { key: 'stats', label: 'Statistika', icon: '<i className="fa-solid fa-chart-simple"></i>' },
+          { key: 'settings', label: 'Sozlamalar', icon: '<i className="fa-solid fa-gear"></i>' },
         ].map(tab => (
           <button
             key={tab.key}
@@ -96,7 +96,7 @@ const ProfilePage: React.FC = () => {
                 <div className="w-full mt-6 space-y-2">
                   <div className="flex items-center justify-between text-sm">
                     <span className="flex items-center gap-1.5 text-gray-600 dark:text-gray-300">
-                      ⭐ Daraja {user.level}
+                      <i className="fa-solid fa-star"></i> Daraja {user.level}
                     </span>
                     <span className="text-gray-500 dark:text-gray-400">
                       {user.experience} / {getExperienceForLevel(user.level)} XP
@@ -112,7 +112,7 @@ const ProfilePage: React.FC = () => {
 
                 {/* Tanga balansi */}
                 <div className="mt-4 flex items-center gap-2 bg-amber-50 dark:bg-amber-900/30 px-5 py-3 rounded-2xl">
-                  <span className="text-2xl">🪙</span>
+                  <span className="text-2xl"><i className="fa-solid fa-coins"></i></span>
                   <span className="text-2xl font-bold text-amber-700 dark:text-amber-300">{user.coins}</span>
                   <span className="text-sm text-amber-600 dark:text-amber-400">tanga</span>
                 </div>
@@ -121,7 +121,7 @@ const ProfilePage: React.FC = () => {
                   onClick={() => setIsEditing(true)}
                   className="mt-4 px-6 py-2.5 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-200 rounded-xl font-medium transition-all active:scale-95"
                 >
-                  ✏️ Profilni tahrirlash
+                  <i className="fa-solid fa-pencil"></i> Profilni tahrirlash
                 </button>
               </>
             )}
@@ -133,12 +133,12 @@ const ProfilePage: React.FC = () => {
       {activeTab === 'stats' && (
         <div className="grid grid-cols-2 gap-3">
           {[
-            { label: 'Rejalashtirilgan sayohatlar', value: user.tripsPlanned, icon: '🗺️', color: 'from-blue-400 to-blue-600' },
-            { label: "Tashrif buyurilgan joylar", value: user.destinationsVisited, icon: '📍', color: 'from-emerald-400 to-emerald-600' },
-            { label: 'Bajarilgan missiyalar', value: completedMissions, icon: '🏆', color: 'from-amber-400 to-amber-600' },
-            { label: 'Jami missiyalar', value: totalMissions, icon: '📋', color: 'from-purple-400 to-purple-600' },
-            { label: 'Inventar buyumlari', value: inventory.length, icon: '🎒', color: 'from-pink-400 to-pink-600' },
-            { label: 'Daraja', value: user.level, icon: '⭐', color: 'from-yellow-400 to-yellow-600' },
+            { label: 'Rejalashtirilgan sayohatlar', value: user.tripsPlanned, icon: '<i className="fa-solid fa-map"></i>', color: 'from-blue-400 to-blue-600' },
+            { label: "Tashrif buyurilgan joylar", value: user.destinationsVisited, icon: '<i className="fa-solid fa-location-dot"></i>', color: 'from-emerald-400 to-emerald-600' },
+            { label: 'Bajarilgan missiyalar', value: completedMissions, icon: '<i className="fa-solid fa-trophy"></i>', color: 'from-amber-400 to-amber-600' },
+            { label: 'Jami missiyalar', value: totalMissions, icon: '<i className="fa-solid fa-clipboard"></i>', color: 'from-purple-400 to-purple-600' },
+            { label: 'Inventar buyumlari', value: inventory.length, icon: '<i className="fa-solid fa-backpack"></i>', color: 'from-pink-400 to-pink-600' },
+            { label: 'Daraja', value: user.level, icon: '<i className="fa-solid fa-star"></i>', color: 'from-yellow-400 to-yellow-600' },
           ].map(stat => (
             <div key={stat.label} className="bg-white dark:bg-gray-800 rounded-2xl p-4 shadow-sm border border-gray-100 dark:border-gray-700">
               <div className={`w-10 h-10 rounded-xl bg-gradient-to-br ${stat.color} flex items-center justify-center text-lg shadow-sm mb-3`}>
@@ -154,7 +154,7 @@ const ProfilePage: React.FC = () => {
       {/* Sozlamalar tab */}
       {activeTab === 'settings' && (
         <div className="bg-white dark:bg-gray-800 rounded-3xl p-6 shadow-sm space-y-4">
-          <h3 className="font-bold text-gray-800 dark:text-white text-lg">⚙️ Sozlamalar</h3>
+          <h3 className="font-bold text-gray-800 dark:text-white text-lg"><i className="fa-solid fa-gear"></i> Sozlamalar</h3>
 
           <div className="space-y-3">
             <div className="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-700/50 rounded-xl">

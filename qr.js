@@ -73,7 +73,7 @@ function onScanSuccess(decodedText) {
 
 // Clear scanned IDs daily (midnight reset)
 function resetScannedIds() {
-    SCANNED_IDS.clear;
+    SCANNED_IDS.clear();
 }
 // Auto-reset every 24 hours
 setInterval(resetScannedIds, 24 * 60 * 60 * 1000);

@@ -4,7 +4,7 @@ function giveKey(placeId) {
         return;
     }
 
-    // 🔍 VERIFY: Find the place in adminPlaces — only admin-created QR codes are valid
+    // <i class='fa-solid fa-magnifying-glass"></i> VERIFY: Find the place in adminPlaces — only admin-created QR codes are valid
     if (typeof adminPlaces === 'undefined' || adminPlaces === null || adminPlaces.length === 0) {
         alert("❌ Hali hech qanday joy qo'shilmagan.\n\nAdmin panel orqali joy qo'shing.");
         return;
@@ -60,7 +60,7 @@ function giveKey(placeId) {
 
     // Show toast with star icon
     if (typeof showToast === 'function') {
-        showToast('⭐', `+${starAmount} yulduz!`);
+        showToast('<i class="fa-solid fa-star"></i>', `+${starAmount} yulduz!`);
     }
     
     if (typeof renderAll === 'function') {

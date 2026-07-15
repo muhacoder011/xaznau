@@ -148,64 +148,64 @@ function extractFood(text: string): string | null {
 
 function getGreeting(): string {
   const saat = new Date().getHours()
-  if (saat < 5) return 'Assalomu alaykum! Tun baraka topsin! 🌙'
-  if (saat < 12) return 'Assalomu alaykum! Xayrli tong! 🌅 Bugun ajoyib sayohat kuni!'
-  if (saat < 14) return 'Assalomu alaykum! Xayrli peshin! ☀️ Sayohatga chiqish vaqti!'
-  if (saat < 18) return 'Assalomu alaykum! Xayrli kun! ☀️ Hali kop vaqt bor!'
-  return 'Assalomu alaykum! Xayrli kech! 🌙 Kechki sayohat ham ajoyib!'
+  if (saat < 5) return 'Assalomu alaykum! Tun baraka topsin! <i className="fa-solid fa-moon"></i>'
+  if (saat < 12) return 'Assalomu alaykum! Xayrli tong! <i className="fa-solid fa-sun"></i> Bugun ajoyib sayohat kuni!'
+  if (saat < 14) return 'Assalomu alaykum! Xayrli peshin! <i className="fa-solid fa-sun"></i> Sayohatga chiqish vaqti!'
+  if (saat < 18) return 'Assalomu alaykum! Xayrli kun! <i className="fa-solid fa-sun"></i> Hali kop vaqt bor!'
+  return 'Assalomu alaykum! Xayrli kech! <i className="fa-solid fa-moon"></i> Kechki sayohat ham ajoyib!'
 }
 
 function getCityResponse(city: string): string {
   const responses: Record<string, string> = {
-    'Toshkent': "Toshkent — poytaxtimiz! 🏙 Bu yerda zamonaviy va tarixiy joylar uyg'unlashgan. Hazrati Imom majmuasi, Chorsu bozori, TV minora — hamma narsa bor!",
-    'Samarqand': "Samarqand — afsonaviy shahar! 🏛 Registon maydoni, Bibixonim, Shohizinda... Bu shaharning har bir toshi tarix. Juda ajoyib tanlov!",
-    'Buxoro': "Buxoro — qadimiy shahar! 🕌 Minorai Kalon, Ark qal'asi, Labi Hovuz... Buxoroning sehrli muhiti sizni hayratga soladi!",
-    'Xiva': "Xiva — ochiq osmon ostidagi muzey! 🏰 Ichan Qal'a, Muhammad Aminxon madrasasi... UNESCO merosi bo'lgan bu shahar bir marta ko'rishga arziydi!",
-    'Namangan': "Namangan — go'zal shahar! 🌄 Mullo Qirg'iz masjidi, shahar bog'i va Chust bozori... Namanganda tinch va maftunkor joylar ko'p!",
-    "Farg'ona": "Farg'ona — vodiyning marvaridi! 🌸 Rishton kulolchiligi, Marg'ilon ipagi, Quva qadimiy shahri... Farg'onada ko'p kashfiyotlar kutmoqda!",
-    'Andijon': "Andijon — Bobur vatani! 👑 Bobur muzeyi, Oqtepa qo'riqxonasi... Bu shahar buyuk tarixga ega!",
-    'Nukus': "Nukus — Qoraqalpog'istonning yuragi! 🎨 Savitskiy muzeyi (O'zbekistonning Louvri) dunyoga mashhur. Mizdaxxon qal'asi esa alohida!",
-    'Guliston': "Guliston — Sirdaryo bo'yidagi go'zal shahar! 🌷 Sirdaryo qirg'og'i va Mirzacho'l bozori bilan tanishing.",
-    'Jizzax': "Jizzax — tabiat qo'ynidagi shahar! 🏔 Zomin milliy bog'i, Sangzor ko'li, Forish tog'lari... Tabiatni sevuvchilar uchun ideal!",
+    'Toshkent': "Toshkent — poytaxtimiz! <i className="fa-solid fa-city"></i> Bu yerda zamonaviy va tarixiy joylar uyg'unlashgan. Hazrati Imom majmuasi, Chorsu bozori, TV minora — hamma narsa bor!",
+    'Samarqand': "Samarqand — afsonaviy shahar! <i className="fa-solid fa-landmark"></i> Registon maydoni, Bibixonim, Shohizinda... Bu shaharning har bir toshi tarix. Juda ajoyib tanlov!",
+    'Buxoro': "Buxoro — qadimiy shahar! <i className="fa-solid fa-mosque"></i> Minorai Kalon, Ark qal'asi, Labi Hovuz... Buxoroning sehrli muhiti sizni hayratga soladi!",
+    'Xiva': "Xiva — ochiq osmon ostidagi muzey! <i className="fa-solid fa-chess-rook"></i> Ichan Qal'a, Muhammad Aminxon madrasasi... UNESCO merosi bo'lgan bu shahar bir marta ko'rishga arziydi!",
+    'Namangan': "Namangan — go'zal shahar! <i className="fa-solid fa-sunrise"></i> Mullo Qirg'iz masjidi, shahar bog'i va Chust bozori... Namanganda tinch va maftunkor joylar ko'p!",
+    "Farg'ona": "Farg'ona — vodiyning marvaridi! <i className="fa-solid fa-flower"></i> Rishton kulolchiligi, Marg'ilon ipagi, Quva qadimiy shahri... Farg'onada ko'p kashfiyotlar kutmoqda!",
+    'Andijon': "Andijon — Bobur vatani! <i className="fa-solid fa-crown"></i> Bobur muzeyi, Oqtepa qo'riqxonasi... Bu shahar buyuk tarixga ega!",
+    'Nukus': "Nukus — Qoraqalpog'istonning yuragi! <i className="fa-solid fa-palette"></i> Savitskiy muzeyi (O'zbekistonning Louvri) dunyoga mashhur. Mizdaxxon qal'asi esa alohida!",
+    'Guliston': "Guliston — Sirdaryo bo'yidagi go'zal shahar! <i className="fa-solid fa-flower"></i> Sirdaryo qirg'og'i va Mirzacho'l bozori bilan tanishing.",
+    'Jizzax': "Jizzax — tabiat qo'ynidagi shahar! <i className="fa-solid fa-mountain"></i> Zomin milliy bog'i, Sangzor ko'li, Forish tog'lari... Tabiatni sevuvchilar uchun ideal!",
   }
-  return responses[city] || `${city} — ajoyib tanlov! 🎉 Bu shaharda juda ko'p qiziqarli joylar bor. Keling, sayohatni rejalashtiramiz!`
+  return responses[city] || `${city} — ajoyib tanlov! <i className="fa-solid fa-circle-check"></i> Bu shaharda juda ko'p qiziqarli joylar bor. Keling, sayohatni rejalashtiramiz!`
 }
 
 function getDurationResponse(duration: string): string {
   const d = duration.toLowerCase()
-  if (d === '2 soat') return "2 soat — qisqa vaqt, lekin barakali! ⚡ Eng muhim joylarni ko'rsatamiz."
-  if (d === '4 soat') return "4 soat — ajoyib! 🕐 Yaxshigina bir nechta joylarni ziyorat qilish mumkin."
-  if (d === '6 soat') return "6 soat — yaxshi vaqt! 🌤 Ko'p joylarni ko'rishga ulgurasiz."
-  if (d === '8 soat') return "8 soat — to'liq kun! 🎉 Shaharni to'liq kashf etish uchun yetarli vaqt."
-  return `${duration} — yaxshi! 🕐 Shu vaqt ichida ko'p joylarga borish mumkin.`
+  if (d === '2 soat') return "2 soat — qisqa vaqt, lekin barakali! <i className="fa-solid fa-bolt"></i> Eng muhim joylarni ko'rsatamiz."
+  if (d === '4 soat') return "4 soat — ajoyib! <i className="fa-solid fa-clock"></i> Yaxshigina bir nechta joylarni ziyorat qilish mumkin."
+  if (d === '6 soat') return "6 soat — yaxshi vaqt! <i className="fa-solid fa-cloud-sun"></i> Ko'p joylarni ko'rishga ulgurasiz."
+  if (d === '8 soat') return "8 soat — to'liq kun! <i className="fa-solid fa-circle-check"></i> Shaharni to'liq kashf etish uchun yetarli vaqt."
+  return `${duration} — yaxshi! <i className="fa-solid fa-clock"></i> Shu vaqt ichida ko'p joylarga borish mumkin.`
 }
 
 function getBudgetResponse(budget: string): string {
   return budget === 'premium'
-    ? 'Premium byudjet! 💎 Eng yaxshi restoranlar, VIP transport va hashamatli joylarni taklif qilamiz. Faqat eng yaxshisi!'
-    : "O'rtacha byudjet — to'g'ri tanlov! 💰 Sifat bilan narx mutanosib. Eng yaxshi variantlarni topamiz."
+    ? 'Premium byudjet! <i className="fa-solid fa-gem"></i> Eng yaxshi restoranlar, VIP transport va hashamatli joylarni taklif qilamiz. Faqat eng yaxshisi!'
+    : "O'rtacha byudjet — to'g'ri tanlov! <i className="fa-solid fa-coins"></i> Sifat bilan narx mutanosib. Eng yaxshi variantlarni topamiz."
 }
 
 function getTransportResponse(transport: string): string {
   const map: Record<string, string> = {
-    'piyoda': 'Piyoda — zo\'r qaror! 🚶‍♂ Shaharni his qilib, har bir ko\'chani kashf etasiz. Sog\'liq uchun ham foydali!',
-    'taksi': 'Taksi — tez va qulay! 🚗 Vaqtingizni tejang va qulaylikda sayohat qiling. Konditsioner bilan!',
-    'aralash': 'Aralash — eng mos variant! 🔄 Qayerda kerak piyoda, qayerda taksi. Eng optimal yechim!',
+    'piyoda': 'Piyoda — zo\'r qaror! <i className="fa-solid fa-person-walking"></i> Shaharni his qilib, har bir ko\'chani kashf etasiz. Sog\'liq uchun ham foydali!',
+    'taksi': 'Taksi — tez va qulay! <i className="fa-solid fa-car"></i> Vaqtingizni tejang va qulaylikda sayohat qiling. Konditsioner bilan!',
+    'aralash': 'Aralash — eng mos variant! <i className="fa-solid fa-rotate"></i> Qayerda kerak piyoda, qayerda taksi. Eng optimal yechim!',
   }
   return map[transport] || ''
 }
 
 function getPrayerResponse(prayer: string): string {
   return prayer === 'ha'
-    ? "Namoz vaqtlarini to'liq hisobga olaman! 🕌 Har bir namoz vaqtida sizga masjidlarni tavsiya qilaman. Xavotir bo'lmang!"
-    : "Mayli, namoz vaqtlarisiz reja tuzamiz. ⏰ Agar keyin kerak bo'lsa, o'zgartirish mumkin!"
+    ? "Namoz vaqtlarini to'liq hisobga olaman! <i className="fa-solid fa-mosque"></i> Har bir namoz vaqtida sizga masjidlarni tavsiya qilaman. Xavotir bo'lmang!"
+    : "Mayli, namoz vaqtlarisiz reja tuzamiz. <i className="fa-solid fa-clock"></i> Agar keyin kerak bo'lsa, o'zgartirish mumkin!"
 }
 
 function getFoodResponse(food: string): string {
   const map: Record<string, string> = {
-    'halol': "Halol taomlar — biz uchun eng muhimi! 🍽 Halol sertifikatli joylarni tanlaymiz. Milliy taomlar sizni kutmoqda!",
-    'vegetarian': "Vegetarian — sog'lom tanlov! 🥗 Sabzavotli va mevali taomlar bilan to'la. O'zbekistonning vegetarian taomlari ham ajoyib!",
-    'har_qanday': "Har qanday taom — ko'p tanlov! 🍲 Eng yaxshi restoranlarni topamiz. Milliy va xalqaro taomlar sizni kutmoqda!",
+    'halol': "Halol taomlar — biz uchun eng muhimi! <i className="fa-solid fa-utensils"></i> Halol sertifikatli joylarni tanlaymiz. Milliy taomlar sizni kutmoqda!",
+    'vegetarian': "Vegetarian — sog'lom tanlov! <i className="fa-solid fa-leaf"></i> Sabzavotli va mevali taomlar bilan to'la. O'zbekistonning vegetarian taomlari ham ajoyib!",
+    'har_qanday': "Har qanday taom — ko'p tanlov! <i className="fa-solid fa-utensils"></i> Eng yaxshi restoranlarni topamiz. Milliy va xalqaro taomlar sizni kutmoqda!",
   }
   return map[food] || ''
 }
@@ -213,30 +213,30 @@ function getFoodResponse(food: string): string {
 function getSmallTalkResponse(text: string): string | null {
   const lower = text.toLowerCase()
   if (/\b(salom|assalomu alaykum|salom alejkum|hayrli)\b/i.test(lower)) return getGreeting()
-  if (/\brahmat|tashakkur|thanks|thank you|minnatdor|savolingiz uchun tashakkur\b/i.test(lower)) return 'Arzimaydi! 😊 Sizga yordam berishdan xursandman. Sayohatni rejalashtirishni davom ettiramizmi?'
-  if (/\b(xayr|hayr|ko\'rishguncha|bye|goodbye|xayr salomat)\b/i.test(lower)) return 'Xayr! Sayohatlaringiz muborak bo\'lsin! 🧳 Qaytganingizda yangi marshrut yaratamiz.'
-  if (/\b(yordam|help|yordam ber|qanday ishlaydi|nima qila olasiz|imkoniyatlar)\b/i.test(lower)) return 'Men sayohat rejalashtirishga yordam beraman! 🧭 \n\n**Mening imkoniyatlarim:**\n📍 Shahar bo\'yicha marshrut tuzish\n⏳ Vaqtni hisobga olish\n💰 Byudjetga mos joylar tanlash\n🚶 Transport turini tanlash\n🕌 Namoz vaqtlarini hisobga olish\n🍽 Ovqat afzalliklarini inobatga olish\n\nFaqat savollarga javob bering, men eng yaxshi marshrutni tuzib beraman! ✨'
-  if (/\b(qanday|yaxshimisiz|ishlar|gap|ahvol)\b/i.test(lower) && (/\b(siz|sen)\b/i.test(lower) || /\bqaley\b/i.test(lower))) return 'Men ajoyibman, rahmat! 🚀 Sizga sayohat rejalashtirishga yordam berishga tayyorman. Qaysi shaharga bormoqchisiz?'
+  if (/\brahmat|tashakkur|thanks|thank you|minnatdor|savolingiz uchun tashakkur\b/i.test(lower)) return 'Arzimaydi! <i className="fa-solid fa-face-smile"></i> Sizga yordam berishdan xursandman. Sayohatni rejalashtirishni davom ettiramizmi?'
+  if (/\b(xayr|hayr|ko\'rishguncha|bye|goodbye|xayr salomat)\b/i.test(lower)) return 'Xayr! Sayohatlaringiz muborak bo\'lsin! <i className="fa-solid fa-suitcase"></i> Qaytganingizda yangi marshrut yaratamiz.'
+  if (/\b(yordam|help|yordam ber|qanday ishlaydi|nima qila olasiz|imkoniyatlar)\b/i.test(lower)) return 'Men sayohat rejalashtirishga yordam beraman! <i className="fa-solid fa-compass"></i> \n\n**Mening imkoniyatlarim:**\n<i className="fa-solid fa-location-dot"></i> Shahar bo\'yicha marshrut tuzish\n<i className="fa-solid fa-hourglass"></i> Vaqtni hisobga olish\n<i className="fa-solid fa-coins"></i> Byudjetga mos joylar tanlash\n<i className="fa-solid fa-person-walking"></i> Transport turini tanlash\n<i className="fa-solid fa-mosque"></i> Namoz vaqtlarini hisobga olish\n<i className="fa-solid fa-utensils"></i> Ovqat afzalliklarini inobatga olish\n\nFaqat savollarga javob bering, men eng yaxshi marshrutni tuzib beraman! <i className="fa-solid fa-wand-magic-sparkles"></i>'
+  if (/\b(qanday|yaxshimisiz|ishlar|gap|ahvol)\b/i.test(lower) && (/\b(siz|sen)\b/i.test(lower) || /\bqaley\b/i.test(lower))) return 'Men ajoyibman, rahmat! <i className="fa-solid fa-rocket"></i> Sizga sayohat rejalashtirishga yordam berishga tayyorman. Qaysi shaharga bormoqchisiz?'
   
   // "Mashhur joylar" yoki "nima qilish mumkin"
   if (/\b(mashhur|tavsiya|nima qilish mumkin|qiziqarli|ko\'rishga arziydi|eng zo\'r|bormoqchi)\b/i.test(lower)) {
-    return "O'zbekistonning eng mashhur joylari: 🌟\n\n" +
-      "🏛 **Samarqand** — Registon, Bibixonim, Shohizinda\n" +
-      "🕌 **Buxoro** — Minorai Kalon, Ark qal'asi, Labi Hovuz\n" +
-      "🏰 **Xiva** — Ichan Qal'a, Muhammad Aminxon madrasasi\n" +
-      "🏙 **Toshkent** — Hazrati Imom, Chorsu bozori, TV minora\n" +
-      "🎨 **Nukus** — Savitskiy muzeyi (O'zbekiston Louvri)\n\n" +
-      "Qaysi shahar sizni ko'proq qiziqtirdi? 🏙"
+    return "O'zbekistonning eng mashhur joylari: <i className="fa-solid fa-star"></i>\n\n" +
+      "<i className="fa-solid fa-landmark"></i> **Samarqand** — Registon, Bibixonim, Shohizinda\n" +
+      "<i className="fa-solid fa-mosque"></i> **Buxoro** — Minorai Kalon, Ark qal'asi, Labi Hovuz\n" +
+      "<i className="fa-solid fa-chess-rook"></i> **Xiva** — Ichan Qal'a, Muhammad Aminxon madrasasi\n" +
+      "<i className="fa-solid fa-city"></i> **Toshkent** — Hazrati Imom, Chorsu bozori, TV minora\n" +
+      "<i className="fa-solid fa-palette"></i> **Nukus** — Savitskiy muzeyi (O'zbekiston Louvri)\n\n" +
+      "Qaysi shahar sizni ko'proq qiziqtirdi? <i className="fa-solid fa-city"></i>"
   }
   
   // Ob-havo so'rash
   if (/\b(ob-havo|ob havo|havo|harorat|issiq|sovuq)\b/i.test(lower)) {
-    return 'Ob-havo haqida aniq ma\'lumotni Google yoki AccuWeather orqali bilib olishingiz mumkin. 🌤 Ammo men sizga eng yaxshi marshrutni tuzib beraman! Qaysi shaharga bormoqchisiz? 🏙'
+    return 'Ob-havo haqida aniq ma\'lumotni Google yoki AccuWeather orqali bilib olishingiz mumkin. <i className="fa-solid fa-cloud-sun"></i> Ammo men sizga eng yaxshi marshrutni tuzib beraman! Qaysi shaharga bormoqchisiz? <i className="fa-solid fa-city"></i>'
   }
   
   // Pul/valyuta so'rash
   if (/\b(pul|valyuta|so\'m|dollar|ayirboshlash|narx)\b/i.test(lower)) {
-    return 'Valyuta kurslari doimiy o\'zgarib turadi. Eng so\'nggi kursni banking ilovalari yoki Google orqali tekshiring. 💰 Men sizga sayohat marshrutini tuzishda yordam bera olaman! 🧭'
+    return 'Valyuta kurslari doimiy o\'zgarib turadi. Eng so\'nggi kursni banking ilovalari yoki Google orqali tekshiring. <i className="fa-solid fa-coins"></i> Men sizga sayohat marshrutini tuzishda yordam bera olaman! <i className="fa-solid fa-compass"></i>'
   }
   
   return null
@@ -245,24 +245,24 @@ function getSmallTalkResponse(text: string): string | null {
 // ==================== YORDAMCHI FUNKSIYALAR ====================
 
 function getSummaryMessage(data: ItineraryRequest): string {
-  return `📋 **Barcha ma'lumotlar yig'ildi!** Marshrut tayyorlanmoqda...
+  return `<i className="fa-solid fa-clipboard"></i> **Barcha ma'lumotlar yig'ildi!** Marshrut tayyorlanmoqda...
 
-📍 Shahar: **${data.city}**
-⏳ Vaqt: **${data.duration}**
-💰 Byudjet: **${data.budget === 'premium' ? '💎 Premium' : "📊 O'rtacha"}**
-🚗 Transport: **${data.transport === 'piyoda' ? '🚶 Piyoda' : data.transport === 'taksi' ? '🚗 Taksi' : '🔄 Aralash'}**
-🕌 Namoz vaqtlari: **${data.prayerTimes === 'ha' ? 'Hisobga olinadi ✅' : "Hisobga olinmaydi"}**
-🍽 Ovqat: **${data.foodPreference === 'halol' ? '🥩 Halol' : data.foodPreference === 'vegetarian' ? '🥗 Vegetarian' : '🍲 Har qanday'}**
+<i className="fa-solid fa-location-dot"></i> Shahar: **${data.city}**
+<i className="fa-solid fa-hourglass"></i> Vaqt: **${data.duration}**
+<i className="fa-solid fa-coins"></i> Byudjet: **${data.budget === 'premium' ? '<i className="fa-solid fa-gem"></i> Premium' : "<i className="fa-solid fa-chart-simple"></i> O'rtacha"}**
+<i className="fa-solid fa-car"></i> Transport: **${data.transport === 'piyoda' ? '<i className="fa-solid fa-person-walking"></i> Piyoda' : data.transport === 'taksi' ? '<i className="fa-solid fa-car"></i> Taksi' : '<i className="fa-solid fa-rotate"></i> Aralash'}**
+<i className="fa-solid fa-mosque"></i> Namoz vaqtlari: **${data.prayerTimes === 'ha' ? 'Hisobga olinadi <i className="fa-solid fa-check"></i>' : "Hisobga olinmaydi"}**
+<i className="fa-solid fa-utensils"></i> Ovqat: **${data.foodPreference === 'halol' ? '<i className="fa-solid fa-drumstick-bite"></i> Halol' : data.foodPreference === 'vegetarian' ? '<i className="fa-solid fa-leaf"></i> Vegetarian' : '<i className="fa-solid fa-utensils"></i> Har qanday'}**
 
-Bir oz sabr qiling, eng yaxshi joylarni tanlayapman... ⏳`
+Bir oz sabr qiling, eng yaxshi joylarni tanlayapman... <i className="fa-solid fa-hourglass"></i>`
 }
 
 function getCitySuggestion(): string {
-  return `Mavjud shaharlar: Toshkent 🏙, Samarqand 🏛, Buxoro 🕌, Xiva 🏰, Namangan 🌄, Farg'ona 🌸, Andijon 👑, Nukus 🎨, Guliston 🌷, Jizzax 🏔`
+  return `Mavjud shaharlar: Toshkent <i className="fa-solid fa-city"></i>, Samarqand <i className="fa-solid fa-landmark"></i>, Buxoro <i className="fa-solid fa-mosque"></i>, Xiva <i className="fa-solid fa-chess-rook"></i>, Namangan <i className="fa-solid fa-sunrise"></i>, Farg'ona <i className="fa-solid fa-flower"></i>, Andijon <i className="fa-solid fa-crown"></i>, Nukus <i className="fa-solid fa-palette"></i>, Guliston <i className="fa-solid fa-flower"></i>, Jizzax <i className="fa-solid fa-mountain"></i>`
 }
 
 function getDurationSuggestion(): string {
-  return 'Misol: "2 soat" (tezkor), "4 soat" (yarim kun), "6 soat" (yaxshigina), "8 soat" (to\'liq kun) yoki "2 kun" ⏱'
+  return 'Misol: "2 soat" (tezkor), "4 soat" (yarim kun), "6 soat" (yaxshigina), "8 soat" (to\'liq kun) yoki "2 kun" <i className="fa-solid fa-stopwatch"></i>'
 }
 
 // ==================== ASOSIY HOOK ====================
@@ -275,7 +275,7 @@ export function useChatBot() {
     : [{
         id: 'welcome',
         type: 'bot',
-        text: `${getGreeting()} Men **Xazina AI** yordamchisiman. 🧭 Sayohat rejalashtirishga yordam beraman.\n\nQaysi shaharga sayohat qilmoqchisiz? 🏙\n\n_${getCitySuggestion()}_`,
+        text: `${getGreeting()} Men **Xazina AI** yordamchisiman. <i className="fa-solid fa-compass"></i> Sayohat rejalashtirishga yordam beraman.\n\nQaysi shaharga sayohat qilmoqchisiz? <i className="fa-solid fa-city"></i>\n\n_${getCitySuggestion()}_`,
         timestamp: new Date(),
       }]
 
@@ -330,13 +330,13 @@ export function useChatBot() {
         setState(prev => ({ ...prev, step: 'done', answers }))
 
         const itemsText = result.items.length > 0
-          ? `🎯 ${result.items.length} ta qiziqarli joy topildi!\n📍 Birinchi manzil: **${result.items[0].placeName}**\n⏳ Jami: ${result.items.reduce((s, i) => s + i.durationMinutes, 0)} daqiqa`
+          ? `<i className="fa-solid fa-bullseye"></i> ${result.items.length} ta qiziqarli joy topildi!\n<i className="fa-solid fa-location-dot"></i> Birinchi manzil: **${result.items[0].placeName}**\n<i className="fa-solid fa-hourglass"></i> Jami: ${result.items.reduce((s, i) => s + i.durationMinutes, 0)} daqiqa`
           : 'Afsuski, bu shahar uchun hozircha joylar ma\'lumotlari to\'liq emas. Tez orada qo\'shamiz!'
 
         const doneMsg: ChatMessage = {
           id: 'done',
           type: 'bot',
-          text: `🎉 **${result.city} shahri uchun marshrut tayyor!**\n\n${itemsText}\n\nYangi sayohat rejalash uchun "Qaytadan boshlash" tugmasini bosing.`,
+          text: `<i className="fa-solid fa-circle-check"></i> **${result.city} shahri uchun marshrut tayyor!**\n\n${itemsText}\n\nYangi sayohat rejalash uchun "Qaytadan boshlash" tugmasini bosing.`,
           timestamp: new Date(),
         }
         setMessages(prev => [...prev, doneMsg])
@@ -360,12 +360,12 @@ export function useChatBot() {
 
     setTimeout(() => {
       const questions: Record<string, string> = {
-        city: `Qaysi shaharga sayohat qilmoqchisiz? 🏙\n_${getCitySuggestion()}_`,
-        duration: `Sayohat uchun qancha vaqt ajratasiz? 🕐\n_${getDurationSuggestion()}_`,
-        budget: "Byudjetingiz qanday? 💰\n_\"O'rtacha\" (tejamkor) yoki \"Premium\" (hashamatli)_",
-        transport: "Qanday harakat qilishni xohlaysiz? 🚶‍♂\n_Piyoda 🚶, Taksi 🚗 yoki Aralash 🔄_",
-        prayer: "Namoz vaqtlarini hisobga olish kerakmi? 🕌\n_Ha yoki Yo'q_",
-        food: "Oziq-ovqat afzalliklaringiz qanday? 🍽\n_Halol 🥩, Vegetarian 🥗 yoki Har qanday 🍲_",
+        city: `Qaysi shaharga sayohat qilmoqchisiz? <i className="fa-solid fa-city"></i>\n_${getCitySuggestion()}_`,
+        duration: `Sayohat uchun qancha vaqt ajratasiz? <i className="fa-solid fa-clock"></i>\n_${getDurationSuggestion()}_`,
+        budget: "Byudjetingiz qanday? <i className="fa-solid fa-coins"></i>\n_\"O'rtacha\" (tejamkor) yoki \"Premium\" (hashamatli)_",
+        transport: "Qanday harakat qilishni xohlaysiz? <i className="fa-solid fa-person-walking"></i>\n_Piyoda <i className="fa-solid fa-person-walking"></i>, Taksi <i className="fa-solid fa-car"></i> yoki Aralash <i className="fa-solid fa-rotate"></i>_",
+        prayer: "Namoz vaqtlarini hisobga olish kerakmi? <i className="fa-solid fa-mosque"></i>\n_Ha yoki Yo'q_",
+        food: "Oziq-ovqat afzalliklaringiz qanday? <i className="fa-solid fa-utensils"></i>\n_Halol <i className="fa-solid fa-drumstick-bite"></i>, Vegetarian <i className="fa-solid fa-leaf"></i> yoki Har qanday <i className="fa-solid fa-utensils"></i>_",
       }
 
       const botMsg: ChatMessage = {
@@ -396,7 +396,7 @@ export function useChatBot() {
         const reply: ChatMessage = {
           id: `bot-done-${Date.now()}`,
           type: 'bot',
-          text: "Marshrut tayyor! 🎉 Yangi sayohat rejalash uchun yuqoridagi 'Qaytadan boshlash' tugmasini bosing.",
+          text: "Marshrut tayyor! <i className="fa-solid fa-circle-check"></i> Yangi sayohat rejalash uchun yuqoridagi 'Qaytadan boshlash' tugmasini bosing.",
           timestamp: new Date(),
         }
         setMessages(prev => [...prev, reply])
@@ -436,18 +436,18 @@ export function useChatBot() {
 
         const steps = ['city', 'duration', 'budget', 'transport', 'prayer', 'food'] as const
         const questions: Record<string, string> = {
-          city: `Mayli, qaytadan boshlaymiz! Qaysi shaharga sayohat qilmoqchisiz? 🏙\n_${getCitySuggestion()}_`,
-          duration: `Vaqtni o'zgartiramiz. Qancha vaqt ajratasiz? 🕐\n_${getDurationSuggestion()}_`,
-          budget: "Byudjetni o'zgartiramiz. Qanday byudjet? 💰",
-          transport: "Transportni o'zgartiramiz. Qanday harakat qilamiz? 🚶‍♂",
-          prayer: "Namoz vaqtlari haqida o'zgartiramiz. Kerakmi? 🕌",
-          food: "Ovqat afzalligini o'zgartiramiz. Nima tanlaysiz? 🍽",
+          city: `Mayli, qaytadan boshlaymiz! Qaysi shaharga sayohat qilmoqchisiz? <i className="fa-solid fa-city"></i>\n_${getCitySuggestion()}_`,
+          duration: `Vaqtni o'zgartiramiz. Qancha vaqt ajratasiz? <i className="fa-solid fa-clock"></i>\n_${getDurationSuggestion()}_`,
+          budget: "Byudjetni o'zgartiramiz. Qanday byudjet? <i className="fa-solid fa-coins"></i>",
+          transport: "Transportni o'zgartiramiz. Qanday harakat qilamiz? <i className="fa-solid fa-person-walking"></i>",
+          prayer: "Namoz vaqtlari haqida o'zgartiramiz. Kerakmi? <i className="fa-solid fa-mosque"></i>",
+          food: "Ovqat afzalligini o'zgartiramiz. Nima tanlaysiz? <i className="fa-solid fa-utensils"></i>",
         }
 
         const botReply: ChatMessage = {
           id: `bot-back-${Date.now()}`,
           type: 'bot',
-          text: `⬅️ Orqaga qaytdik!\n\n${questions[prevStep] || ''}`,
+          text: `<i className="fa-solid fa-arrow-left"></i> Orqaga qaytdik!\n\n${questions[prevStep] || ''}`,
           timestamp: new Date(),
         }
         setMessages(prev => [...prev, botReply])
@@ -468,7 +468,7 @@ export function useChatBot() {
             responseText = getCityResponse(city)
           } else {
             detected = false
-            responseText = `Shahar nomini aniqlay olmadim. 😕\n\nIltimos, quyidagi shaharlardan birini yozing:\n${getCitySuggestion()}\n\nYoki "mashhur joylar" deb yozib, O'zbekistondagi eng qiziqarli joylar haqida bilib oling! 👀`
+            responseText = `Shahar nomini aniqlay olmadim. <i className="fa-solid fa-face-confused"></i>\n\nIltimos, quyidagi shaharlardan birini yozing:\n${getCitySuggestion()}\n\nYoki "mashhur joylar" deb yozib, O'zbekistondagi eng qiziqarli joylar haqida bilib oling! <i className="fa-solid fa-eye"></i>`
           }
           break
         }
@@ -479,7 +479,7 @@ export function useChatBot() {
             responseText = getDurationResponse(duration)
           } else {
             detected = false
-            responseText = `Vaqtni tushunmadim. 😕\n\nMisol uchun:\n• "2 soat" — tezkor sayohat ⚡\n• "4 soat" — yarim kunlik 🕐\n• "8 soat" — to'liq kun 🎉\n• "2 kun" — ikki kunlik 📆\n\nQancha vaqt ajrata olasiz?`
+            responseText = `Vaqtni tushunmadim. <i className="fa-solid fa-face-confused"></i>\n\nMisol uchun:\n• "2 soat" — tezkor sayohat <i className="fa-solid fa-bolt"></i>\n• "4 soat" — yarim kunlik <i className="fa-solid fa-clock"></i>\n• "8 soat" — to'liq kun <i className="fa-solid fa-circle-check"></i>\n• "2 kun" — ikki kunlik <i className="fa-solid fa-calendar-check"></i>\n\nQancha vaqt ajrata olasiz?`
           }
           break
         }
@@ -490,7 +490,7 @@ export function useChatBot() {
             responseText = getBudgetResponse(budget)
           } else {
             detected = false
-            responseText = 'Byudjetingizni tushunmadim. 😕\n\nQuyidagilardan birini tanlang:\n• "O\'rtacha" — sifatli va tejamkor 💰\n• "Premium" — eng yaxshi, hashamatli 💎\n\nQaysi byudjet sizga mos keladi?'
+            responseText = 'Byudjetingizni tushunmadim. <i className="fa-solid fa-face-confused"></i>\n\nQuyidagilardan birini tanlang:\n• "O\'rtacha" — sifatli va tejamkor <i className="fa-solid fa-coins"></i>\n• "Premium" — eng yaxshi, hashamatli <i className="fa-solid fa-gem"></i>\n\nQaysi byudjet sizga mos keladi?'
           }
           break
         }
@@ -501,7 +501,7 @@ export function useChatBot() {
             responseText = getTransportResponse(transport)
           } else {
             detected = false
-            responseText = 'Transport turini tushunmadim. 😕\n\nQuyidagilardan birini yozing:\n• "Piyoda" — shaharni his qilish uchun 🚶‍♂\n• "Taksi" — tez va qulay 🚗\n• "Aralash" — eng optimal 🔄\n\nQaysi tur sizga mos?'
+            responseText = 'Transport turini tushunmadim. <i className="fa-solid fa-face-confused"></i>\n\nQuyidagilardan birini yozing:\n• "Piyoda" — shaharni his qilish uchun <i className="fa-solid fa-person-walking"></i>\n• "Taksi" — tez va qulay <i className="fa-solid fa-car"></i>\n• "Aralash" — eng optimal <i className="fa-solid fa-rotate"></i>\n\nQaysi tur sizga mos?'
           }
           break
         }
@@ -512,7 +512,7 @@ export function useChatBot() {
             responseText = getPrayerResponse(prayer)
           } else {
             detected = false
-            responseText = 'Tushunmadim. 😕\n\nNamoz vaqtlarini hisobga olish kerakmi?\n• "Ha" — barcha namoz vaqtlarini hisobga olaman 🕌\n• "Yo\'q" — kerakmas, vaqtni tejaymiz ⏰\n\nIltimos, "Ha" yoki "Yo\'q" deb javob bering.'
+            responseText = 'Tushunmadim. <i className="fa-solid fa-face-confused"></i>\n\nNamoz vaqtlarini hisobga olish kerakmi?\n• "Ha" — barcha namoz vaqtlarini hisobga olaman <i className="fa-solid fa-mosque"></i>\n• "Yo\'q" — kerakmas, vaqtni tejaymiz <i className="fa-solid fa-clock"></i>\n\nIltimos, "Ha" yoki "Yo\'q" deb javob bering.'
           }
           break
         }
@@ -523,13 +523,13 @@ export function useChatBot() {
             responseText = getFoodResponse(food)
           } else {
             detected = false
-            responseText = 'Taom afzalligingizni tushunmadim. 😕\n\nQuyidagilardan birini tanlang:\n• "Halol" — halol sertifikatli taomlar 🥩\n• "Vegetarian" — sabzavotli taomlar 🥗\n• "Har qanday" — barcha turdagi taomlar 🍲\n\nQaysi biri sizga mos?'
+            responseText = 'Taom afzalligingizni tushunmadim. <i className="fa-solid fa-face-confused"></i>\n\nQuyidagilardan birini tanlang:\n• "Halol" — halol sertifikatli taomlar <i className="fa-solid fa-drumstick-bite"></i>\n• "Vegetarian" — sabzavotli taomlar <i className="fa-solid fa-leaf"></i>\n• "Har qanday" — barcha turdagi taomlar <i className="fa-solid fa-utensils"></i>\n\nQaysi biri sizga mos?'
           }
           break
         }
         default:
           detected = false
-          responseText = 'Assalomu alaykum! Sayohat rejalashga tayyormisiz? 🧭'
+          responseText = 'Assalomu alaykum! Sayohat rejalashga tayyormisiz? <i className="fa-solid fa-compass"></i>'
       }
 
       if (detected) {
@@ -564,7 +564,7 @@ export function useChatBot() {
       {
         id: 'welcome',
         type: 'bot',
-        text: `${getGreeting()} Men **Xazina AI** yordamchisiman. 🧭 Sayohat rejalashtirishga yordam beraman.\n\nQaysi shaharga sayohat qilmoqchisiz? 🏙\n\n_${getCitySuggestion()}_`,
+        text: `${getGreeting()} Men **Xazina AI** yordamchisiman. <i className="fa-solid fa-compass"></i> Sayohat rejalashtirishga yordam beraman.\n\nQaysi shaharga sayohat qilmoqchisiz? <i className="fa-solid fa-city"></i>\n\n_${getCitySuggestion()}_`,
         timestamp: new Date(),
       },
     ])

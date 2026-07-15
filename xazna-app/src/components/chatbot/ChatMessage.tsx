@@ -57,7 +57,7 @@ export const ChatMessage: React.FC<Props> = ({ message }) => {
             : 'bg-gradient-to-br from-amber-400 to-amber-600 text-white'
         }`}
       >
-        {isBot ? '🤖' : '👤'}
+        {isBot ? '<i className="fa-solid fa-robot"></i>' : '<i className="fa-solid fa-user"></i>'}
       </div>
 
       {/* Content */}

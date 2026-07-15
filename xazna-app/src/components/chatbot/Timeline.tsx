@@ -86,7 +86,7 @@ export const Timeline: React.FC<Props> = ({ itinerary }) => {
       {/* Sarlavha */}
       <div className="mb-6 text-center">
         <h2 className="text-2xl font-bold text-gray-900">
-          🗺️ {itinerary.city} bo'ylab sayohat
+          <i className="fa-solid fa-map"></i> {itinerary.city} bo'ylab sayohat
         </h2>
         <p className="text-sm text-gray-500 mt-1">
           {itinerary.items.length} ta joy · {itinerary.totalDuration} ·{' '}
@@ -113,7 +113,7 @@ export const Timeline: React.FC<Props> = ({ itinerary }) => {
             {itinerary.items.reduce((sum, i) => sum + i.durationMinutes, 0)}{' '}
             daqiqa
           </strong>{' '}
-          davom etadigan ajoyib sayohat! 🎉
+          davom etadigan ajoyib sayohat! <i className="fa-solid fa-circle-check"></i>
         </p>
       </div>
     </div>

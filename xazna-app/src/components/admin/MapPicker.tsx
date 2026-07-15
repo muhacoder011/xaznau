@@ -42,7 +42,7 @@ export const MapPicker: React.FC<Props> = ({
   return (
     <div className="space-y-2">
       <label className="block text-sm font-medium text-gray-700">
-        📍 Xaritada joyni belgilang
+        <i className="fa-solid fa-location-dot"></i> Xaritada joyni belgilang
       </label>
 
       <div
@@ -53,11 +53,11 @@ export const MapPicker: React.FC<Props> = ({
 
       <div className="flex items-center gap-3 text-xs text-gray-500 bg-gray-50 rounded-xl px-4 py-2.5">
         <span className="flex items-center gap-1">
-          🖱️ Xaritani bosish — marker qo'yadi
+          <i className="fa-solid fa-mouse-pointer"></i> Xaritani bosish — marker qo'yadi
         </span>
         <span className="text-gray-300">|</span>
         <span className="flex items-center gap-1">
-          ↔️ Markerni sudrab — koordinatalarni o'zgartirish
+          <i className="fa-solid fa-arrows-left-right"></i> Markerni sudrab — koordinatalarni o'zgartirish
         </span>
         {latitude && longitude && (
           <>
@@ -92,7 +92,7 @@ export const MapPicker: React.FC<Props> = ({
               </span>
             </div>
             <span className="text-xs text-green-600 font-medium bg-green-50 px-2.5 py-1 rounded-full">
-              ✅ Belgilandi
+              <i className="fa-solid fa-check"></i> Belgilandi
             </span>
           </div>
         </div>

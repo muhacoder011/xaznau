@@ -60,7 +60,7 @@ export function useMapPicker(options: UseMapPickerOptions = {}) {
     if (initialLat && initialLng) {
       const marker = L.marker([initialLat, initialLng], { draggable: true }).addTo(map)
       markerRef.current = marker
-      marker.bindPopup(`📍 ${initialLat.toFixed(4)}, ${initialLng.toFixed(4)}`)
+      marker.bindPopup(`<i className="fa-solid fa-location-dot"></i> ${initialLat.toFixed(4)}, ${initialLng.toFixed(4)}`)
 
       marker.on('dragend', () => {
         const pos = marker.getLatLng()
@@ -68,7 +68,7 @@ export function useMapPicker(options: UseMapPickerOptions = {}) {
         const lng = parseFloat(pos.lng.toFixed(6))
         setLatitude(lat)
         setLongitude(lng)
-        marker.setPopupContent(`📍 ${lat}, ${lng}`)
+        marker.setPopupContent(`<i className="fa-solid fa-location-dot"></i> ${lat}, ${lng}`)
         onCoordinateChange?.(lat, lng)
       })
     }
@@ -90,14 +90,14 @@ export function useMapPicker(options: UseMapPickerOptions = {}) {
           const newLng = parseFloat(pos.lng.toFixed(6))
           setLatitude(newLat)
           setLongitude(newLng)
-          marker.setPopupContent(`📍 ${newLat}, ${newLng}`)
+          marker.setPopupContent(`<i className="fa-solid fa-location-dot"></i> ${newLat}, ${newLng}`)
           onCoordinateChange?.(newLat, newLng)
         })
       }
 
       setLatitude(lat)
       setLongitude(lng)
-      markerRef.current.setPopupContent(`📍 ${lat}, ${lng}`)
+      markerRef.current.setPopupContent(`<i className="fa-solid fa-location-dot"></i> ${lat}, ${lng}`)
       onCoordinateChange?.(lat, lng)
     })
 
@@ -120,7 +120,7 @@ export function useMapPicker(options: UseMapPickerOptions = {}) {
 
     if (markerRef.current) {
       markerRef.current.setLatLng([lat, lng])
-      markerRef.current.setPopupContent(`📍 ${lat}, ${lng}`)
+      markerRef.current.setPopupContent(`<i className="fa-solid fa-location-dot"></i> ${lat}, ${lng}`)
     } else if (mapRef.current) {
       const marker = L.marker([lat, lng], { draggable: true }).addTo(mapRef.current)
       markerRef.current = marker
@@ -131,7 +131,7 @@ export function useMapPicker(options: UseMapPickerOptions = {}) {
         const newLng = parseFloat(pos.lng.toFixed(6))
         setLatitude(newLat)
         setLongitude(newLng)
-        marker.setPopupContent(`📍 ${newLat}, ${newLng}`)
+        marker.setPopupContent(`<i className="fa-solid fa-location-dot"></i> ${newLat}, ${newLng}`)
         onCoordinateChange?.(newLat, newLng)
       })
     }

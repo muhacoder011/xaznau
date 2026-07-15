@@ -66,7 +66,7 @@ function toggleFlashlight() {
             }
         } catch (e) { /* not supported */ }
     }
-    console.warn("🔦 Fonar qo'llab-quvvatlanmaydi");
+    console.warn("<i class='fa-solid fa-flashlight'></i> +\"Fonar qo'llab-quvvatlanmaydi");
     return false;
 }
 

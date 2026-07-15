@@ -23,45 +23,45 @@ function schedulerToast(icon, text, duration) {
 /* ---------- Mission Database — sayohat missiyalari ---------- */
 const MISSION_POOL = {
     general: [
-        { title: 'Mahalliy taomni tatib ko\'r', desc: 'Bugungi joydagi eng mashhur milliy taomni buyurtma qiling va fotosuratga oling!', icon: '🍲', stars: 3 },
-        { title: 'Bir mahalliy bilan suhbat', desc: 'Biror mahalliy aholi bilan suhbatlashing va uning hikoyasini eshiting.', icon: '💬', stars: 3 },
-        { title: 'Yangi do\'st orttir', desc: 'Sayohat paytida kim bilandir tanishing. Yangi do\'st – yangi eshik!', icon: '🤝', stars: 4 },
-        { title: '5 ta surat ol', desc: 'Shaharning eng chiroyli 5 joyini suratga oling va kollektsiya yarating.', icon: '📸', stars: 3 },
-        { title: 'Mahalliy transportda yur', desc: 'Mahalliy jamoat transportida bir bekat yuring. Yangi tajriba!', icon: '🚌', stars: 4 },
-        { title: 'Biror narsa sovg\'a qil', desc: 'Sayohatdan biror kichik sovg\'a oling va uni birovga bering.', icon: '🎁', stars: 5 },
-        { title: 'Qo\'lda yozilgan xat', desc: 'Biror kafeda o\'tirib, qo\'lda xat yozing. Eski usul – eng samimiy usul!', icon: '✉️', stars: 4 },
-        { title: 'Adashib qol', desc: 'Ataylab xaritaga qaramasdan bir ko\'cha bilan yuring. Yangi kashfiyotlar!', icon: '🗺️', stars: 5 },
-        { title: 'Mahalliy musiqani tingla', desc: 'Biror mahalliy musiqachi yoki an\'anaviy kuyni tinglang.', icon: '🎵', stars: 3 },
-        { title: 'Bir kunda 10 km yur', desc: 'Bugun piyoda 10 kilometr masofani bosib o\'ting. Sog\'lik va kashfiyot!', icon: '🚶', stars: 4 },
-        { title: 'Bir narsani birinchi marta sinab ko\'r', desc: 'Hayotingizda birinchi marta biror narsa qiling. Yangi taassurotlar!', icon: '🎯', stars: 5 },
-        { title: 'Kun chiqishini kutib ol', desc: 'Erta turib, quyosh chiqishini tomosha qiling. Kunni go\'zal boshlang!', icon: '🌅', stars: 4 },
-        { title: 'Mahalliy bozorga bor', desc: 'Shaharning markaziy bozoriga boring. Mahalliy hayotni his qiling!', icon: '🏪', stars: 3 },
-        { title: 'Biror narsani o\'rgan', desc: 'Bugun biror yangi narsani o\'rganing — tarix, hunar yoki til.', icon: '📚', stars: 4 },
-        { title: 'Bir kunlik vlogger bo\'l', desc: 'Kuningizni video yoki ovozli xotira shaklida yozib oling.', icon: '🎥', stars: 5 },
-        { title: 'Tabiat bilan bog\'lan', desc: 'Eng yaqin bog\' yoki tabiat burchagiga boring. 10 daqiqa tinch dam oling.', icon: '🌿', stars: 3 },
-        { title: 'Bir mahalliy ibodatxoni ziyorat qil', desc: 'Shahardagi masjid, cherkov yoki ma\'badni ziyorat qiling.', icon: '🕌', stars: 3 },
-        { title: 'Kun botishini kuzat', desc: 'Kun botishini eng chiroyli nuqtadan kuzating. Romantik lahza!', icon: '🌇', stars: 4 }
+        { title: 'Mahalliy taomni tatib ko\'r', desc: 'Bugungi joydagi eng mashhur milliy taomni buyurtma qiling va fotosuratga oling!', icon: '<i class="fa-solid fa-utensils"></i>', stars: 3 },
+        { title: 'Bir mahalliy bilan suhbat', desc: 'Biror mahalliy aholi bilan suhbatlashing va uning hikoyasini eshiting.', icon: '<i class="fa-solid fa-comment"></i>', stars: 3 },
+        { title: 'Yangi do\'st orttir', desc: 'Sayohat paytida kim bilandir tanishing. Yangi do\'st – yangi eshik!', icon: '<i class="fa-solid fa-handshake"></i>', stars: 4 },
+        { title: '5 ta surat ol', desc: 'Shaharning eng chiroyli 5 joyini suratga oling va kollektsiya yarating.', icon: '<i class="fa-solid fa-camera"></i>', stars: 3 },
+        { title: 'Mahalliy transportda yur', desc: 'Mahalliy jamoat transportida bir bekat yuring. Yangi tajriba!', icon: '<i class="fa-solid fa-bus"></i>', stars: 4 },
+        { title: 'Biror narsa sovg\'a qil', desc: 'Sayohatdan biror kichik sovg\'a oling va uni birovga bering.', icon: '<i class="fa-solid fa-gift"></i>', stars: 5 },
+        { title: 'Qo\'lda yozilgan xat', desc: 'Biror kafeda o\'tirib, qo\'lda xat yozing. Eski usul – eng samimiy usul!', icon: '<i class="fa-solid fa-envelope"></i>', stars: 4 },
+        { title: 'Adashib qol', desc: 'Ataylab xaritaga qaramasdan bir ko\'cha bilan yuring. Yangi kashfiyotlar!', icon: '<i class="fa-solid fa-map"></i>', stars: 5 },
+        { title: 'Mahalliy musiqani tingla', desc: 'Biror mahalliy musiqachi yoki an\'anaviy kuyni tinglang.', icon: '<i class="fa-solid fa-music"></i>', stars: 3 },
+        { title: 'Bir kunda 10 km yur', desc: 'Bugun piyoda 10 kilometr masofani bosib o\'ting. Sog\'lik va kashfiyot!', icon: '<i class="fa-solid fa-person-walking"></i>', stars: 4 },
+        { title: 'Bir narsani birinchi marta sinab ko\'r', desc: 'Hayotingizda birinchi marta biror narsa qiling. Yangi taassurotlar!', icon: '<i class="fa-solid fa-bullseye"></i>', stars: 5 },
+        { title: 'Kun chiqishini kutib ol', desc: 'Erta turib, quyosh chiqishini tomosha qiling. Kunni go\'zal boshlang!', icon: '<i class="fa-solid fa-sun"></i>', stars: 4 },
+        { title: 'Mahalliy bozorga bor', desc: 'Shaharning markaziy bozoriga boring. Mahalliy hayotni his qiling!', icon: '<i class="fa-solid fa-store"></i>', stars: 3 },
+        { title: 'Biror narsani o\'rgan', desc: 'Bugun biror yangi narsani o\'rganing — tarix, hunar yoki til.', icon: '<i class="fa-solid fa-book-open"></i>', stars: 4 },
+        { title: 'Bir kunlik vlogger bo\'l', desc: 'Kuningizni video yoki ovozli xotira shaklida yozib oling.', icon: '<i class="fa-solid fa-video"></i>', stars: 5 },
+        { title: 'Tabiat bilan bog\'lan', desc: 'Eng yaqin bog\' yoki tabiat burchagiga boring. 10 daqiqa tinch dam oling.', icon: '<i class="fa-solid fa-leaf"></i>', stars: 3 },
+        { title: 'Bir mahalliy ibodatxoni ziyorat qil', desc: 'Shahardagi masjid, cherkov yoki ma\'badni ziyorat qiling.', icon: '<i class="fa-solid fa-mosque"></i>', stars: 3 },
+        { title: 'Kun botishini kuzat', desc: 'Kun botishini eng chiroyli nuqtadan kuzating. Romantik lahza!', icon: '<i class="fa-solid fa-sun"></i>', stars: 4 }
     ],
     food: [
-        { title: '5 xil mahalliy taom', desc: 'Bugun 5 xil mahalliy taomni tatib ko\'ring. Oshxona sayohati!', icon: '🍽️', stars: 4 },
-        { title: 'Ko\'cha taomlari', desc: 'Faqat ko\'cha taomlaridan iborat kun o\'tkazing. Eng mazali narsalar ko\'chada!', icon: '🌮', stars: 4 },
-        { title: 'O\'zing pishir', desc: 'Biror mahalliy taomni o\'zingiz tayyorlashni o\'rganing.', icon: '👨‍🍳', stars: 5 },
-        { title: 'Nonvoyxonaga bor', desc: 'Mahalliy nonvoyxonaga boring va yangi pishgan nonni tatib ko\'ring.', icon: '🍞', stars: 3 }
+        { title: '5 xil mahalliy taom', desc: 'Bugun 5 xil mahalliy taomni tatib ko\'ring. Oshxona sayohati!', icon: '<i class="fa-solid fa-utensils"></i>', stars: 4 },
+        { title: 'Ko\'cha taomlari', desc: 'Faqat ko\'cha taomlaridan iborat kun o\'tkazing. Eng mazali narsalar ko\'chada!', icon: '<i class="fa-solid fa-burger"></i>', stars: 4 },
+        { title: 'O\'zing pishir', desc: 'Biror mahalliy taomni o\'zingiz tayyorlashni o\'rganing.', icon: '<i class="fa-solid fa-utensils"></i>', stars: 5 },
+        { title: 'Nonvoyxonaga bor', desc: 'Mahalliy nonvoyxonaga boring va yangi pishgan nonni tatib ko\'ring.', icon: '<i class="fa-solid fa-bread-slice"></i>', stars: 3 }
     ],
     photo: [
-        { title: 'Eng yaxshi selfi', desc: 'Shaharning eng mashhur joyida selfi oling va ijtimoiy tarmoqlarda ulashing.', icon: '🤳', stars: 3 },
-        { title: 'Portretlar galereyasi', desc: 'Bugun 5 xil odamning portret suratini oling (ruxsat so\'rab).', icon: '📷', stars: 5 }
+        { title: 'Eng yaxshi selfi', desc: 'Shaharning eng mashhur joyida selfi oling va ijtimoiy tarmoqlarda ulashing.', icon: '<i class="fa-solid fa-camera"></i>', stars: 3 },
+        { title: 'Portretlar galereyasi', desc: 'Bugun 5 xil odamning portret suratini oling (ruxsat so\'rab).', icon: '<i class="fa-solid fa-camera"></i>', stars: 5 }
     ],
     cultural: [
-        { title: 'An\'anaviy kiyim kiy', desc: 'Mahalliy an\'anaviy kiyimda suratga tushing.', icon: '👘', stars: 5 },
-        { title: 'Mahalliy bayramga qatnash', desc: 'Agar bugun biror bayram bo\'lsa, unda ishtirok eting!', icon: '🎉', stars: 5 },
-        { title: 'Muzeyga bor', desc: 'Shahardagi eng qiziqarli muzeyni ziyorat qiling.', icon: '🏛️', stars: 3 }
+        { title: 'An\'anaviy kiyim kiy', desc: 'Mahalliy an\'anaviy kiyimda suratga tushing.', icon: '<i class="fa-solid fa-tshirt"></i>', stars: 5 },
+        { title: 'Mahalliy bayramga qatnash', desc: 'Agar bugun biror bayram bo\'lsa, unda ishtirok eting!', icon: '<i class="fa-solid fa-circle-check"></i>', stars: 5 },
+        { title: 'Muzeyga bor', desc: 'Shahardagi eng qiziqarli muzeyni ziyorat qiling.', icon: '<i class="fa-solid fa-landmark"></i>', stars: 3 }
     ],
     adventure: [
-        { title: 'Tog\'ga chiq', desc: 'Eng yaqin tepalik yoki tog\'ga chiqing. Yuqoridan shahar manzarasi!', icon: '⛰️', stars: 5 },
-        { title: 'Daryo bo\'ylab sayr', desc: 'Shahardagi daryo yoki kanal bo\'ylab sayr qiling.', icon: '🌊', stars: 3 },
-        { title: 'Velosiped ijarasi', desc: 'Velosiped olib, shahar bo\'ylab sayohat qiling. Erkinlik hissi!', icon: '🚲', stars: 4 },
-        { title: 'Yulduzlarni tomosha qil', desc: 'Kechasi yulduzlarni tomosha qiling. Shahar chiroqlaridan uzoqroqda.', icon: '⭐', stars: 5 }
+        { title: 'Tog\'ga chiq', desc: 'Eng yaqin tepalik yoki tog\'ga chiqing. Yuqoridan shahar manzarasi!', icon: '<i class="fa-solid fa-mountain"></i>', stars: 5 },
+        { title: 'Daryo bo\'ylab sayr', desc: 'Shahardagi daryo yoki kanal bo\'ylab sayr qiling.', icon: '<i class="fa-solid fa-water"></i>', stars: 3 },
+        { title: 'Velosiped ijarasi', desc: 'Velosiped olib, shahar bo\'ylab sayohat qiling. Erkinlik hissi!', icon: '<i class="fa-solid fa-bicycle"></i>', stars: 4 },
+        { title: 'Yulduzlarni tomosha qil', desc: 'Kechasi yulduzlarni tomosha qiling. Shahar chiroqlaridan uzoqroqda.', icon: '<i class="fa-solid fa-star"></i>', stars: 5 }
     ]
 };
 
@@ -95,9 +95,9 @@ function generateMission() {
     if (isSleepTime) {
         return {
             id: 'mission-' + Date.now(),
-            title: '🌜 Dam olish va tiklanish',
+            title: '<i class="fa-solid fa-moon"></i> Dam olish va tiklanish',
             desc: 'Tanangiz va miyangizni dam oldiring. Ertangi sarguzasht uchun kuch to\'plang! Ertaga yangi missiya kutmoqda.',
-            icon: '🌜',
+            icon: '<i class="fa-solid fa-moon"></i>',
             stars: 1,
             date: new Date().toISOString().split('T')[0],
             completed: false,
@@ -164,9 +164,9 @@ function completeMission() {
         if (typeof saveStars === 'function') saveStars();
         if (typeof renderAll === 'function') renderAll();
         
-        schedulerToast('⭐', '+' + awarded + ' yulduz! Missiya bajarildi! 🎉', 3000);
+        schedulerToast('<i class="fa-solid fa-star"></i>', '+' + awarded + ' yulduz! Missiya bajarildi! <i class='fa-solid fa-circle-check'></i>', 3000);
     } else {
-        schedulerToast('⭐', '+' + starAmount + ' yulduz! Missiya bajarildi! 🎉', 3000);
+        schedulerToast('<i class="fa-solid fa-star"></i>', '+' + starAmount + ' yulduz! Missiya bajarildi! <i class='fa-solid fa-circle-check'></i>', 3000);
     }
     
     missionHistory.push({ ...missionState, completedAt: new Date().toISOString() });
@@ -219,7 +219,7 @@ function renderMissionContainer(containerId) {
     const isW = isWeekend();
     
     // Time-based greeting
-    const timeGreeting = hour < 12 ? 'Xayrli tong 🌅' : hour < 18 ? 'Xayrli kun ☀️' : 'Xayrli kech 🌆';
+    const timeGreeting = hour < 12 ? 'Xayrli tong <i class='fa-solid fa-sun'></i>' : hour < 18 ? 'Xayrli kun <i class='fa-solid fa-sun'></i>' : 'Xayrli kech <i class='fa-solid fa-city'></i>';
     
     let html = '<div class="mission-container">';
     
@@ -232,17 +232,17 @@ function renderMissionContainer(containerId) {
     // Trip status banner
     if (tripInfo.active) {
         html += '<div class="trip-status-banner">';
-        html += '<span class="tsb-icon">🧳</span>';
+        html += '<span class="tsb-icon"><i class='fa-solid fa-suitcase'></i></span>';
         html += '<div class="tsb-content">';
         html += '<div class="tsb-title">' + tripInfo.city + ' — jonli sayohat</div>';
         if (tripInfo.currentStop) {
-            html += '<div class="tsb-stop">📍 Hozir: ' + tripInfo.currentStop + '</div>';
+            html += '<div class="tsb-stop"><i class='fa-solid fa-location-dot'></i> Hozir: ' + tripInfo.currentStop + '</div>';
         }
         html += '</div>';
         html += '</div>';
     } else if (isW) {
         html += '<div class="weekend-banner">';
-        html += '<span class="tsb-icon">🎉</span>';
+        html += '<span class="tsb-icon"><i class='fa-solid fa-circle-check'></i></span>';
         html += '<div class="tsb-content">';
         html += '<div class="tsb-title">Dam olish kuni!</div>';
         html += '<div class="tsb-stop">Bugun sayohatga chiqish uchun ajoyib kun!</div>';
@@ -253,7 +253,7 @@ function renderMissionContainer(containerId) {
     // Sleep time message
     if (isSleepTime) {
         html += '<div class="sleep-mission-card">';
-        html += '<div class="sleep-icon">🌜</div>';
+        html += '<div class="sleep-icon"><i class='fa-solid fa-moon'></i></div>';
         html += '<div class="sleep-text">';
         html += '<strong>Dam olish vaqti</strong><br>';
         html += '<span style="font-size:12px;opacity:0.8;">Ertangi sarguzashtlar uchun kuch to\'plang!</span>';
@@ -265,13 +265,13 @@ function renderMissionContainer(containerId) {
     if (mission && !isSleepTime) {
         const isDone = mission.completed;
         html += '<div class="mission-card ' + (isDone ? 'mission-done' : '') + '">';
-        html += '<div class="mission-badge">🎯 Kunlik Missiya</div>';
+        html += '<div class="mission-badge"><i class='fa-solid fa-bullseye'></i> Kunlik Missiya</div>';
         
         if (isDone) {
-            html += '<div class="mission-complete-icon">✅</div>';
+            html += '<div class="mission-complete-icon"><i class='fa-solid fa-check'></i></div>';
         }
         
-        html += '<div class="mission-icon-large">' + (mission.icon || '🎯') + '</div>';
+        html += '<div class="mission-icon-large">' + (mission.icon || '<i class="fa-solid fa-bullseye"></i>') + '</div>';
         html += '<h2 class="mission-title">' + mission.title + '</h2>';
         html += '<p class="mission-desc">' + mission.desc + '</p>';
         
@@ -279,7 +279,7 @@ function renderMissionContainer(containerId) {
         html += '<div class="mission-stars">';
         html += '<span class="ms-label">Mukofot:</span>';
         for (let i = 0; i < (mission.stars || 3); i++) {
-            html += '<span class="ms-star">⭐</span>';
+            html += '<span class="ms-star"><i class='fa-solid fa-star'></i></span>';
         }
         html += '<span class="ms-count">+' + (mission.stars || 3) + ' yulduz</span>';
         html += '</div>';
@@ -287,14 +287,14 @@ function renderMissionContainer(containerId) {
         // Action buttons
         html += '<div class="mission-actions">';
         if (!isDone) {
-            html += '<button class="cta-btn mission-complete-btn" onclick="completeMission()">✅ Missiyani bajarildi deb belgilash</button>';
-            html += '<button class="cta-btn ghost mission-refresh-btn" onclick="if(confirm(\'Yangi missiya generatsiya qilinsinmi?\'))refreshMission()">🔄 Yangi missiya</button>';
+            html += '<button class="cta-btn mission-complete-btn" onclick="completeMission()"><i class='fa-solid fa-check'></i> Missiyani bajarildi deb belgilash</button>';
+            html += '<button class="cta-btn ghost mission-refresh-btn" onclick="if(confirm(\'Yangi missiya generatsiya qilinsinmi?\'))refreshMission()"><i class='fa-solid fa-rotate'></i> Yangi missiya</button>';
         } else {
             html += '<div class="mission-done-message">';
-            html += '<span class="md-icon">🎉</span>';
+            html += '<span class="md-icon"><i class='fa-solid fa-circle-check'></i></span>';
             html += '<span>Bugungi missiya bajarildi! Ertaga yangi sarguzasht kutmoqda.</span>';
             html += '</div>';
-            html += '<button class="cta-btn ghost" onclick="refreshMission()">🔄 Yangi missiya</button>';
+            html += '<button class="cta-btn ghost" onclick="refreshMission()"><i class='fa-solid fa-rotate'></i> Yangi missiya</button>';
         }
         html += '</div>';
         html += '</div>';
@@ -302,15 +302,15 @@ function renderMissionContainer(containerId) {
     
     // Suggestions / travel prompts
     if (!isSleepTime) {
-        html += '<div class="mission-section-title">💡 Sayohat maslahatlari</div>';
+        html += '<div class="mission-section-title"><i class='fa-solid fa-lightbulb'></i> Sayohat maslahatlari</div>';
         html += '<div class="mission-tips">';
         
         const tips = [
-            { icon: '🧴', text: 'Quyosh kremini unutmang!' },
-            { icon: '💧', text: 'Ko\'proq suv iching — 2 litr!' },
-            { icon: '📱', text: 'Yo\'l xaritangizni yuklab oling' },
-            { icon: '🔋', text: 'Powerbank oling!' },
-            { icon: '👟', text: 'Qulay poyabzal kiying' }
+            { icon: '<i class="fa-solid fa-bottle-water"></i>', text: 'Quyosh kremini unutmang!' },
+            { icon: '<i class="fa-solid fa-droplet"></i>', text: 'Ko\'proq suv iching — 2 litr!' },
+            { icon: '<i class="fa-solid fa-mobile-screen-button"></i>', text: 'Yo\'l xaritangizni yuklab oling' },
+            { icon: '<i class="fa-solid fa-battery-full"></i>', text: 'Powerbank oling!' },
+            { icon: '<i class="fa-solid fa-shoe-prints"></i>', text: 'Qulay poyabzal kiying' }
         ];
         
         const shuffled = tips.sort(() => Math.random() - 0.5).slice(0, 3);
@@ -325,16 +325,16 @@ function renderMissionContainer(containerId) {
     
     // Mission history (last few)
     if (missionHistory.length > 0) {
-        html += '<div class="mission-section-title">📜 Missiyalar tarixi</div>';
+        html += '<div class="mission-section-title"><i class='fa-solid fa-scroll'></i> Missiyalar tarixi</div>';
         html += '<div class="mission-history">';
         const recent = missionHistory.slice(-5).reverse();
         recent.forEach(h => {
             const date = h.date ? h.date.split('T')[0] : '';
             html += '<div class="history-item">';
-            html += '<span class="hi-icon">' + (h.icon || '🎯') + '</span>';
+            html += '<span class="hi-icon">' + (h.icon || '<i class="fa-solid fa-bullseye"></i>') + '</span>';
             html += '<span class="hi-title">' + (h.title || '').replace(/[^\w\s\u0600-\u06FF\u0400-\u04FF]/g, '').trim() + '</span>';
             html += '<span class="hi-date">' + date + '</span>';
-            html += '<span class="hi-status">✅</span>';
+            html += '<span class="hi-status"><i class='fa-solid fa-check'></i></span>';
             html += '</div>';
         });
         html += '</div>';

@@ -70,7 +70,7 @@ const ShareModal: React.FC<ShareModalProps> = ({ isOpen, onClose, shareData }) =
         className="bg-white dark:bg-gray-800 rounded-3xl p-6 max-w-sm w-full shadow-2xl animate-scale-in"
         onClick={e => e.stopPropagation()}
       >
-        <h3 className="text-xl font-bold text-gray-800 dark:text-white text-center mb-2">📤 Ulashish</h3>
+        <h3 className="text-xl font-bold text-gray-800 dark:text-white text-center mb-2"><i className="fa-solid fa-share-from-square"></i> Ulashish</h3>
         <p className="text-sm text-gray-500 dark:text-gray-400 text-center mb-6">{shareData.title}</p>
 
         {/* Native share / Copy link */}
@@ -79,7 +79,7 @@ const ShareModal: React.FC<ShareModalProps> = ({ isOpen, onClose, shareData }) =
             onClick={handleNativeShare}
             className="flex flex-col items-center gap-1.5 p-3 rounded-2xl bg-blue-50 dark:bg-blue-900/30 hover:bg-blue-100 dark:hover:bg-blue-900/50 transition-colors group"
           >
-            <span className="text-2xl group-hover:scale-110 transition-transform">📱</span>
+            <span className="text-2xl group-hover:scale-110 transition-transform"><i className="fa-solid fa-mobile-screen-button"></i></span>
             <span className="text-xs text-blue-600 dark:text-blue-400 font-medium">Ulashish</span>
           </button>
 
@@ -87,7 +87,7 @@ const ShareModal: React.FC<ShareModalProps> = ({ isOpen, onClose, shareData }) =
             onClick={handleCopyLink}
             className="flex flex-col items-center gap-1.5 p-3 rounded-2xl bg-gray-50 dark:bg-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors group"
           >
-            <span className="text-2xl group-hover:scale-110 transition-transform">{copied ? '✅' : '🔗'}</span>
+            <span className="text-2xl group-hover:scale-110 transition-transform">{copied ? '<i className="fa-solid fa-check"></i>' : '<i className="fa-solid fa-link"></i>'}</span>
             <span className="text-xs text-gray-600 dark:text-gray-400 font-medium">{copied ? 'Nusxalandi' : 'Havola'}</span>
           </button>
 
@@ -95,7 +95,7 @@ const ShareModal: React.FC<ShareModalProps> = ({ isOpen, onClose, shareData }) =
             onClick={shareToTelegram}
             className="flex flex-col items-center gap-1.5 p-3 rounded-2xl bg-sky-50 dark:bg-sky-900/30 hover:bg-sky-100 dark:hover:bg-sky-900/50 transition-colors group"
           >
-            <span className="text-2xl group-hover:scale-110 transition-transform">✈️</span>
+            <span className="text-2xl group-hover:scale-110 transition-transform"><i className="fa-solid fa-plane"></i></span>
             <span className="text-xs text-sky-600 dark:text-sky-400 font-medium">Telegram</span>
           </button>
 
@@ -103,7 +103,7 @@ const ShareModal: React.FC<ShareModalProps> = ({ isOpen, onClose, shareData }) =
             onClick={shareToWhatsApp}
             className="flex flex-col items-center gap-1.5 p-3 rounded-2xl bg-green-50 dark:bg-green-900/30 hover:bg-green-100 dark:hover:bg-green-900/50 transition-colors group"
           >
-            <span className="text-2xl group-hover:scale-110 transition-transform">💬</span>
+            <span className="text-2xl group-hover:scale-110 transition-transform"><i className="fa-solid fa-comment"></i></span>
             <span className="text-xs text-green-600 dark:text-green-400 font-medium">WhatsApp</span>
           </button>
         </div>

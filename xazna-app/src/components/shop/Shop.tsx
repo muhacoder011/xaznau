@@ -42,7 +42,7 @@ const Shop: React.FC = () => {
     const totalPrice = item.price * qty
 
     if (user.coins < totalPrice) {
-      setPurchaseMessage({ type: 'error', text: `Tangalar yetarli emas! ${totalPrice} 🪙 kerak. Sizda: ${user.coins} 🪙` })
+      setPurchaseMessage({ type: 'error', text: `Tangalar yetarli emas! ${totalPrice} <i className="fa-solid fa-coins"></i> kerak. Sizda: ${user.coins} <i className="fa-solid fa-coins"></i>` })
       setTimeout(() => setPurchaseMessage(null), 3000)
       return
     }
@@ -53,7 +53,7 @@ const Shop: React.FC = () => {
     }
 
     if (successCount > 0) {
-      setPurchaseMessage({ type: 'success', text: `"${item.name}" x${successCount} muvaffaqiyatli sotib olindi! ✅` })
+      setPurchaseMessage({ type: 'success', text: `"${item.name}" x${successCount} muvaffaqiyatli sotib olindi! <i className="fa-solid fa-check"></i>` })
       setSelectedItem(null)
       setQuantity(1)
     } else {
@@ -77,11 +77,11 @@ const Shop: React.FC = () => {
       {/* Sarlavha va tanga balansi */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div>
-          <h2 className="text-2xl font-bold text-gray-800 dark:text-white">🛒 Do'kon</h2>
+          <h2 className="text-2xl font-bold text-gray-800 dark:text-white"><i className="fa-solid fa-cart-shopping"></i> Do'kon</h2>
           <p className="text-sm text-gray-500 dark:text-gray-400">Sayohat uchun kerakli narsalarni xarid qiling</p>
         </div>
         <div className="flex items-center gap-2 bg-amber-50 dark:bg-amber-900/30 px-4 py-2 rounded-full self-start">
-          <span className="text-xl">🪙</span>
+          <span className="text-xl"><i className="fa-solid fa-coins"></i></span>
           <span className="font-bold text-amber-700 dark:text-amber-300 text-lg">{user.coins}</span>
         </div>
       </div>
@@ -90,7 +90,7 @@ const Shop: React.FC = () => {
       {dailyDeals.length > 0 && (
         <div className="bg-gradient-to-r from-red-50 to-amber-50 dark:from-red-900/20 dark:to-amber-900/20 rounded-2xl p-4 border border-red-100 dark:border-red-800/30">
           <div className="flex items-center gap-2 mb-3">
-            <span className="text-lg">🔥</span>
+            <span className="text-lg"><i className="fa-solid fa-fire"></i></span>
             <h3 className="font-bold text-gray-800 dark:text-white">Kunlik chegirmalar</h3>
             <span className="text-xs px-2 py-0.5 bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400 rounded-full font-medium">Cheklangan vaqt</span>
           </div>
@@ -107,8 +107,8 @@ const Shop: React.FC = () => {
                 <div className="text-left">
                   <p className="text-sm font-semibold text-gray-800 dark:text-white">{deal.name}</p>
                   <p className="text-xs">
-                    <span className="text-amber-600 font-bold">{deal.price} 🪙</span>
-                    <span className="text-gray-400 line-through ml-1">{deal.originalPrice} 🪙</span>
+                    <span className="text-amber-600 font-bold">{deal.price} <i className="fa-solid fa-coins"></i></span>
+                    <span className="text-gray-400 line-through ml-1">{deal.originalPrice} <i className="fa-solid fa-coins"></i></span>
                     <span className="text-red-500 font-bold ml-1">-{discountPercent(deal)}%</span>
                   </p>
                 </div>
@@ -131,7 +131,7 @@ const Shop: React.FC = () => {
                   : 'bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
               }`}
             >
-              {cat === 'all' ? '🏷️ Barchasi' : SHOP_ITEM_CATEGORY_LABELS[cat]}
+              {cat === 'all' ? '<i className="fa-solid fa-tag"></i> Barchasi' : SHOP_ITEM_CATEGORY_LABELS[cat]}
             </button>
           ))}
         </div>
@@ -140,9 +140,9 @@ const Shop: React.FC = () => {
           onChange={(e) => setSortBy(e.target.value as SortOption)}
           className="px-3 py-2 rounded-xl border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 text-sm text-gray-600 dark:text-gray-300 outline-none focus:ring-2 focus:ring-emerald-500"
         >
-          <option value="default">📌 Standart</option>
-          <option value="price-asc">💵 Narx: arzondan qimmatga</option>
-          <option value="price-desc">💵 Narx: qimmatdan arzonga</option>
+          <option value="default"><i className="fa-solid fa-thumbtack"></i> Standart</option>
+          <option value="price-asc"><i className="fa-solid fa-dollar-sign"></i> Narx: arzondan qimmatga</option>
+          <option value="price-desc"><i className="fa-solid fa-dollar-sign"></i> Narx: qimmatdan arzonga</option>
         </select>
       </div>
 
@@ -179,7 +179,7 @@ const Shop: React.FC = () => {
               <div className="absolute top-2 right-2 flex flex-col gap-1">
                 {item.isPopular && (
                   <span className="bg-amber-400 text-amber-900 text-xs font-bold px-2 py-0.5 rounded-full shadow-lg">
-                    ⭐ Top
+                    <i className="fa-solid fa-star"></i> Top
                   </span>
                 )}
                 {item.originalPrice && (
@@ -211,7 +211,7 @@ const Shop: React.FC = () => {
               <div className="space-y-1">
                 {item.benefits.map((benefit, idx) => (
                   <div key={idx} className="flex items-center gap-1.5 text-xs text-gray-600 dark:text-gray-300">
-                    <span className="text-emerald-500 font-bold">✓</span>
+                    <span className="text-emerald-500 font-bold"><i className="fa-solid fa-check"></i></span>
                     {benefit}
                   </div>
                 ))}
@@ -222,10 +222,10 @@ const Shop: React.FC = () => {
                 <div className="flex flex-col">
                   <div className="flex items-center gap-1.5">
                     <span className="text-amber-500 font-bold text-lg">{item.price}</span>
-                    <span className="text-amber-500">🪙</span>
+                    <span className="text-amber-500"><i className="fa-solid fa-coins"></i></span>
                   </div>
                   {item.originalPrice && (
-                    <span className="text-xs text-gray-400 line-through">{item.originalPrice} 🪙</span>
+                    <span className="text-xs text-gray-400 line-through">{item.originalPrice} <i className="fa-solid fa-coins"></i></span>
                   )}
                 </div>
                 <button
@@ -245,7 +245,7 @@ const Shop: React.FC = () => {
 
         {filteredItems.length === 0 && (
           <div className="col-span-full text-center py-12 text-gray-400 dark:text-gray-500">
-            <span className="text-5xl block mb-3">📭</span>
+            <span className="text-5xl block mb-3"><i className="fa-solid fa-inbox"></i></span>
             <p>Bu kategoriyada mahsulotlar topilmadi</p>
           </div>
         )}
@@ -275,10 +275,10 @@ const Shop: React.FC = () => {
               <span className="text-gray-700 dark:text-gray-200 font-medium">Narxi:</span>
               <div className="text-right">
                 <span className="text-amber-600 dark:text-amber-400 font-bold text-lg flex items-center gap-1">
-                  {selectedItem.price} 🪙
+                  {selectedItem.price} <i className="fa-solid fa-coins"></i>
                 </span>
                 {selectedItem.originalPrice && (
-                  <span className="text-xs text-gray-400 line-through block">{selectedItem.originalPrice} 🪙</span>
+                  <span className="text-xs text-gray-400 line-through block">{selectedItem.originalPrice} <i className="fa-solid fa-coins"></i></span>
                 )}
               </div>
             </div>
@@ -302,7 +302,7 @@ const Shop: React.FC = () => {
                 </button>
               </div>
               <p className="text-xs text-gray-400 mt-2 text-center">
-                Jami: <span className="text-amber-600 font-bold">{selectedItem.price * quantity} 🪙</span>
+                Jami: <span className="text-amber-600 font-bold">{selectedItem.price * quantity} <i className="fa-solid fa-coins"></i></span>
               </p>
             </div>
 
@@ -319,8 +319,8 @@ const Shop: React.FC = () => {
                 className="flex-1 px-4 py-3 bg-emerald-500 hover:bg-emerald-600 disabled:bg-gray-300 dark:disabled:bg-gray-600 text-white rounded-xl font-medium transition-all disabled:cursor-not-allowed shadow-md hover:shadow-lg active:scale-95"
               >
                 {user.coins >= selectedItem.price * quantity
-                  ? `✅ Sotib olish (${quantity} dona)`
-                  : '❌ Yetarli emas'}
+                  ? `<i className="fa-solid fa-check"></i> Sotib olish (${quantity} dona)`
+                  : '<i className="fa-solid fa-xmark"></i> Yetarli emas'}
               </button>
             </div>
           </div>

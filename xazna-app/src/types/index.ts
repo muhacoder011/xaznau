@@ -100,11 +100,11 @@ export interface LocationFormData {
 // --- Kategoriya konfiguratsiyasi ---
 
 export const CATEGORY_LABELS: Record<LocationCategory, string> = {
-  masjid: '🕌 Masjid',
-  museum: '🏛️ Muzey',
-  park: '🌳 Park',
-  restaurant: '🍽️ Oshxona',
-  historical: '🏰 Tarixiy',
+  masjid: '<i className="fa-solid fa-mosque"></i> Masjid',
+  museum: '<i className="fa-solid fa-landmark"></i> Muzey',
+  park: '<i className="fa-solid fa-tree"></i> Park',
+  restaurant: '<i className="fa-solid fa-utensils"></i> Oshxona',
+  historical: '<i className="fa-solid fa-chess-rook"></i> Tarixiy',
 }
 
 export const CATEGORY_COLORS: Record<LocationCategory, string> = {
@@ -204,7 +204,7 @@ export interface ShareData {
 }
 
 export const SHOP_ITEM_CATEGORY_LABELS: Record<ShopItemCategory, string> = {
-  guide: '🧭 Gid xizmati',
-  souvenir: '🎁 Suvenir',
-  boost: '⚡ Kuchaytirish',
+  guide: '<i className="fa-solid fa-compass"></i> Gid xizmati',
+  souvenir: '<i className="fa-solid fa-gift"></i> Suvenir',
+  boost: '<i className="fa-solid fa-bolt"></i> Kuchaytirish',
 }

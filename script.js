@@ -53,11 +53,11 @@ function throttle(fn, ms) {
 
 /* ---------- Network Status ---------- */
 function getNetworkStatus() {
-    return navigator.onLine ? '📶 Online' : '📵 Offline';
+    return navigator.onLine ? '<i class="fa-solid fa-signal"></i> Online' : '<i class="fa-solid fa-mobile-screen-button"></i> Offline';
 }
 
 window.addEventListener('online', () => console.log('📶 Tarmoq ulandi'));
-window.addEventListener('offline', () => console.warn('📵 Tarmoq uzildi'));
+window.addEventListener('offline', () => console.warn('📱 Tarmoq uzildi'));
 
 /* ---------- Keyboard Shortcuts ---------- */
 document.addEventListener('keydown', function(e) {

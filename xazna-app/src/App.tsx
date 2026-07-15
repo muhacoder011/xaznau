@@ -76,12 +76,12 @@ const AppContent: React.FC = () => {
 
   // ====== NAV TABS ======
   const mainTabs = [
-    { key: 'chat' as Tab, icon: '🤖', label: 'AI Yordamchi' },
-    { key: 'admin' as Tab, icon: '📍', label: 'Admin' },
-    { key: 'shop' as Tab, icon: '🛒', label: 'Do\'kon' },
-    { key: 'missions' as Tab, icon: '🎯', label: 'Missiyalar' },
-    { key: 'inventory' as Tab, icon: '🎒', label: 'Inventar' },
-    { key: 'calculator' as Tab, icon: '📏', label: 'Masofa' },
+    { key: 'chat' as Tab, icon: '<i className="fa-solid fa-robot"></i>', label: 'AI Yordamchi' },
+    { key: 'admin' as Tab, icon: '<i className="fa-solid fa-location-dot"></i>', label: 'Admin' },
+    { key: 'shop' as Tab, icon: '<i className="fa-solid fa-cart-shopping"></i>', label: 'Do\'kon' },
+    { key: 'missions' as Tab, icon: '<i className="fa-solid fa-bullseye"></i>', label: 'Missiyalar' },
+    { key: 'inventory' as Tab, icon: '<i className="fa-solid fa-backpack"></i>', label: 'Inventar' },
+    { key: 'calculator' as Tab, icon: '<i className="fa-solid fa-ruler"></i>', label: 'Masofa' },
   ]
 
   return (
@@ -100,7 +100,7 @@ const AppContent: React.FC = () => {
               </span>
               {isAuthenticated && (
                 <span className="hidden sm:inline-flex items-center gap-1 ml-2 px-2.5 py-0.5 bg-emerald-50 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300 text-xs font-medium rounded-full">
-                  🪙 {user.coins}
+                  <i className="fa-solid fa-coins"></i> {user.coins}
                 </span>
               )}
             </div>
@@ -121,7 +121,7 @@ const AppContent: React.FC = () => {
                 className="p-2 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
                 title="Ulashish"
               >
-                <span className="text-lg">📤</span>
+                <span className="text-lg"><i className="fa-solid fa-share-from-square"></i></span>
               </button>
             </div>
           </div>
@@ -176,7 +176,7 @@ const AppContent: React.FC = () => {
                   onClick={() => setActiveTab('inventory')}
                   className="ml-2 px-4 py-2.5 rounded-xl text-sm font-medium transition-all bg-gradient-to-r from-amber-50 to-amber-100 dark:from-amber-900/20 dark:to-amber-800/20 text-amber-700 dark:text-amber-300 hover:shadow-md flex items-center gap-1.5"
                 >
-                  <span>👤</span>
+                  <span><i className="fa-solid fa-user"></i></span>
                   <span className="hidden sm:inline">Profil</span>
                 </button>
               </nav>
@@ -189,7 +189,7 @@ const AppContent: React.FC = () => {
                   <div className="flex items-center justify-between">
                     <div>
                       <h2 className="text-xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
-                        🤖 AI Sayohat Yordamchisi
+                        <i className="fa-solid fa-robot"></i> AI Sayohat Yordamchisi
                       </h2>
                       <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
                         Sayohat rejalashingizga yordam beradi!
@@ -197,10 +197,10 @@ const AppContent: React.FC = () => {
                     </div>
                     <div className="flex items-center gap-2">
                       <span className="px-3 py-1 bg-amber-50 dark:bg-amber-900/30 text-amber-700 dark:text-amber-300 text-xs font-medium rounded-full flex items-center gap-1">
-                        🪙 {user.coins}
+                        <i className="fa-solid fa-coins"></i> {user.coins}
                       </span>
                       <span className="px-3 py-1 bg-emerald-50 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300 text-xs font-medium rounded-full flex items-center gap-1">
-                        ⭐ Lv.{user.level}
+                        <i className="fa-solid fa-star"></i> Lv.{user.level}
                       </span>
                     </div>
                   </div>
@@ -215,7 +215,7 @@ const AppContent: React.FC = () => {
               <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 overflow-hidden">
                 <div className="p-6 border-b border-gray-100 dark:border-gray-700 bg-gradient-to-r from-emerald-50 to-green-50 dark:from-emerald-900/20 dark:to-green-900/20">
                   <h2 className="text-xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
-                    📍 Admin Panel
+                    <i className="fa-solid fa-location-dot"></i> Admin Panel
                   </h2>
                   <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
                     Yangi lokatsiyalar qo'shish va baza boshqarish
@@ -249,7 +249,7 @@ const AppContent: React.FC = () => {
               <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 overflow-hidden">
                 <div className="p-6 border-b border-gray-100 dark:border-gray-700 bg-gradient-to-r from-amber-50 to-yellow-50 dark:from-amber-900/20 dark:to-yellow-900/20">
                   <h2 className="text-xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
-                    📏 Masofa Kalkulyatori
+                    <i className="fa-solid fa-ruler"></i> Masofa Kalkulyatori
                   </h2>
                   <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
                     Haversine formulasi yordamida masofalar hisoblang
@@ -270,7 +270,7 @@ const AppContent: React.FC = () => {
         onClose={() => setShowShareModal(false)}
         shareData={{
           title: 'Xazina - Sayohat Yordamchisi',
-          text: `Xazina ilovasida ${user.tripsPlanned} ta sayohat rejalashtirdim! ${user.level}-darajaga yetdim! Siz ham sinab ko'ring 🚀`,
+          text: `Xazina ilovasida ${user.tripsPlanned} ta sayohat rejalashtirdim! ${user.level}-darajaga yetdim! Siz ham sinab ko'ring <i className="fa-solid fa-rocket"></i>`,
           url: window.location.href,
         }}
       />

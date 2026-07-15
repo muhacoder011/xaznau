@@ -94,7 +94,7 @@ function addMapMarker(map, coords, title, popupText) {
     if (!map || !coords) return null;
     
     const markerIcon = L.divIcon({
-        html: `<div style="background:var(--green,#1f6d4c);color:#fff;width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;box-shadow:0 2px 8px rgba(0,0,0,0.3);border:2px solid #fff;">📍</div>`,
+        html: `<div style="background:var(--green,#1f6d4c);color:#fff;width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;box-shadow:0 2px 8px rgba(0,0,0,0.3);border:2px solid #fff;"><i class='fa-solid fa-location-dot"></i></div>`,
         className: '',
         iconSize: [30, 30],
         iconAnchor: [15, 15],
@@ -142,7 +142,7 @@ function showCityMap(city, stops) {
                 const offsetLng = Math.sin(angle) * radius;
                 stopCoords = [coords[0] + offsetLat, coords[1] + offsetLng];
             }
-            const popup = `${stop.desc || ''}${stop.time ? '<br>🕐 ' + stop.time : ''}${stop.dur ? ' · ' + stop.dur + ' daq' : ''}`;
+            const popup = `${stop.desc || ''}${stop.time ? '<br><i class="fa-solid fa-clock"></i> ' + stop.time : ''}${stop.dur ? ' · ' + stop.dur + ' daq' : ''}`;
             addMapMarker(map, stopCoords, stop.name, popup);
         });
     }

@@ -10,11 +10,11 @@ const ADMIN_LOGIN = 'Xazina'
 const ADMIN_PASSWORD = 'xazina2026'
 
 const CATEGORY_OPTIONS = [
-  { value: 'masjid', label: '🕌 Masjid' },
-  { value: 'museum', label: '🏛️ Muzey' },
-  { value: 'park', label: '🌳 Park' },
-  { value: 'restaurant', label: '🍽️ Oshxona' },
-  { value: 'historical', label: '🏰 Tarixiy' },
+  { value: 'masjid', label: '<i className="fa-solid fa-mosque"></i> Masjid' },
+  { value: 'museum', label: '<i className="fa-solid fa-landmark"></i> Muzey' },
+  { value: 'park', label: '<i className="fa-solid fa-tree"></i> Park' },
+  { value: 'restaurant', label: '<i className="fa-solid fa-utensils"></i> Oshxona' },
+  { value: 'historical', label: '<i className="fa-solid fa-chess-rook"></i> Tarixiy' },
 ]
 
 const CITY_OPTIONS = [
@@ -139,11 +139,11 @@ export const AddLocationForm: React.FC<Props> = ({ onSubmit }) => {
         const idx = allLocations.findIndex(l => l.id === editingId)
         if (idx >= 0) {
           allLocations[idx] = { ...formData, id: editingId, createdAt: allLocations[idx].createdAt } as StoredLocation
-          setSubmitMessage({ type: 'success', text: '✅ Joy muvaffaqiyatli yangilandi!' })
+          setSubmitMessage({ type: 'success', text: '<i className="fa-solid fa-check"></i> Joy muvaffaqiyatli yangilandi!' })
         }
       } else {
         allLocations.push({ ...formData, id: crypto.randomUUID(), createdAt: now } as StoredLocation)
-        setSubmitMessage({ type: 'success', text: '✅ Joy muvaffaqiyatli qo\'shildi!' })
+        setSubmitMessage({ type: 'success', text: '<i className="fa-solid fa-check"></i> Joy muvaffaqiyatli qo\'shildi!' })
       }
 
       saveLocations(allLocations)
@@ -154,7 +154,7 @@ export const AddLocationForm: React.FC<Props> = ({ onSubmit }) => {
       setEditingId(null)
       setTimeout(() => setSubmitMessage(null), 3000)
     } catch {
-      setSubmitMessage({ type: 'error', text: '❌ Xatolik yuz berdi' })
+      setSubmitMessage({ type: 'error', text: '<i className="fa-solid fa-xmark"></i> Xatolik yuz berdi' })
     } finally {
       setIsSubmitting(false)
     }
@@ -180,7 +180,7 @@ export const AddLocationForm: React.FC<Props> = ({ onSubmit }) => {
     const allLocations = loadLocations().filter(l => l.id !== id)
     saveLocations(allLocations)
     setLocations(allLocations)
-    setSubmitMessage({ type: 'success', text: '🗑 Joy ochirildi!' })
+    setSubmitMessage({ type: 'success', text: '<i className="fa-solid fa-trash-can"></i> Joy ochirildi!' })
     setTimeout(() => setSubmitMessage(null), 3000)
   }
 
@@ -196,7 +196,7 @@ export const AddLocationForm: React.FC<Props> = ({ onSubmit }) => {
         <div className="w-full max-w-md">
           <div className="text-center mb-8">
             <div className="w-20 h-20 rounded-3xl bg-gradient-to-br from-emerald-500 to-emerald-700 flex items-center justify-center text-white text-4xl shadow-lg mx-auto mb-4 ring-4 ring-emerald-100">
-              🔐
+              <i className="fa-solid fa-lock"></i>
             </div>
             <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Admin Panel</h2>
             <p className="text-gray-500 dark:text-gray-400 mt-1">Faqat adminlar uchun</p>
@@ -205,7 +205,7 @@ export const AddLocationForm: React.FC<Props> = ({ onSubmit }) => {
             <div className="space-y-2">
               <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Login</label>
               <div className="relative">
-                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-lg">👤</span>
+                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-lg"><i className="fa-solid fa-user"></i></span>
                 <input type="text" value={adminLogin} onChange={(e) => setAdminLogin(e.target.value)} placeholder="Admin logini kiriting"
                   className="w-full pl-10 pr-4 py-3 rounded-xl border border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white text-sm focus:ring-2 focus:ring-emerald-500 focus:border-transparent outline-none transition-all" />
               </div>
@@ -213,15 +213,15 @@ export const AddLocationForm: React.FC<Props> = ({ onSubmit }) => {
             <div className="space-y-2">
               <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Parol</label>
               <div className="relative">
-                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-lg">🔑</span>
+                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-lg"><i className="fa-solid fa-key"></i></span>
                 <input type={showPassword ? 'text' : 'password'} value={adminPassword} onChange={(e) => setAdminPassword(e.target.value)} placeholder="Parolni kiriting"
                   className="w-full pl-10 pr-12 py-3 rounded-xl border border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white text-sm focus:ring-2 focus:ring-emerald-500 focus:border-transparent outline-none transition-all" />
-                <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600">{showPassword ? '🙈' : '👁️'}</button>
+                <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600">{showPassword ? '<i className="fa-solid fa-eye-slash"></i>' : '<i className="fa-solid fa-eye"></i>'}</button>
               </div>
             </div>
-            {adminError && <div className="p-4 bg-red-50 dark:bg-red-900/30 border border-red-200 dark:border-red-800 rounded-xl text-sm text-red-600 dark:text-red-400 text-center font-medium">❌ {adminError}</div>}
+            {adminError && <div className="p-4 bg-red-50 dark:bg-red-900/30 border border-red-200 dark:border-red-800 rounded-xl text-sm text-red-600 dark:text-red-400 text-center font-medium"><i className="fa-solid fa-xmark"></i> {adminError}</div>}
             <button type="submit" disabled={!adminLogin || !adminPassword}
-              className="w-full py-3.5 bg-gradient-to-r from-emerald-500 to-emerald-700 hover:from-emerald-600 hover:to-emerald-800 disabled:from-gray-300 disabled:to-gray-300 text-white rounded-xl font-semibold text-sm transition-all disabled:cursor-not-allowed active:scale-[0.98] shadow-lg hover:shadow-xl">🔓 Kirish</button>
+              className="w-full py-3.5 bg-gradient-to-r from-emerald-500 to-emerald-700 hover:from-emerald-600 hover:to-emerald-800 disabled:from-gray-300 disabled:to-gray-300 text-white rounded-xl font-semibold text-sm transition-all disabled:cursor-not-allowed active:scale-[0.98] shadow-lg hover:shadow-xl"><i className="fa-solid fa-unlock"></i> Kirish</button>
             <p className="text-xs text-gray-400 dark:text-gray-500 text-center">Admin panelga kirish uchun maxsus login va parol talab qilinadi</p>
           </form>
         </div>
@@ -247,7 +247,7 @@ export const AddLocationForm: React.FC<Props> = ({ onSubmit }) => {
       <div className="flex items-center justify-between flex-wrap gap-3">
         <div>
           <h2 className="text-2xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
-            <span className="text-3xl">⚙️</span>
+            <span className="text-3xl"><i className="fa-solid fa-gear"></i></span>
             Admin Panel
           </h2>
           <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
@@ -256,10 +256,10 @@ export const AddLocationForm: React.FC<Props> = ({ onSubmit }) => {
         </div>
         <div className="flex items-center gap-2">
           <span className="text-xs px-3 py-1.5 bg-emerald-50 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400 rounded-full font-medium">
-            📍 {totalLocations} ta joy
+            <i className="fa-solid fa-location-dot"></i> {totalLocations} ta joy
           </span>
           <button onClick={handleAdminLogout} className="px-4 py-2 bg-red-50 dark:bg-red-900/30 hover:bg-red-100 dark:hover:bg-red-900/50 text-red-600 dark:text-red-400 rounded-xl text-sm font-medium transition-all flex items-center gap-1.5">
-            🚪 Chiqish
+            <i className="fa-solid fa-door-open"></i> Chiqish
           </button>
         </div>
       </div>
@@ -274,9 +274,9 @@ export const AddLocationForm: React.FC<Props> = ({ onSubmit }) => {
       {/* Tabs */}
       <div className="flex gap-2 overflow-x-auto pb-1">
         {[
-          { id: 'add' as const, label: '➕ Qo\'shish', desc: 'Yangi joy qo\'shish' },
-          { id: 'list' as const, label: '📋 Joylar', desc: 'Barcha joylar ro\'yxati' },
-          { id: 'stats' as const, label: '📊 Statistika', desc: 'Ma\'lumotlar tahlili' },
+          { id: 'add' as const, label: '<i className="fa-solid fa-plus"></i> Qo\'shish', desc: 'Yangi joy qo\'shish' },
+          { id: 'list' as const, label: '<i className="fa-solid fa-clipboard"></i> Joylar', desc: 'Barcha joylar ro\'yxati' },
+          { id: 'stats' as const, label: '<i className="fa-solid fa-chart-simple"></i> Statistika', desc: 'Ma\'lumotlar tahlili' },
         ].map(tab => (
           <button key={tab.id} onClick={() => setActiveTab(tab.id)}
             className={`px-5 py-3 rounded-xl text-sm font-medium transition-all whitespace-nowrap ${activeTab === tab.id ? 'bg-emerald-600 text-white shadow-md scale-105' : 'bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-300 border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700'}`}>
@@ -291,7 +291,7 @@ export const AddLocationForm: React.FC<Props> = ({ onSubmit }) => {
           <div className="bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 p-6 shadow-sm">
             <div className="flex items-center justify-between mb-5">
               <h3 className="text-sm font-semibold text-gray-800 dark:text-gray-200 uppercase tracking-wider">
-                {editingId ? '✏️ Joyni tahrirlash' : '📍 Yangi joy qo\'shish'}
+                {editingId ? '<i className="fa-solid fa-pencil"></i> Joyni tahrirlash' : '<i className="fa-solid fa-location-dot"></i> Yangi joy qo\'shish'}
               </h3>
               {editingId && (
                 <button type="button" onClick={handleCancelEdit} className="text-xs text-red-500 hover:text-red-700 font-medium">Bekor qilish</button>
@@ -307,13 +307,13 @@ export const AddLocationForm: React.FC<Props> = ({ onSubmit }) => {
           </div>
 
           <div className="bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 p-6 shadow-sm">
-            <h3 className="text-sm font-semibold text-gray-800 dark:text-gray-200 uppercase tracking-wider mb-4">🗺️ Xaritada joylashuv</h3>
+            <h3 className="text-sm font-semibold text-gray-800 dark:text-gray-200 uppercase tracking-wider mb-4"><i className="fa-solid fa-map"></i> Xaritada joylashuv</h3>
             <MapPicker latitude={formData.latitude} longitude={formData.longitude} onCoordinateChange={handleCoordinateChange} />
             {errors.latitude && <p className="text-red-500 text-xs mt-2">{errors.latitude}</p>}
           </div>
 
           <Button type="submit" variant="primary" size="lg" disabled={isSubmitting} className="w-full">
-            {isSubmitting ? '⏳ Saqlanmoqda...' : editingId ? '💾 Yangilash' : '✅ Qo\'shish'}
+            {isSubmitting ? '<i className="fa-solid fa-hourglass"></i> Saqlanmoqda...' : editingId ? '<i className="fa-solid fa-floppy-disk"></i> Yangilash' : '<i className="fa-solid fa-check"></i> Qo\'shish'}
           </Button>
         </form>
       )}
@@ -324,12 +324,12 @@ export const AddLocationForm: React.FC<Props> = ({ onSubmit }) => {
           <div className="flex flex-col sm:flex-row gap-3">
             <select value={filterCity} onChange={(e) => setFilterCity(e.target.value)}
               className="flex-1 px-4 py-2.5 rounded-xl border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-800 text-sm text-gray-600 dark:text-gray-300 outline-none focus:ring-2 focus:ring-emerald-500">
-              <option value="all">🏙 Barcha shaharlar</option>
+              <option value="all"><i className="fa-solid fa-city"></i> Barcha shaharlar</option>
               {CITY_OPTIONS.map(c => <option key={c.value} value={c.value}>{c.label}</option>)}
             </select>
             <select value={filterCategory} onChange={(e) => setFilterCategory(e.target.value)}
               className="flex-1 px-4 py-2.5 rounded-xl border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-800 text-sm text-gray-600 dark:text-gray-300 outline-none focus:ring-2 focus:ring-emerald-500">
-              <option value="all">🏷 Barcha kategoriyalar</option>
+              <option value="all"><i className="fa-solid fa-tag"></i> Barcha kategoriyalar</option>
               {CATEGORY_OPTIONS.map(c => <option key={c.value} value={c.value}>{c.label}</option>)}
             </select>
             <span className="text-sm text-gray-400 flex items-center px-3">{filteredLocations.length} ta joy</span>
@@ -337,7 +337,7 @@ export const AddLocationForm: React.FC<Props> = ({ onSubmit }) => {
 
           {filteredLocations.length === 0 ? (
             <div className="text-center py-12 text-gray-400">
-              <span className="text-5xl block mb-3">📭</span>
+              <span className="text-5xl block mb-3"><i className="fa-solid fa-inbox"></i></span>
               <p className="font-medium">Joylar topilmadi</p>
               <p className="text-sm mt-1">Yangi joy qo'shish uchin "Qo'shish" bo'limiga o'ting</p>
             </div>
@@ -354,14 +354,14 @@ export const AddLocationForm: React.FC<Props> = ({ onSubmit }) => {
                       </div>
                       <p className="text-sm text-gray-500 dark:text-gray-400 mt-1 line-clamp-2">{loc.description}</p>
                       <div className="flex items-center gap-3 mt-2 text-xs text-gray-400">
-                        <span>⏱ {loc.averageTimeMinutes} daq</span>
-                        <span>📍 {loc.latitude?.toFixed(4)}, {loc.longitude?.toFixed(4)}</span>
-                        <span>📅 {new Date(loc.createdAt).toLocaleDateString('uz-UZ')}</span>
+                        <span><i className="fa-solid fa-stopwatch"></i> {loc.averageTimeMinutes} daq</span>
+                        <span><i className="fa-solid fa-location-dot"></i> {loc.latitude?.toFixed(4)}, {loc.longitude?.toFixed(4)}</span>
+                        <span><i className="fa-solid fa-calendar"></i> {new Date(loc.createdAt).toLocaleDateString('uz-UZ')}</span>
                       </div>
                     </div>
                     <div className="flex gap-1.5 flex-shrink-0">
-                      <button onClick={() => handleEdit(loc)} className="p-2 rounded-lg bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 hover:bg-blue-100 dark:hover:bg-blue-900/50 transition-colors" title="Tahrirlash">✏️</button>
-                      <button onClick={() => handleDelete(loc.id)} className="p-2 rounded-lg bg-red-50 dark:bg-red-900/30 text-red-600 dark:text-red-400 hover:bg-red-100 dark:hover:bg-red-900/50 transition-colors" title="O'chirish">🗑</button>
+                      <button onClick={() => handleEdit(loc)} className="p-2 rounded-lg bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 hover:bg-blue-100 dark:hover:bg-blue-900/50 transition-colors" title="Tahrirlash"><i className="fa-solid fa-pencil"></i></button>
+                      <button onClick={() => handleDelete(loc.id)} className="p-2 rounded-lg bg-red-50 dark:bg-red-900/30 text-red-600 dark:text-red-400 hover:bg-red-100 dark:hover:bg-red-900/50 transition-colors" title="O'chirish"><i className="fa-solid fa-trash-can"></i></button>
                     </div>
                   </div>
                 </div>
@@ -376,22 +376,22 @@ export const AddLocationForm: React.FC<Props> = ({ onSubmit }) => {
         <div className="space-y-5">
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
             <div className="bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 p-5 shadow-sm text-center">
-              <span className="text-3xl block mb-2">📍</span>
+              <span className="text-3xl block mb-2"><i className="fa-solid fa-location-dot"></i></span>
               <p className="text-2xl font-bold text-gray-800 dark:text-white">{totalLocations}</p>
               <p className="text-xs text-gray-500 mt-0.5">Jami joylar</p>
             </div>
             <div className="bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 p-5 shadow-sm text-center">
-              <span className="text-3xl block mb-2">🏙</span>
+              <span className="text-3xl block mb-2"><i className="fa-solid fa-city"></i></span>
               <p className="text-2xl font-bold text-gray-800 dark:text-white">{cityCount}</p>
               <p className="text-xs text-gray-500 mt-0.5">Shaharlar</p>
             </div>
             <div className="bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 p-5 shadow-sm text-center">
-              <span className="text-3xl block mb-2">🏷</span>
+              <span className="text-3xl block mb-2"><i className="fa-solid fa-tag"></i></span>
               <p className="text-2xl font-bold text-gray-800 dark:text-white">{Object.keys(categoryCounts).length}</p>
               <p className="text-xs text-gray-500 mt-0.5">Kategoriyalar</p>
             </div>
             <div className="bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 p-5 shadow-sm text-center">
-              <span className="text-3xl block mb-2">⏱</span>
+              <span className="text-3xl block mb-2"><i className="fa-solid fa-stopwatch"></i></span>
               <p className="text-2xl font-bold text-gray-800 dark:text-white">
                 {locations.reduce((sum, l) => sum + l.averageTimeMinutes, 0)}
               </p>
@@ -401,7 +401,7 @@ export const AddLocationForm: React.FC<Props> = ({ onSubmit }) => {
 
           {/* Category breakdown */}
           <div className="bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 p-6 shadow-sm">
-            <h3 className="font-bold text-gray-800 dark:text-white mb-4">📊 Kategoriyalar bo'yicha</h3>
+            <h3 className="font-bold text-gray-800 dark:text-white mb-4"><i className="fa-solid fa-chart-simple"></i> Kategoriyalar bo'yicha</h3>
             <div className="space-y-3">
               {CATEGORY_OPTIONS.map(cat => {
                 const count = categoryCounts[cat.value] || 0
@@ -424,7 +424,7 @@ export const AddLocationForm: React.FC<Props> = ({ onSubmit }) => {
 
           {/* City breakdown */}
           <div className="bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 p-6 shadow-sm">
-            <h3 className="font-bold text-gray-800 dark:text-white mb-4">🏙 Shaharlar bo'yicha</h3>
+            <h3 className="font-bold text-gray-800 dark:text-white mb-4"><i className="fa-solid fa-city"></i> Shaharlar bo'yicha</h3>
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
               {CITY_OPTIONS.map(city => {
                 const count = locations.filter(l => l.city === city.value).length

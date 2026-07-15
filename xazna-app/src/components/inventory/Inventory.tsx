@@ -27,13 +27,13 @@ const Inventory: React.FC = () => {
   if (inventory.length === 0) {
     return (
       <div className="space-y-6">
-        <h2 className="text-2xl font-bold text-gray-800 dark:text-white">🎒 Inventar</h2>
+        <h2 className="text-2xl font-bold text-gray-800 dark:text-white"><i className="fa-solid fa-backpack"></i> Inventar</h2>
         <div className="text-center py-16 bg-white dark:bg-gray-800 rounded-3xl shadow-sm">
-          <span className="text-6xl block mb-4">📦</span>
+          <span className="text-6xl block mb-4"><i className="fa-solid fa-box"></i></span>
           <h3 className="text-xl font-bold text-gray-800 dark:text-white mb-2">Inventar bo'sh</h3>
           <p className="text-gray-500 dark:text-gray-400 mb-6">Hali hech narsa sotib olmagansiz</p>
           <p className="text-sm text-gray-400 dark:text-gray-500">
-            Do'kondan kerakli narsalarni xarid qiling 🛒
+            Do'kondan kerakli narsalarni xarid qiling <i className="fa-solid fa-cart-shopping"></i>
           </p>
         </div>
       </div>
@@ -45,11 +45,11 @@ const Inventory: React.FC = () => {
       {/* Sarlavha */}
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-2xl font-bold text-gray-800 dark:text-white">🎒 Inventar</h2>
+          <h2 className="text-2xl font-bold text-gray-800 dark:text-white"><i className="fa-solid fa-backpack"></i> Inventar</h2>
           <p className="text-sm text-gray-500 dark:text-gray-400">Sizning xaridlaringiz ({inventory.length} ta)</p>
         </div>
         <div className="flex items-center gap-2 bg-amber-50 dark:bg-amber-900/30 px-4 py-2 rounded-full">
-          <span className="text-xl">🪙</span>
+          <span className="text-xl"><i className="fa-solid fa-coins"></i></span>
           <span className="font-bold text-amber-700 dark:text-amber-300 text-lg">{user.coins}</span>
         </div>
       </div>
@@ -66,7 +66,7 @@ const Inventory: React.FC = () => {
                 : 'bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
             }`}
           >
-            {cat === 'all' ? `📋 Barchasi (${inventory.length})` : `${SHOP_ITEM_CATEGORY_LABELS[cat]}`}
+            {cat === 'all' ? `<i className="fa-solid fa-clipboard"></i> Barchasi (${inventory.length})` : `${SHOP_ITEM_CATEGORY_LABELS[cat]}`}
           </button>
         ))}
       </div>
@@ -142,7 +142,7 @@ const Inventory: React.FC = () => {
                 onClick={() => handleUseItem(selectedItem)}
                 className="flex-1 px-4 py-3 bg-emerald-500 hover:bg-emerald-600 text-white rounded-xl font-medium transition-all active:scale-95 shadow-md"
               >
-                ✅ Foydalanish
+                <i className="fa-solid fa-check"></i> Foydalanish
               </button>
             </div>
           </div>

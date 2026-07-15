@@ -3,9 +3,9 @@ import { useAppStore } from '../../hooks/useAppStore'
 import type { Mission, MissionType } from '../../types'
 
 const MISSIONS_TYPE_LABELS: Record<MissionType, { label: string; icon: string }> = {
-  daily: { label: 'Kunlik', icon: '📅' },
-  weekly: { label: 'Haftalik', icon: '📆' },
-  achievement: { label: 'Yutuqlar', icon: '🏆' },
+  daily: { label: 'Kunlik', icon: '<i className="fa-solid fa-calendar"></i>' },
+  weekly: { label: 'Haftalik', icon: '<i className="fa-solid fa-calendar-check"></i>' },
+  achievement: { label: 'Yutuqlar', icon: '<i className="fa-solid fa-trophy"></i>' },
 }
 
 const MISSIONS_TYPE_COLORS: Record<MissionType, string> = {
@@ -15,9 +15,9 @@ const MISSIONS_TYPE_COLORS: Record<MissionType, string> = {
 }
 
 const DIFFICULTY_BADGES: Record<string, { label: string; color: string; icon: string }> = {
-  easy: { label: 'Oson', color: 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-300', icon: '🟢' },
-  medium: { label: "O'rtacha", color: 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-300', icon: '🟡' },
-  hard: { label: 'Qiyin', color: 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-300', icon: '🔴' },
+  easy: { label: 'Oson', color: 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-300', icon: '<i className="fa-solid fa-circle"></i>' },
+  medium: { label: "O'rtacha", color: 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-300', icon: '<i className="fa-solid fa-circle"></i>' },
+  hard: { label: 'Qiyin', color: 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-300', icon: '<i className="fa-solid fa-circle"></i>' },
 }
 
 // Countdown timer hook
@@ -71,7 +71,7 @@ const MissionCard: React.FC<{
           }`}>
             <span className="text-2xl">{mission.icon}</span>
             {mission.status === 'completed' && (
-              <span className="absolute -top-1 -right-1 text-sm">✨</span>
+              <span className="absolute -top-1 -right-1 text-sm"><i className="fa-solid fa-wand-magic-sparkles"></i></span>
             )}
           </div>
 
@@ -84,12 +84,12 @@ const MissionCard: React.FC<{
               </span>
               {mission.status === 'completed' && (
                 <span className="text-xs px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300 font-medium">
-                  ✅ Bajarildi
+                  <i className="fa-solid fa-check"></i> Bajarildi
                 </span>
               )}
               {mission.status === 'claimed' && (
                 <span className="text-xs px-2 py-0.5 rounded-full bg-gray-100 text-gray-500 dark:bg-gray-700 dark:text-gray-400 font-medium">
-                  📦 Olindi
+                  <i className="fa-solid fa-box"></i> Olindi
                 </span>
               )}
             </div>
@@ -100,7 +100,7 @@ const MissionCard: React.FC<{
               <div className="mt-3 space-y-1.5">
                 <div className="flex items-center justify-between text-xs text-gray-500 dark:text-gray-400">
                   <span className="flex items-center gap-1">
-                    <span className="text-emerald-500">●</span>
+                    <span className="text-emerald-500"><i className="fa-solid fa-circle"></i></span>
                     {mission.requirements.current} / {mission.requirements.target}
                   </span>
                   <span className="font-medium">{mission.progress}%</span>
@@ -121,14 +121,14 @@ const MissionCard: React.FC<{
             {/* Reward preview */}
             <div className="flex items-center gap-3 mt-3 text-xs text-gray-600 dark:text-gray-300">
               <span className="flex items-center gap-1 bg-amber-50 dark:bg-amber-900/20 px-2 py-0.5 rounded-full">
-                🪙 {mission.reward.coins}
+                <i className="fa-solid fa-coins"></i> {mission.reward.coins}
               </span>
               <span className="flex items-center gap-1 bg-blue-50 dark:bg-blue-900/20 px-2 py-0.5 rounded-full">
-                ⭐ {mission.reward.experience} XP
+                <i className="fa-solid fa-star"></i> {mission.reward.experience} XP
               </span>
               {mission.reward.item && (
                 <span className="flex items-center gap-1 bg-purple-50 dark:bg-purple-900/20 px-2 py-0.5 rounded-full">
-                  🎁 {mission.reward.item}
+                  <i className="fa-solid fa-gift"></i> {mission.reward.item}
                 </span>
               )}
             </div>
@@ -141,25 +141,25 @@ const MissionCard: React.FC<{
                 onClick={(e) => { e.stopPropagation(); onClaim(mission.id) }}
                 className="px-5 py-2.5 bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 text-white rounded-xl text-sm font-semibold transition-all active:scale-95 shadow-md hover:shadow-lg animate-bounce-in"
               >
-                📥 Olish
+                <i className="fa-solid fa-download"></i> Olish
               </button>
             )}
             {mission.status === 'in_progress' && (
               <span className="px-4 py-2 bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 rounded-xl text-sm font-medium">
-                ⏳ Bajarilmoqda
+                <i className="fa-solid fa-hourglass"></i> Bajarilmoqda
               </span>
             )}
             {mission.status === 'available' && (
               <span className="px-4 py-2 bg-gray-50 dark:bg-gray-700 text-gray-400 dark:text-gray-500 rounded-xl text-sm font-medium">
-                🔒 Mavjud
+                <i className="fa-solid fa-lock"></i> Mavjud
               </span>
             )}
             {mission.status === 'claimed' && (
-              <span className="text-2xl">✅</span>
+              <span className="text-2xl"><i className="fa-solid fa-check"></i></span>
             )}
             {/* Expand indicator */}
             <span className={`text-gray-300 dark:text-gray-600 text-sm transition-transform ${isExpanded ? 'rotate-180' : ''}`}>
-              ▼
+              <i className="fa-solid fa-chevron-down"></i>
             </span>
           </div>
         </div>
@@ -186,13 +186,13 @@ const MissionCard: React.FC<{
               <div className="bg-gray-50 dark:bg-gray-700/50 rounded-xl p-3 text-center">
                 <p className="text-xs text-gray-400 dark:text-gray-500">Mukofot</p>
                 <p className="font-semibold text-amber-600 dark:text-amber-400 text-sm mt-0.5">
-                  🪙 {mission.reward.coins}
+                  <i className="fa-solid fa-coins"></i> {mission.reward.coins}
                 </p>
               </div>
               <div className="bg-gray-50 dark:bg-gray-700/50 rounded-xl p-3 text-center">
                 <p className="text-xs text-gray-400 dark:text-gray-500">Tajriba</p>
                 <p className="font-semibold text-blue-600 dark:text-blue-400 text-sm mt-0.5">
-                  ⭐ {mission.reward.experience} XP
+                  <i className="fa-solid fa-star"></i> {mission.reward.experience} XP
                 </p>
               </div>
             </div>
@@ -200,7 +200,7 @@ const MissionCard: React.FC<{
             {/* Progress hint */}
             {mission.status !== 'claimed' && mission.progress < 100 && (
               <div className="bg-blue-50 dark:bg-blue-900/20 rounded-xl p-3 text-sm text-blue-700 dark:text-blue-300">
-                <p className="font-medium mb-1">💡 Maslahat:</p>
+                <p className="font-medium mb-1"><i className="fa-solid fa-lightbulb"></i> Maslahat:</p>
                 <p className="text-xs">
                   {mission.type === 'daily' && "Kunlik missiyalarni bajarish uchun har kuni yangi imkoniyatlar mavjud!"}
                   {mission.type === 'weekly' && "Haftalik missiyalarni bajarishga ko'proq vaqt ajrating!"}
@@ -213,7 +213,7 @@ const MissionCard: React.FC<{
             {/* Item reward highlight */}
             {mission.reward.item && (
               <div className="bg-purple-50 dark:bg-purple-900/20 rounded-xl p-3 text-sm text-purple-700 dark:text-purple-300 border border-purple-200 dark:border-purple-800">
-                <p className="font-medium">🎁 Maxsus mukofot: <strong>{mission.reward.item}</strong></p>
+                <p className="font-medium"><i className="fa-solid fa-gift"></i> Maxsus mukofot: <strong>{mission.reward.item}</strong></p>
                 <p className="text-xs mt-1">Ushbu missiyani bajarish orqali noyob mukofotga ega bo'ling!</p>
               </div>
             )}
@@ -291,11 +291,11 @@ const Missions: React.FC = () => {
       {/* Sarlavha va statistika */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div>
-          <h2 className="text-2xl font-bold text-gray-800 dark:text-white">🎯 Missiyalar</h2>
+          <h2 className="text-2xl font-bold text-gray-800 dark:text-white"><i className="fa-solid fa-bullseye"></i> Missiyalar</h2>
           <p className="text-sm text-gray-500 dark:text-gray-400">Vazifalarni bajarib, tanga va tajriba to'plang</p>
         </div>
         <div className="flex items-center gap-2 bg-blue-50 dark:bg-blue-900/30 px-4 py-2 rounded-full self-start">
-          <span className="text-lg">📋</span>
+          <span className="text-lg"><i className="fa-solid fa-clipboard"></i></span>
           <span className="font-bold text-blue-700 dark:text-blue-300 text-sm">
             {availableCount} ta faol
           </span>
@@ -307,7 +307,7 @@ const Missions: React.FC = () => {
         <div className="bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 rounded-2xl p-3 border border-blue-100 dark:border-blue-800/30">
           <div className="flex items-center justify-between text-sm">
             <div className="flex items-center gap-2">
-              <span className="text-lg">⏰</span>
+              <span className="text-lg"><i className="fa-solid fa-clock"></i></span>
               <span className="text-gray-700 dark:text-gray-200 font-medium">Kunlik missiyalar yangilanadi:</span>
             </div>
             <span className="font-mono font-bold text-blue-600 dark:text-blue-400 bg-white dark:bg-gray-800 px-3 py-1 rounded-lg shadow-sm">
@@ -321,13 +321,13 @@ const Missions: React.FC = () => {
       {claimedMessage && (
         <div className="p-4 bg-gradient-to-r from-emerald-50 to-amber-50 dark:from-emerald-900/30 dark:to-amber-900/30 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800 rounded-xl shadow-lg animate-slide-down">
           <div className="flex items-center gap-3">
-            <span className="text-3xl animate-bounce-in">🎉</span>
+            <span className="text-3xl animate-bounce-in"><i className="fa-solid fa-circle-check"></i></span>
             <div>
               <p className="font-semibold">"{claimedMessage.text}" bajarildi!</p>
               <p className="text-sm mt-0.5">
-                <span className="font-bold">+{claimedMessage.coins} 🪙</span>
+                <span className="font-bold">+{claimedMessage.coins} <i className="fa-solid fa-coins"></i></span>
                 <span className="mx-1">|</span>
-                <span className="font-bold">+{claimedMessage.xp} ⭐ XP</span>
+                <span className="font-bold">+{claimedMessage.xp} <i className="fa-solid fa-star"></i> XP</span>
               </p>
             </div>
           </div>
@@ -346,7 +346,7 @@ const Missions: React.FC = () => {
                 : 'bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
             }`}
           >
-            {type === 'all' ? '📋 Barchasi' : `${MISSIONS_TYPE_LABELS[type].icon} ${MISSIONS_TYPE_LABELS[type].label}`}
+            {type === 'all' ? '<i className="fa-solid fa-clipboard"></i> Barchasi' : `${MISSIONS_TYPE_LABELS[type].icon} ${MISSIONS_TYPE_LABELS[type].label}`}
             {type !== 'all' && missionCounts[type] && (
               <span className={`ml-1.5 px-1.5 py-0.5 text-xs rounded-full ${
                 selectedType === type
@@ -381,7 +381,7 @@ const Missions: React.FC = () => {
 
         {filteredMissions.length === 0 && (
           <div className="text-center py-12 text-gray-400 dark:text-gray-500">
-            <span className="text-5xl block mb-3">📭</span>
+            <span className="text-5xl block mb-3"><i className="fa-solid fa-inbox"></i></span>
             <p className="text-lg font-medium">Bu turdagi missiyalar hozircha mavjud emas</p>
             <p className="text-sm mt-1">Yangi missiyalar qo'shilishini kuting!</p>
           </div>

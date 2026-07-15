@@ -7,37 +7,37 @@ import { Button } from '../ui/Button'
 // Tezkor javoblar — qadamga qarab
 const QUICK_REPLIES: Record<string, { label: string; icon: string }[]> = {
   city: [
-    { label: 'Toshkent', icon: '🏙' },
-    { label: 'Samarqand', icon: '🏛' },
-    { label: 'Buxoro', icon: '🕌' },
-    { label: 'Xiva', icon: '🏰' },
-    { label: 'Namangan', icon: '🌄' },
-    { label: "Farg'ona", icon: '🌸' },
+    { label: 'Toshkent', icon: '<i className="fa-solid fa-city"></i>' },
+    { label: 'Samarqand', icon: '<i className="fa-solid fa-landmark"></i>' },
+    { label: 'Buxoro', icon: '<i className="fa-solid fa-mosque"></i>' },
+    { label: 'Xiva', icon: '<i className="fa-solid fa-chess-rook"></i>' },
+    { label: 'Namangan', icon: '<i className="fa-solid fa-sunrise"></i>' },
+    { label: "Farg'ona", icon: '<i className="fa-solid fa-flower"></i>' },
   ],
   duration: [
-    { label: '2 soat', icon: '⚡' },
-    { label: '4 soat', icon: '🕐' },
-    { label: '6 soat', icon: '🌤' },
-    { label: '8 soat', icon: '🎉' },
-    { label: '2 kun', icon: '📆' },
+    { label: '2 soat', icon: '<i className="fa-solid fa-bolt"></i>' },
+    { label: '4 soat', icon: '<i className="fa-solid fa-clock"></i>' },
+    { label: '6 soat', icon: '<i className="fa-solid fa-cloud-sun"></i>' },
+    { label: '8 soat', icon: '<i className="fa-solid fa-circle-check"></i>' },
+    { label: '2 kun', icon: '<i className="fa-solid fa-calendar-check"></i>' },
   ],
   budget: [
-    { label: "O'rtacha", icon: '💰' },
-    { label: 'Premium', icon: '💎' },
+    { label: "O'rtacha", icon: '<i className="fa-solid fa-coins"></i>' },
+    { label: 'Premium', icon: '<i className="fa-solid fa-gem"></i>' },
   ],
   transport: [
-    { label: 'Piyoda', icon: '🚶' },
-    { label: 'Taksi', icon: '🚗' },
-    { label: 'Aralash', icon: '🔄' },
+    { label: 'Piyoda', icon: '<i className="fa-solid fa-person-walking"></i>' },
+    { label: 'Taksi', icon: '<i className="fa-solid fa-car"></i>' },
+    { label: 'Aralash', icon: '<i className="fa-solid fa-rotate"></i>' },
   ],
   prayer: [
-    { label: 'Ha', icon: '🕌' },
-    { label: "Yo'q", icon: '⏰' },
+    { label: 'Ha', icon: '<i className="fa-solid fa-mosque"></i>' },
+    { label: "Yo'q", icon: '<i className="fa-solid fa-clock"></i>' },
   ],
   food: [
-    { label: 'Halol', icon: '🥩' },
-    { label: 'Vegetarian', icon: '🥗' },
-    { label: 'Har qanday', icon: '🍲' },
+    { label: 'Halol', icon: '<i className="fa-solid fa-drumstick-bite"></i>' },
+    { label: 'Vegetarian', icon: '<i className="fa-solid fa-leaf"></i>' },
+    { label: 'Har qanday', icon: '<i className="fa-solid fa-utensils"></i>' },
   ],
 }
 
@@ -90,7 +90,7 @@ export const ChatBot: React.FC = () => {
       {/* Header */}
       <div className="bg-gradient-to-r from-primary-600 to-primary-800 px-5 py-4 flex items-center gap-3">
         <div className="w-11 h-11 rounded-xl bg-white/20 flex items-center justify-center text-xl shadow-inner">
-          🧭
+          <i className="fa-solid fa-compass"></i>
         </div>
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2">
@@ -170,7 +170,7 @@ export const ChatBot: React.FC = () => {
                          hover:border-gray-300 hover:text-gray-600 dark:hover:text-gray-300
                          active:scale-95 transition-all duration-200 flex items-center gap-1"
             >
-              ⬅️ Orqaga
+              <i className="fa-solid fa-arrow-left"></i> Orqaga
             </button>
           </div>
         )}
