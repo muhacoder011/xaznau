@@ -6028,15 +6028,15 @@
             if (typeof getTodayMission === 'function') {
                 const mission = getTodayMission();
                 if (mission && mission.completed) {
-                    preview.textContent = '<i class="fa-solid fa-check"></i> Bugungi missiya bajarildi! <i class="fa-solid fa-circle-check"></i>';
+                    preview.innerHTML = '<i class="fa-solid fa-check"></i> Bugungi missiya bajarildi! <i class="fa-solid fa-circle-check"></i>';
                 } else if (mission) {
                     const title = mission.title.replace(/[^\w\s\u0600-\u06FF\u0400-\u04FF]/g, '').trim();
-                    preview.textContent = '<i class="fa-solid fa-bullseye"></i> ' + title + ' — +' + (mission.stars || 3) + ' <i class="fa-solid fa-star"></i>';
+                    preview.innerHTML = '<i class="fa-solid fa-bullseye"></i> ' + title + ' — +' + (mission.stars || 3) + ' <i class="fa-solid fa-star"></i>';
                 } else {
-                    preview.textContent = '<i class="fa-solid fa-bullseye"></i> Bugungi missiyani ko\'rish';
+                    preview.innerHTML = '<i class="fa-solid fa-bullseye"></i> Bugungi missiyani ko\'rish';
                 }
             } else {
-                preview.textContent = '<i class="fa-solid fa-bullseye"></i> Bugungi missiyani ko\'rish';
+                preview.innerHTML = '<i class="fa-solid fa-bullseye"></i> Bugungi missiyani ko\'rish';
             }
         }
 
