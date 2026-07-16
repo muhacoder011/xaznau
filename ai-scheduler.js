@@ -164,9 +164,9 @@ function completeMission() {
         if (typeof saveStars === 'function') saveStars();
         if (typeof renderAll === 'function') renderAll();
         
-        schedulerToast('<i class="fa-solid fa-star"></i>', '+' + awarded + ' yulduz! Missiya bajarildi! <i class='fa-solid fa-circle-check'></i>', 3000);
+        schedulerToast('<i class="fa-solid fa-star"></i>', '+' + awarded + ' yulduz! Missiya bajarildi! <i class="fa-solid fa-circle-check"></i>', 3000);
     } else {
-        schedulerToast('<i class="fa-solid fa-star"></i>', '+' + starAmount + ' yulduz! Missiya bajarildi! <i class='fa-solid fa-circle-check'></i>', 3000);
+        schedulerToast('<i class="fa-solid fa-star"></i>', '+' + starAmount + ' yulduz! Missiya bajarildi! <i class="fa-solid fa-circle-check"></i>', 3000);
     }
     
     missionHistory.push({ ...missionState, completedAt: new Date().toISOString() });
@@ -219,7 +219,7 @@ function renderMissionContainer(containerId) {
     const isW = isWeekend();
     
     // Time-based greeting
-    const timeGreeting = hour < 12 ? 'Xayrli tong <i class='fa-solid fa-sun'></i>' : hour < 18 ? 'Xayrli kun <i class='fa-solid fa-sun'></i>' : 'Xayrli kech <i class='fa-solid fa-city'></i>';
+    const timeGreeting = hour < 12 ? 'Xayrli tong <i class="fa-solid fa-sun"></i>' : hour < 18 ? 'Xayrli kun <i class="fa-solid fa-sun"></i>' : 'Xayrli kech <i class="fa-solid fa-city"></i>';
     
     let html = '<div class="mission-container">';
     
@@ -232,17 +232,17 @@ function renderMissionContainer(containerId) {
     // Trip status banner
     if (tripInfo.active) {
         html += '<div class="trip-status-banner">';
-        html += '<span class="tsb-icon"><i class='fa-solid fa-suitcase'></i></span>';
+        html += '<span class="tsb-icon"><i class="fa-solid fa-suitcase"></i></span>';
         html += '<div class="tsb-content">';
         html += '<div class="tsb-title">' + tripInfo.city + ' — jonli sayohat</div>';
         if (tripInfo.currentStop) {
-            html += '<div class="tsb-stop"><i class='fa-solid fa-location-dot'></i> Hozir: ' + tripInfo.currentStop + '</div>';
+            html += '<div class="tsb-stop"><i class="fa-solid fa-location-dot"></i> Hozir: ' + tripInfo.currentStop + '</div>';
         }
         html += '</div>';
         html += '</div>';
     } else if (isW) {
         html += '<div class="weekend-banner">';
-        html += '<span class="tsb-icon"><i class='fa-solid fa-circle-check'></i></span>';
+        html += '<span class="tsb-icon"><i class="fa-solid fa-circle-check"></i></span>';
         html += '<div class="tsb-content">';
         html += '<div class="tsb-title">Dam olish kuni!</div>';
         html += '<div class="tsb-stop">Bugun sayohatga chiqish uchun ajoyib kun!</div>';
@@ -253,7 +253,7 @@ function renderMissionContainer(containerId) {
     // Sleep time message
     if (isSleepTime) {
         html += '<div class="sleep-mission-card">';
-        html += '<div class="sleep-icon"><i class='fa-solid fa-moon'></i></div>';
+        html += '<div class="sleep-icon"><i class="fa-solid fa-moon"></i></div>';
         html += '<div class="sleep-text">';
         html += '<strong>Dam olish vaqti</strong><br>';
         html += '<span style="font-size:12px;opacity:0.8;">Ertangi sarguzashtlar uchun kuch to\'plang!</span>';
@@ -265,10 +265,10 @@ function renderMissionContainer(containerId) {
     if (mission && !isSleepTime) {
         const isDone = mission.completed;
         html += '<div class="mission-card ' + (isDone ? 'mission-done' : '') + '">';
-        html += '<div class="mission-badge"><i class='fa-solid fa-bullseye'></i> Kunlik Missiya</div>';
+        html += '<div class="mission-badge"><i class="fa-solid fa-bullseye"></i> Kunlik Missiya</div>';
         
         if (isDone) {
-            html += '<div class="mission-complete-icon"><i class='fa-solid fa-check'></i></div>';
+            html += '<div class="mission-complete-icon"><i class="fa-solid fa-check"></i></div>';
         }
         
         html += '<div class="mission-icon-large">' + (mission.icon || '<i class="fa-solid fa-bullseye"></i>') + '</div>';
@@ -279,7 +279,7 @@ function renderMissionContainer(containerId) {
         html += '<div class="mission-stars">';
         html += '<span class="ms-label">Mukofot:</span>';
         for (let i = 0; i < (mission.stars || 3); i++) {
-            html += '<span class="ms-star"><i class='fa-solid fa-star'></i></span>';
+            html += '<span class="ms-star"><i class="fa-solid fa-star"></i></span>';
         }
         html += '<span class="ms-count">+' + (mission.stars || 3) + ' yulduz</span>';
         html += '</div>';
@@ -287,14 +287,14 @@ function renderMissionContainer(containerId) {
         // Action buttons
         html += '<div class="mission-actions">';
         if (!isDone) {
-            html += '<button class="cta-btn mission-complete-btn" onclick="completeMission()"><i class='fa-solid fa-check'></i> Missiyani bajarildi deb belgilash</button>';
-            html += '<button class="cta-btn ghost mission-refresh-btn" onclick="if(confirm(\'Yangi missiya generatsiya qilinsinmi?\'))refreshMission()"><i class='fa-solid fa-rotate'></i> Yangi missiya</button>';
+            html += '<button class="cta-btn mission-complete-btn" onclick="completeMission()"><i class="fa-solid fa-check"></i> Missiyani bajarildi deb belgilash</button>';
+            html += '<button class="cta-btn ghost mission-refresh-btn" onclick="if(confirm(\'Yangi missiya generatsiya qilinsinmi?\'))refreshMission()"><i class="fa-solid fa-rotate"></i> Yangi missiya</button>';
         } else {
             html += '<div class="mission-done-message">';
-            html += '<span class="md-icon"><i class='fa-solid fa-circle-check'></i></span>';
+            html += '<span class="md-icon"><i class="fa-solid fa-circle-check"></i></span>';
             html += '<span>Bugungi missiya bajarildi! Ertaga yangi sarguzasht kutmoqda.</span>';
             html += '</div>';
-            html += '<button class="cta-btn ghost" onclick="refreshMission()"><i class='fa-solid fa-rotate'></i> Yangi missiya</button>';
+            html += '<button class="cta-btn ghost" onclick="refreshMission()"><i class="fa-solid fa-rotate"></i> Yangi missiya</button>';
         }
         html += '</div>';
         html += '</div>';
@@ -302,7 +302,7 @@ function renderMissionContainer(containerId) {
     
     // Suggestions / travel prompts
     if (!isSleepTime) {
-        html += '<div class="mission-section-title"><i class='fa-solid fa-lightbulb'></i> Sayohat maslahatlari</div>';
+        html += '<div class="mission-section-title"><i class="fa-solid fa-lightbulb"></i> Sayohat maslahatlari</div>';
         html += '<div class="mission-tips">';
         
         const tips = [
@@ -325,7 +325,7 @@ function renderMissionContainer(containerId) {
     
     // Mission history (last few)
     if (missionHistory.length > 0) {
-        html += '<div class="mission-section-title"><i class='fa-solid fa-scroll'></i> Missiyalar tarixi</div>';
+        html += '<div class="mission-section-title"><i class="fa-solid fa-scroll"></i> Missiyalar tarixi</div>';
         html += '<div class="mission-history">';
         const recent = missionHistory.slice(-5).reverse();
         recent.forEach(h => {
@@ -334,7 +334,7 @@ function renderMissionContainer(containerId) {
             html += '<span class="hi-icon">' + (h.icon || '<i class="fa-solid fa-bullseye"></i>') + '</span>';
             html += '<span class="hi-title">' + (h.title || '').replace(/[^\w\s\u0600-\u06FF\u0400-\u04FF]/g, '').trim() + '</span>';
             html += '<span class="hi-date">' + date + '</span>';
-            html += '<span class="hi-status"><i class='fa-solid fa-check'></i></span>';
+            html += '<span class="hi-status"><i class="fa-solid fa-check"></i></span>';
             html += '</div>';
         });
         html += '</div>';
