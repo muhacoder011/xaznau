@@ -1183,6 +1183,15 @@
             color: #fff;
         }
 
+        /* City selection chips in chat — gradient cards */
+        .city-chip:hover {
+            transform: scale(1.05) !important;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.25) !important;
+        }
+        .city-chip:active {
+            transform: scale(0.95) !important;
+        }
+
         .confirm-btn {
             background: var(--gold);
             color: #3a2708;
@@ -4982,7 +4991,7 @@
         <section class="screen active" data-screen="home">
             <!-- Simple top bar -->
             <div class="home-topbar">
-                <div class="home-greeting-sm">Xush kelibsiz <i class="fa-solid fa-hand-wave"></i></div>
+                <div class="home-greeting-sm"><i class="fa-solid fa-hand-wave"></i> Salom, <span id="homeUserName">Sayohatchi</span></div>
                 <div class="home-top-actions">
                     <button class="icon-btn" onclick="openScanner()" title="QR Skanner"><i
                             class="fa-solid fa-qrcode"></i></button>
@@ -4992,7 +5001,7 @@
 
             <!-- Main greeting -->
             <div class="home-greeting">
-                <div class="home-subtitle">Xush kelibsiz, <span id="homeUserName">Sayohatchi</span>! <i class="fa-solid fa-hand-wave"></i></div>
+                <div class="home-subtitle">Xush kelibsiz <i class="fa-solid fa-hand-wave"></i></div>
                 <h1 class="home-title">Bugun qayerga <span>sayohat</span> qilamiz?</h1>
             </div>
 
@@ -5197,6 +5206,10 @@
             </div>
 
             <div id="adminLogin">
+                <div style="font-size:13px;color:var(--ink-soft);margin-bottom:15px;text-align:center;padding:10px;background:var(--surface-2);border-radius:12px;">
+                    <i class="fa-solid fa-lock"></i> 
+                    Login: <strong>Xazina</strong> &nbsp;|&nbsp; Parol: <strong>xazina2026</strong>
+                </div>
                 <input id="adminUser" placeholder="Login" data-tr="admin_login"
                     style="width:100%;padding:15px;margin-bottom:15px;border-radius:12px;">
                 <input id="adminPass" type="password" placeholder="Parol" data-tr="admin_pass"
@@ -5321,12 +5334,106 @@
             'linear-gradient(135deg,#3a7d94,#1f4b5c)'
         ];
 
-        const CITIES = [];
+        const CITIES = [
+            { name: 'Toshkent', emoji: '<i class="fa-solid fa-city"></i> 🌆', count: 25, categories: ['tarixiy', 'madaniy', 'zamonaviy'] },
+            { name: 'Samarqand', emoji: '<i class="fa-solid fa-landmark"></i> 🕌', count: 30, categories: ['tarixiy', 'madaniy'] },
+            { name: 'Buxoro', emoji: '<i class="fa-solid fa-mosque"></i> 🏛️', count: 28, categories: ['tarixiy', 'madaniy'] },
+            { name: 'Xiva', emoji: '<i class="fa-solid fa-archway"></i> 🏰', count: 20, categories: ['tarixiy'] },
+            { name: 'Shahrisabz', emoji: '<i class="fa-solid fa-monument"></i> 🏗️', count: 15, categories: ['tarixiy'] },
+            { name: 'Namangan', emoji: '<i class="fa-solid fa-tree"></i> 🌳', count: 18, categories: ['tabiat', 'madaniy'] },
+            { name: 'Farg\'ona', emoji: '<i class="fa-solid fa-leaf"></i> 🌿', count: 22, categories: ['tabiat', 'zamonaviy'] },
+            { name: 'Andijon', emoji: '<i class="fa-solid fa-shop"></i> 🏪', count: 16, categories: ['tarixiy', 'zamonaviy'] },
+            { name: 'Nukus', emoji: '<i class="fa-solid fa-palette"></i> 🎨', count: 12, categories: ['madaniy'] },
+            { name: 'Termiz', emoji: '<i class="fa-solid fa-sun"></i> ☀️', count: 14, categories: ['tarixiy', 'tabiat'] },
+            { name: 'Jizzax', emoji: '<i class="fa-solid fa-mountain"></i> ⛰️', count: 10, categories: ['tabiat'] },
+            { name: 'Guliston', emoji: '<i class="fa-solid fa-seedling"></i> 🌱', count: 8, categories: ['tabiat', 'zamonaviy'] }
+        ];
 
-        // City images — empty by default, admin can add cities via admin panel
+        // City images — emoji-based by default, admin can override via admin panel
         const CITY_IMAGES = {};
 
-        const ITINERARIES = {};
+        const ITINERARIES = {
+            "Toshkent": [
+                { name: "Mustaqillik maydoni", time: "09:00", dur: 45, desc: "O'zbekistonning asosiy maydoni — Mustaqillik ramzi", emoji: '<i class="fa-solid fa-flag"></i>', image: null },
+                { name: "Chorsu bozori", time: "10:00", dur: 60, desc: "Toshkentning eng qadimiy va rang-barang bozori", emoji: '<i class="fa-solid fa-store"></i>', image: null },
+                { name: "Minor masjidi", time: "11:30", dur: 40, desc: "O'zbekistondagi eng katta masjid", emoji: '<i class="fa-solid fa-mosque"></i>', image: null },
+                { name: "Oliy Majlis binosi", time: "12:30", dur: 30, desc: "Parlament binosi — zamonaviy me'morchilik namunasi", emoji: '<i class="fa-solid fa-building-columns"></i>', image: null },
+                { name: "Toshkent teleminorasiga chiqish", time: "13:30", dur: 60, desc: "Shaharning eng baland nuqtasidan panoramik ko'rinish", emoji: '<i class="fa-solid fa-tower-broadcast"></i>', image: null },
+                { name: "Milliy bog'", time: "15:00", dur: 90, desc: "Yashil dam olish maskani — piyoda sayr qiling", emoji: '<i class="fa-solid fa-tree"></i>', image: null },
+                { name: "Amir Temur muzeyi", time: "16:45", dur: 50, desc: "Buyuk sarkarda tarixiga sayohat", emoji: '<i class="fa-solid fa-landmark"></i>', image: null },
+                { name: "TV minorasi", time: "18:00", dur: 45, desc: "Toshkent teleminorasi — shahar tungi chiroqlari manzarasi", emoji: '<i class="fa-solid fa-tower-observation"></i>', image: null }
+            ],
+            "Samarqand": [
+                { name: "Registon maydoni", time: "09:00", dur: 60, desc: "Samarqandning durdonasi — uchta madrasa majmuasi", emoji: '<i class="fa-solid fa-landmark"></i>', image: null },
+                { name: "Shohizinda", time: "10:30", dur: 45, desc: "Maqbaralar ko'chasi — moviy naqshlar", emoji: '<i class="fa-solid fa-archway"></i>', image: null },
+                { name: "Bibi-Xonim masjidi", time: "11:30", dur: 40, desc: "Amir Temur davrining ulkan me'moriy yodgorligi", emoji: '<i class="fa-solid fa-mosque"></i>', image: null },
+                { name: "Siyob bozori", time: "12:30", dur: 50, desc: "Mahalliy taomlar va mevalar — non, samsa va qandolat", emoji: '<i class="fa-solid fa-store"></i>', image: null },
+                { name: "Amir Temur maqbarasi", time: "14:00", dur: 40, desc: "Go'ri Amir — buyuk sarkanda dafn etilgan joy", emoji: '<i class="fa-solid fa-monument"></i>', image: null },
+                { name: "Ulug'bek rasadxonasi", time: "15:00", dur: 45, desc: "15-asr astronomik kuzatish markazi", emoji: '<i class="fa-solid fa-telescope"></i>', image: null },
+                { name: "Samarqand nonvoyxonasi", time: "16:15", dur: 30, desc: "An'anaviy non yopilishini tomosha qiling", emoji: '<i class="fa-solid fa-bread-slice"></i>', image: null }
+            ],
+            "Buxoro": [
+                { name: "Lyabi-Hovuz ansambli", time: "09:00", dur: 40, desc: "Soyabon ostidagi hovuz — Buxoro qalbi", emoji: '<i class="fa-solid fa-water"></i>', image: null },
+                { name: "Minorai Kalon", time: "10:00", dur: 35, desc: "12-asrda qurilgan minor — Buxoro ramzi", emoji: '<i class="fa-solid fa-tower-observation"></i>', image: null },
+                { name: "Arq qal'asi", time: "11:00", dur: 50, desc: "Buxoro amirlarining qarorgohi", emoji: '<i class="fa-solid fa-castle"></i>', image: null },
+                { name: "Samanidlar maqbarasi", time: "12:15", dur: 30, desc: "O'rta Osiyodagi eng qadimiy islomiy yodgorlik", emoji: '<i class="fa-solid fa-archway"></i>', image: null },
+                { name: "Buxoro bozori", time: "13:00", dur: 60, desc: "Mahalliy hunarmandlar va taomlar", emoji: '<i class="fa-solid fa-store"></i>', image: null },
+                { name: "Chor-Minor madrasasi", time: "14:30", dur: 35, desc: "Noyob to'rt minorali me'moriy yodgorlik", emoji: '<i class="fa-solid fa-building-columns"></i>', image: null }
+            ],
+            "Xiva": [
+                { name: "Ichan-Qal'a darvozasi", time: "09:00", dur: 30, desc: "Xiva qal'asiga kirish — ochiq osmon ostidagi muzey", emoji: '<i class="fa-solid fa-gate"></i>', image: null },
+                { name: "Muhammad Aminxon madrasasi", time: "09:45", dur: 40, desc: "Eng katta madrasa — hozir mehmonxona sifatida", emoji: '<i class="fa-solid fa-building-columns"></i>', image: null },
+                { name: "Juma masjidi", time: "10:45", dur: 35, desc: "215 ta yog'och ustunli noyob masjid", emoji: '<i class="fa-solid fa-mosque"></i>', image: null },
+                { name: "Tosh-Hovli saroyi", time: "11:45", dur: 45, desc: "Xonlarning yozgi saroyi — nafis naqshlar", emoji: '<i class="fa-solid fa-palace"></i>', image: null },
+                { name: "Islomxo'ja minorasi", time: "13:00", dur: 30, desc: "Eng baland minora — Xiva manzarasi", emoji: '<i class="fa-solid fa-tower-observation"></i>', image: null },
+                { name: "Xiva gilam ustaxonasi", time: "14:00", dur: 40, desc: "An'anaviy gilam to'qish jarayoni", emoji: '<i class="fa-solid fa-rug"></i>', image: null }
+            ],
+            "Shahrisabz": [
+                { name: "Oqsaroy saroyi", time: "09:00", dur: 50, desc: "Amir Temurning tug'ilgan shahridagi muhtasham saroy", emoji: '<i class="fa-solid fa-palace"></i>', image: null },
+                { name: "Kuk-Gumbaz masjidi", time: "10:15", dur: 35, desc: "Moviy gumbazli juma masjidi", emoji: '<i class="fa-solid fa-mosque"></i>', image: null },
+                { name: "Dor-ut Tilovat majmuasi", time: "11:15", dur: 40, desc: "Temuriylar maqbaralari majmuasi", emoji: '<i class="fa-solid fa-monument"></i>', image: null },
+                { name: "Shahrisabz bozori", time: "12:30", dur: 50, desc: "Qadimiy bozor — milliy taomlar va hunarmandchilik", emoji: '<i class="fa-solid fa-store"></i>', image: null }
+            ],
+            "Namangan": [
+                { name: "Namangan shahar bog'i", time: "09:00", dur: 60, desc: "Yashil bog' — dam olish va sayr qilish uchun", emoji: '<i class="fa-solid fa-tree"></i>', image: null },
+                { name: "Ota-Valixon masjidi", time: "10:30", dur: 35, desc: "20-asr boshlarida qurilgan go'zal masjid", emoji: '<i class="fa-solid fa-mosque"></i>', image: null },
+                { name: "Namangan bozori", time: "11:30", dur: 60, desc: "Viloyatning eng katta bozori — meva va sabzavotlar", emoji: '<i class="fa-solid fa-store"></i>', image: null },
+                { name: "Mingbuloq sayohati", time: "13:00", dur: 120, desc: "Shahar atrofidagi tabiat maskani", emoji: '<i class="fa-solid fa-mountain"></i>', image: null }
+            ],
+            "Farg'ona": [
+                { name: "Farg'ona viloyat muzeyi", time: "09:00", dur: 50, desc: "Viloyat tarixi va madaniyati", emoji: '<i class="fa-solid fa-landmark"></i>', image: null },
+                { name: "Ahmad al-Farg'oniy haykali", time: "10:15", dur: 25, desc: "Buyuk matematik va astronom haykali", emoji: '<i class="fa-solid fa-statue"></i>', image: null },
+                { name: "Farg'ona bozori", time: "11:00", dur: 60, desc: "Farg'ona vodiysining eng yirik bozori", emoji: '<i class="fa-solid fa-store"></i>', image: null },
+                { name: "Rishton kulolchilik ustaxonasi", time: "13:00", dur: 90, desc: "Mashhur Rishton sopol buyumlari ishlab chiqarilishi", emoji: '<i class="fa-solid fa-jar"></i>', image: null }
+            ],
+            "Andijon": [
+                { name: "Bobur nomli milliy bog'", time: "09:00", dur: 60, desc: "Zahiriddin Muhammad Bobur nomidagi go'zal bog'", emoji: '<i class="fa-solid fa-tree"></i>', image: null },
+                { name: "Bobur muzeyi", time: "10:30", dur: 45, desc: "Buyuk shoir va sarkarda hayoti va ijodi", emoji: '<i class="fa-solid fa-book"></i>', image: null },
+                { name: "Andijon bozori", time: "11:45", dur: 60, desc: "Vodiyning eng qadimiy bozorlaridan biri", emoji: '<i class="fa-solid fa-store"></i>', image: null },
+                { name: "Oqtepa arxeologik yodgorligi", time: "13:30", dur: 50, desc: "Qadimiy shahar harobalari", emoji: '<i class="fa-solid fa-archway"></i>', image: null }
+            ],
+            "Nukus": [
+                { name: "Savitskiy muzeyi", time: "09:00", dur: 120, desc: "Dunyodagi eng mashhur san'at muzeylaridan biri — Ikar usuli", emoji: '<i class="fa-solid fa-palette"></i>', image: null },
+                { name: "Nukus bozori", time: "11:30", dur: 50, desc: "Qoraqalpoq milliy taomlari va hunarmandchiligi", emoji: '<i class="fa-solid fa-store"></i>', image: null },
+                { name: "Mizdakxon qal'asi", time: "13:00", dur: 90, desc: "Qadimiy zardushtiylik yodgorligi", emoji: '<i class="fa-solid fa-monument"></i>', image: null }
+            ],
+            "Termiz": [
+                { name: "Fayoztepa budda ibodatxonasi", time: "09:00", dur: 60, desc: "Qadimiy budda monastiri — milodiy 1-asr", emoji: '<i class="fa-solid fa-pagoda"></i>', image: null },
+                { name: "Al-Hakim at-Termiziy maqbarasi", time: "10:30", dur: 35, desc: "Buyuk alloma maqbarasi", emoji: '<i class="fa-solid fa-mosque"></i>', image: null },
+                { name: "Termiz bozori", time: "11:30", dur: 50, desc: "Janubiy mintaqaning rang-barang bozori", emoji: '<i class="fa-solid fa-store"></i>', image: null },
+                { name: "Amudaryo qirg'og'i", time: "13:00", dur: 60, desc: "O'rta Osiyoning eng katta daryosi bo'yida sayr", emoji: '<i class="fa-solid fa-water"></i>', image: null }
+            ],
+            "Jizzax": [
+                { name: "Zomin milliy bog'i", time: "09:00", dur: 120, desc: "Toza havo va tog' manzaralari — piyoda sayohat", emoji: '<i class="fa-solid fa-mountain"></i>', image: null },
+                { name: "Jizzax viloyat muzeyi", time: "11:30", dur: 45, desc: "Viloyat tarixi va madaniyati", emoji: '<i class="fa-solid fa-landmark"></i>', image: null },
+                { name: "Jizzax bozori", time: "12:45", dur: 50, desc: "Mahalliy mahsulotlar va taomlar", emoji: '<i class="fa-solid fa-store"></i>', image: null }
+            ],
+            "Guliston": [
+                { name: "Guliston shahar bog'i", time: "09:00", dur: 60, desc: "Yam-yashil bog' — dam olish maskani", emoji: '<i class="fa-solid fa-tree"></i>', image: null },
+                { name: "Sirdaryo bo'yi", time: "10:30", dur: 60, desc: "Sirdaryo daryosi bo'ylab sayr", emoji: '<i class="fa-solid fa-water"></i>', image: null },
+                { name: "Guliston bozori", time: "12:00", dur: 50, desc: "Mintaqaning markaziy bozori", emoji: '<i class="fa-solid fa-store"></i>', image: null }
+            ]
+        };
 
         const CHAT_STEPS = [
             { ai: 'chat_greeting', field: null, type: 'single', options: ['chat_greeting_btn'] },
@@ -5505,6 +5612,9 @@
                 if (profileName) profileName.textContent = state.user.name;
                 const profileEmail = document.querySelector('.profile-top p');
                 if (profileEmail) profileEmail.textContent = state.user.phone || state.user.email || 'mehmon@yolchi.uz';
+                // Update home screen greeting with user's name
+                const homeUserNameNodes = document.querySelectorAll('#homeUserName');
+                homeUserNameNodes.forEach(el => el.textContent = state.user.name.split(' ')[0]);
                 return;
             }
             // Show landing page instead of auth directly
@@ -7074,12 +7184,13 @@
         }
 
         /* ================= DYNAMIC CITIES & ITINERARIES ================= */
-        // Merge default CITIES with admin-added cities (deduplicate by name)
+        // Merge default CITIES with admin-added cities (deduplicate by name, case-insensitive)
         function getAllCities() {
+            const normalize = (s) => String(s || '').trim().toLowerCase();
             const merged = [...CITIES];
             if (typeof adminCities !== 'undefined' && adminCities !== null) {
                 adminCities.forEach(c => {
-                    if (!merged.find(m => m.name === c.name)) {
+                    if (!merged.find(m => normalize(m.name) === normalize(c.name))) {
                         merged.push({
                             name: c.name,
                             emoji: c.emoji || '<i class="fa-solid fa-city"></i>',
@@ -7095,13 +7206,18 @@
 
         // Get itinerary for a city — default ones from ITINERARIES or build from adminPlaces
         function getCityItinerary(city) {
+            // Case-insensitive matching
+            const normalize = (s) => String(s || '').trim().toLowerCase();
+            const normalizedCity = normalize(city);
+
             // Default cities have predefined itineraries
-            if (ITINERARIES[city]) {
-                return ITINERARIES[city].map((s, i) => ({ ...s, status: 'upcoming' }));
+            const itineraryCity = Object.keys(ITINERARIES).find(k => normalize(k) === normalizedCity);
+            if (itineraryCity && ITINERARIES[itineraryCity]) {
+                return ITINERARIES[itineraryCity].map((s, i) => ({ ...s, status: 'upcoming' }));
             }
             // Admin cities: build from adminPlaces filtered by city
             if (typeof adminPlaces !== 'undefined' && adminPlaces !== null) {
-                const places = adminPlaces.filter(p => p.city === city);
+                const places = adminPlaces.filter(p => normalize(p.city) === normalizedCity);
                 if (places.length > 0) {
                     return places.map((p, i) => ({
                         name: p.name,
@@ -7123,7 +7239,8 @@
         // Find city emoji from merged list
         function getCityEmoji(city) {
             const all = getAllCities();
-            const found = all.find(c => c.name === city);
+            const normalize = (s) => String(s || '').trim().toLowerCase();
+            const found = all.find(c => normalize(c.name) === normalize(city));
             return found ? found.emoji : '<i class="fa-solid fa-city"></i>';
         }
 
@@ -7449,9 +7566,24 @@
             const typingRow = appendBubble(`<div class="typing"><span></span><span></span><span></span></div>`, 'ai');
             setTimeout(() => {
                 typingRow.remove();
-                const optsHTML = step.type === 'multi'
-                    ? `<div class="option-wrap" id="optWrap">${step.options.map(o => `<div class="option-chip" data-val="${o.value}">${o.label}</div>`).join('')}<div class="confirm-btn" id="confirmBtn" style="display:none;" onclick="submitMulti(${i})">${t('chat_confirm')}</div></div>`
-                    : `<div class="option-wrap" id="optWrap">${step.options.map(o => `<div class="option-chip" data-val="${o.value}">${o.label}</div>`).join('')}</div>`;
+                let optsHTML;
+                if (step.field === 'city') {
+                    // City selection with images/emojis grid
+                    const allCityData = getAllCities();
+                    optsHTML = `<div class="option-wrap" id="optWrap" style="display:grid;grid-template-columns:1fr 1fr;gap:8px;width:100%;">${step.options.map((o, idx) => {
+                        const cityData = allCityData.find(c => c.name === o.value);
+                        const gradColor = GRADIENTS[idx % GRADIENTS.length];
+                        const emoji = cityData ? cityData.emoji : '<i class="fa-solid fa-city"></i>';
+                        return `<div class="option-chip city-chip" data-val="${o.value}" style="display:flex;flex-direction:column;align-items:center;justify-content:center;padding:14px 10px;border-radius:14px;background:${gradColor};color:#fff;border:none;min-height:80px;gap:6px;text-align:center;cursor:pointer;transition:transform 0.2s ease,box-shadow 0.2s ease;">
+                            <span style="font-size:32px;line-height:1;">${emoji}</span>
+                            <span style="font-size:13px;font-weight:700;">${o.label.replace(/<[^>]*>/g,'').trim()}</span>
+                        </div>`;
+                    }).join('')}</div>`;
+                } else if (step.type === 'multi') {
+                    optsHTML = `<div class="option-wrap" id="optWrap">${step.options.map(o => `<div class="option-chip" data-val="${o.value}">${o.label}</div>`).join('')}<div class="confirm-btn" id="confirmBtn" style="display:none;" onclick="submitMulti(${i})">${t('chat_confirm')}</div></div>`;
+                } else {
+                    optsHTML = `<div class="option-wrap" id="optWrap">${step.options.map(o => `<div class="option-chip" data-val="${o.value}">${o.label}</div>`).join('')}</div>`;
+                }
                 const hintText = '<div style="font-size:11px;color:var(--ink-soft);margin-top:6px;opacity:0.7;"><i class="fa-solid fa-lightbulb"></i> Javobni yozing yoki tugmalardan tanlang</div>';
                 appendBubble(step.ai + optsHTML + hintText, 'ai');
                 if (step.type === 'single') {
@@ -7545,11 +7677,16 @@
 
             const allCities = getAllCities();
             const defaultCity = allCities.length > 0 ? allCities[0].name : 'Toshkent';
-            const city = state.chatAnswers.city || defaultCity;
+            const rawCity = state.chatAnswers.city || defaultCity;
+            // Find properly-capitalized city name
+            const normalize = (s) => String(s || '').trim().toLowerCase();
+            const cityObj = allCities.find(c => normalize(c.name) === normalize(rawCity));
+            const city = cityObj ? cityObj.name : rawCity;
+            const emoji = cityObj ? cityObj.emoji : '<i class="fa-solid fa-city"></i>';
             const typingRow = appendBubble(`<div class="typing"><span></span><span></span><span></span></div>`, 'ai');
             setTimeout(() => {
                 typingRow.remove();
-                appendBubble(`Zo'r! ${city} bo'yicha ${state.chatAnswers.hours || ''} sayohatingizni tayyorladim <i class="fa-solid fa-wand-magic-sparkles"></i>`, 'ai');
+                appendBubble(`Zo'r! ${emoji} ${city} bo'yicha sayohatingizni tayyorladim <i class="fa-solid fa-wand-magic-sparkles"></i>`, 'ai');
                 setTimeout(() => {
                     const trip = createTrip(city);
                     state.activeTripId = trip.id;
@@ -8061,7 +8198,8 @@
             const name = document.getElementById('cityName').value.trim();
             const emoji = document.getElementById('cityEmoji').value.trim() || '<i class="fa-solid fa-city"></i>';
             if (!name) { alert("Shahar nomini kiriting!"); return; }
-            if (adminCities.find(c => c.name === name)) { alert("Bu shahar allaqachon mavjud!"); return; }
+            const normalize = (s) => String(s || '').trim().toLowerCase();
+            if (adminCities.find(c => normalize(c.name) === normalize(name))) { alert("Bu shahar allaqachon mavjud!"); return; }
             adminCities.push({ name, emoji, count: 0 });
             localStorage.setItem('yolchi_cities', JSON.stringify(adminCities));
             updateCitySelects();
@@ -8085,8 +8223,10 @@
             const allCities = [...adminCities, ...CITIES];
             const unique = [];
             const seen = new Set();
+            const normalize = (s) => String(s || '').trim().toLowerCase();
             allCities.forEach(c => {
-                if (!seen.has(c.name)) { seen.add(c.name); unique.push(c); }
+                const key = normalize(c.name);
+                if (!seen.has(key)) { seen.add(key); unique.push(c); }
             });
             sel.innerHTML = '<option value="">Shaharni tanlang</option>' +
                 unique.map(c => `<option value="${c.name}">${c.emoji || '<i class="fa-solid fa-city"></i>'} ${c.name}</option>`).join('');
@@ -8196,7 +8336,7 @@
                 document.getElementById('imagePreview').style.display = 'block';
             }
             const btn = document.getElementById('addPlaceBtn');
-            btn.textContent = '<i class="fa-solid fa-floppy-disk"></i> Joyni yangilash';
+            btn.innerHTML = '<i class="fa-solid fa-floppy-disk"></i> Joyni yangilash';
             btn.dataset.editId = placeId;
             document.getElementById('placeCity').scrollIntoView({ behavior: 'smooth', block: 'center' });
         }
@@ -8223,7 +8363,9 @@
             updateCitySelects();
             let html = '';
             if (adminPlaces.length === 0) {
-                html = '<p style="color:var(--ink-soft);font-size:13px;">' + t('admin_no_places') + '</p>';
+                html = '<p style="color:var(--ink-soft);font-size:13px;text-align:center;padding:30px;">' + t('admin_no_places') + '</p>';
+                document.getElementById('adminPlaces').innerHTML = html;
+                return;
             }
             adminPlaces.forEach((p, index) => {
                 const imgStyle = p.image
