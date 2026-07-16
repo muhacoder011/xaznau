@@ -252,7 +252,7 @@ function renderMissionContainer(containerId) {
     
     // Sleep time message
     if (isSleepTime) {
-        html += '<div class="sleep-mission-card">';
+        html += '<div class="sleep-mission-card reveal">';
         html += '<div class="sleep-icon"><i class="fa-solid fa-moon"></i></div>';
         html += '<div class="sleep-text">';
         html += '<strong>Dam olish vaqti</strong><br>';
@@ -264,7 +264,7 @@ function renderMissionContainer(containerId) {
     // Mission card
     if (mission && !isSleepTime) {
         const isDone = mission.completed;
-        html += '<div class="mission-card ' + (isDone ? 'mission-done' : '') + '">';
+        html += '<div class="mission-card reveal ' + (isDone ? 'mission-done' : '') + '">';
         html += '<div class="mission-badge"><i class="fa-solid fa-bullseye"></i> Kunlik Missiya</div>';
         
         if (isDone) {

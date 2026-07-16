@@ -236,6 +236,7 @@
             flex: 1 1 auto;
             align-self: flex-start;
             width: 100%;
+            position: relative;
         }
 
         .screen.active {
@@ -1026,12 +1027,12 @@
         }
 
         .cta-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 24px var(--green-glow);
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 10px 30px var(--green-glow);
         }
 
         .cta-btn:active {
-            transform: scale(0.96);
+            transform: scale(0.94);
             box-shadow: 0 2px 8px var(--green-glow);
         }
 
@@ -4884,6 +4885,419 @@
             font-size: 9px;
             letter-spacing: 0.3px;
         }
+        .bottom-nav button.active .ic i {
+            animation: glow-pulse 2s ease-in-out infinite;
+            filter: drop-shadow(0 0 6px var(--gold));
+        }
+
+        /* ================= ULTRA ANIMATIONS — MASTER COLLECTION ================= */
+
+        /* 1. Animated gradient text — hero titles, brand */
+        .text-gradient-anim {
+            background: linear-gradient(135deg, var(--green), var(--gold), var(--green), var(--gold));
+            background-size: 300% 300%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: grad-text-shift 4s ease-in-out infinite;
+        }
+        @keyframes grad-text-shift {
+            0%   { background-position: 0% 50%; }
+            50%  { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* 2. Gentle float — cards, icons, avatars float up/down */
+        .float-gentle {
+            animation: float-gentle 3s ease-in-out infinite;
+        }
+        @keyframes float-gentle {
+            0%, 100% { transform: translateY(0); }
+            50%      { transform: translateY(-8px); }
+        }
+        .float-slow {
+            animation: float-slow 4.5s ease-in-out infinite;
+        }
+        @keyframes float-slow {
+            0%, 100% { transform: translateY(0); }
+            50%      { transform: translateY(-6px); }
+        }
+
+        /* 3. Glow pulse — cards, buttons, active elements */
+        .glow-pulse {
+            animation: glow-pulse 2s ease-in-out infinite;
+        }
+        @keyframes glow-pulse {
+            0%, 100% { box-shadow: 0 0 8px var(--green-glow); }
+            50%      { box-shadow: 0 0 24px var(--green-glow), 0 0 40px var(--gold-glow); }
+        }
+
+        /* 4. Heartbeat — important elements (yulduz, achievements) */
+        .heartbeat {
+            animation: heartbeat 1.4s ease-in-out infinite;
+        }
+        @keyframes heartbeat {
+            0%   { transform: scale(1); }
+            14%  { transform: scale(1.25); }
+            28%  { transform: scale(1); }
+            42%  { transform: scale(1.2); }
+            70%  { transform: scale(1); }
+            100% { transform: scale(1); }
+        }
+
+        /* 5. Bounce-in — elements entering */
+        .bounce-in {
+            animation: bounce-in 0.6s cubic-bezier(.22, 1.3, .36, 1) both;
+        }
+        @keyframes bounce-in {
+            0%   { opacity: 0; transform: scale(0.3) translateY(30px); }
+            50%  { transform: scale(1.05) translateY(-4px); }
+            70%  { transform: scale(0.95) translateY(2px); }
+            100% { opacity: 1; transform: scale(1) translateY(0); }
+        }
+
+        /* 6. Slide-in from left/right */
+        .slide-left {
+            animation: slide-left 0.5s cubic-bezier(.2, 1.4, .4, 1) both;
+        }
+        @keyframes slide-left {
+            from { opacity: 0; transform: translateX(30px); }
+            to   { opacity: 1; transform: translateX(0); }
+        }
+        .slide-right {
+            animation: slide-right 0.5s cubic-bezier(.2, 1.4, .4, 1) both;
+        }
+        @keyframes slide-right {
+            from { opacity: 0; transform: translateX(-30px); }
+            to   { opacity: 1; transform: translateX(0); }
+        }
+        .slide-up {
+            animation: slide-up 0.5s cubic-bezier(.2, 1.4, .4, 1) both;
+        }
+        @keyframes slide-up {
+            from { opacity: 0; transform: translateY(24px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        /* 7. Scale pop — for achievements, stars, badges */
+        .pop-in {
+            animation: pop-in 0.4s cubic-bezier(.34, 1.56, .64, 1) both;
+        }
+        @keyframes pop-in {
+            0%   { opacity: 0; transform: scale(0); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+
+        /* 8. Spin slow — loading icons, decorative */
+        .spin-slow {
+            animation: spin-slow 3s linear infinite;
+        }
+        @keyframes spin-slow {
+            to { transform: rotate(360deg); }
+        }
+        .spin-reverse {
+            animation: spin-reverse 4s linear infinite;
+        }
+        @keyframes spin-reverse {
+            to { transform: rotate(-360deg); }
+        }
+
+        /* 9. Wiggle — attention grabber */
+        .wiggle {
+            animation: wiggle 0.5s ease both;
+        }
+        @keyframes wiggle {
+            0%, 100% { transform: rotate(0deg); }
+            20%      { transform: rotate(-8deg); }
+            40%      { transform: rotate(8deg); }
+            60%      { transform: rotate(-5deg); }
+            80%      { transform: rotate(5deg); }
+        }
+
+        /* 10. Pulse ring — for important CTAs */
+        .pulse-ring {
+            position: relative;
+        }
+        .pulse-ring::before {
+            content: '';
+            position: absolute;
+            inset: -4px;
+            border-radius: inherit;
+            border: 2px solid var(--green);
+            animation: pulse-ring 1.8s ease-out infinite;
+            pointer-events: none;
+        }
+        @keyframes pulse-ring {
+            0%   { transform: scale(1); opacity: 0.6; }
+            100% { transform: scale(1.25); opacity: 0; }
+        }
+
+        /* 11. Shimmer sweep — card loading skeleton */
+        .shimmer-sweep {
+            position: relative;
+            overflow: hidden;
+        }
+        .shimmer-sweep::after {
+            content: '';
+            position: absolute;
+            top: 0; left: -100%;
+            width: 100%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+            animation: shimmer-sweep 2.2s ease-in-out infinite;
+        }
+        @keyframes shimmer-sweep {
+            to { left: 100%; }
+        }
+
+        /* 12. Fade-in-up staggered — for lists, grids */
+        .fade-up {
+            animation: fade-up 0.6s ease both;
+        }
+        @keyframes fade-up {
+            from { opacity: 0; transform: translateY(20px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+        .fade-up:nth-child(1) { animation-delay: 0.04s; }
+        .fade-up:nth-child(2) { animation-delay: 0.10s; }
+        .fade-up:nth-child(3) { animation-delay: 0.16s; }
+        .fade-up:nth-child(4) { animation-delay: 0.22s; }
+        .fade-up:nth-child(5) { animation-delay: 0.28s; }
+        .fade-up:nth-child(6) { animation-delay: 0.34s; }
+        .fade-up:nth-child(7) { animation-delay: 0.40s; }
+        .fade-up:nth-child(8) { animation-delay: 0.46s; }
+        .fade-up:nth-child(9) { animation-delay: 0.52s; }
+        .fade-up:nth-child(10){ animation-delay: 0.58s; }
+
+        /* 13. Neon glow — for premium elements */
+        .neon-glow {
+            animation: neon-glow 2s ease-in-out infinite alternate;
+        }
+        @keyframes neon-glow {
+            from { text-shadow: 0 0 4px var(--green-glow), 0 0 8px var(--green-glow); }
+            to   { text-shadow: 0 0 8px var(--gold-glow), 0 0 16px var(--gold-glow), 0 0 24px var(--gold-glow); }
+        }
+
+        /* 14. Ripple expand — for map location dots */
+        .ripple-dot {
+            position: relative;
+        }
+        .ripple-dot::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: 50%;
+            border: 2px solid var(--gold);
+            animation: ripple-dot 1.5s ease-out infinite;
+        }
+        @keyframes ripple-dot {
+            0%   { transform: scale(0.8); opacity: 0.8; }
+            100% { transform: scale(3); opacity: 0; }
+        }
+
+        /* 15. Typewriter cursor blink */
+        .cursor-blink {
+            border-right: 2px solid var(--green);
+            animation: cursor-blink 0.8s step-end infinite;
+        }
+        @keyframes cursor-blink {
+            50% { border-color: transparent; }
+        }
+
+        /* 16. Count-up number animation trigger (data-count) */
+        .count-up {
+            opacity: 0;
+            animation: count-in 0.5s ease forwards;
+        }
+        @keyframes count-in {
+            to { opacity: 1; }
+        }
+
+        /* 17. Rainbow border animation */
+        .rainbow-border {
+            position: relative;
+            border-radius: var(--radius);
+            overflow: hidden;
+        }
+        .rainbow-border::before {
+            content: '';
+            position: absolute;
+            inset: -2px;
+            border-radius: inherit;
+            background: linear-gradient(90deg, var(--green), var(--gold), var(--green-deep), var(--gold-deep), var(--green));
+            background-size: 300% 100%;
+            animation: rainbow-border 4s linear infinite;
+            z-index: -1;
+        }
+        @keyframes rainbow-border {
+            0%   { background-position: 0% 50%; }
+            100% { background-position: 300% 50%; }
+        }
+
+        /* 18. Particle float mix — decorative dots */
+        .particle-mix {
+            position: absolute;
+            border-radius: 50%;
+            pointer-events: none;
+            background: var(--gold);
+            opacity: 0.15;
+            animation: particle-mix 6s ease-in-out infinite;
+        }
+        @keyframes particle-mix {
+            0%, 100% { transform: translate(0, 0) scale(1); opacity: 0.1; }
+            25%      { transform: translate(20px, -30px) scale(1.3); opacity: 0.25; }
+            50%      { transform: translate(-15px, -50px) scale(0.8); opacity: 0.15; }
+            75%      { transform: translate(25px, -20px) scale(1.1); opacity: 0.2; }
+        }
+
+        /* 19. Image zoom on hover */
+        .img-zoom {
+            overflow: hidden;
+        }
+        .img-zoom img, .img-zoom div {
+            transition: transform 0.5s cubic-bezier(.2, 1.4, .4, 1);
+        }
+        .img-zoom:hover img, .img-zoom:hover div {
+            transform: scale(1.12);
+        }
+
+        /* 20. Button magnetic lift */
+        .btn-lift {
+            transition: transform 0.25s cubic-bezier(.2, 1.4, .4, 1), box-shadow 0.25s ease;
+        }
+        .btn-lift:hover {
+            transform: translateY(-3px) scale(1.03);
+            box-shadow: 0 12px 28px rgba(0,0,0,0.15);
+        }
+        .btn-lift:active {
+            transform: scale(0.95);
+        }
+
+        /* 21. Star sparkle */
+        .sparkle {
+            display: inline-block;
+            animation: sparkle 1.2s ease-in-out infinite;
+        }
+        @keyframes sparkle {
+            0%, 100% { opacity: 1; transform: scale(1) rotate(0deg); }
+            50%      { opacity: 0.6; transform: scale(1.3) rotate(15deg); }
+        }
+
+        /* 22. Screen background ambient glow */
+        .ambient-glow {
+            position: absolute;
+            top: -20%;
+            left: -10%;
+            width: 120%;
+            height: 60%;
+            background: radial-gradient(ellipse at center, var(--green-glow) 0%, transparent 70%);
+            opacity: 0.3;
+            pointer-events: none;
+            animation: ambient-pulse 4s ease-in-out infinite alternate;
+        }
+        @keyframes ambient-pulse {
+            from { opacity: 0.15; transform: scale(1); }
+            to   { opacity: 0.35; transform: scale(1.1); }
+        }
+
+        /* 23. Dash underline animation */
+        .dash-underline {
+            background: linear-gradient(to right, var(--green), var(--gold));
+            background-repeat: no-repeat;
+            background-size: 0% 3px;
+            background-position: 0 100%;
+            transition: background-size 0.4s cubic-bezier(.2, 1.4, .4, 1);
+        }
+        .dash-underline:hover {
+            background-size: 100% 3px;
+        }
+
+        /* 24. Screen content staggered entrance */
+        .screen.active .stagger-child {
+            animation: stagger-fade-up 0.5s cubic-bezier(.2, 1.4, .4, 1) both;
+        }
+        .screen.active .stagger-child:nth-child(1) { animation-delay: 0.05s; }
+        .screen.active .stagger-child:nth-child(2) { animation-delay: 0.12s; }
+        .screen.active .stagger-child:nth-child(3) { animation-delay: 0.19s; }
+        .screen.active .stagger-child:nth-child(4) { animation-delay: 0.26s; }
+        .screen.active .stagger-child:nth-child(5) { animation-delay: 0.33s; }
+        .screen.active .stagger-child:nth-child(6) { animation-delay: 0.40s; }
+        .screen.active .stagger-child:nth-child(7) { animation-delay: 0.47s; }
+        @keyframes stagger-fade-up {
+            from { opacity: 0; transform: translateY(18px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        /* 25. Flip-in card animation */
+        .flip-in {
+            animation: flip-in 0.6s cubic-bezier(.2, 1.4, .4, 1) both;
+        }
+        @keyframes flip-in {
+            from { opacity: 0; transform: perspective(600px) rotateX(-20deg) translateY(30px); }
+            to   { opacity: 1; transform: perspective(600px) rotateX(0) translateY(0); }
+        }
+
+        /* 26. Blob morphing — decorative shapes */
+        .blob {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(40px);
+            opacity: 0.1;
+            pointer-events: none;
+            animation: blob-morph 8s ease-in-out infinite alternate;
+        }
+        @keyframes blob-morph {
+            0%   { border-radius: 50% 50% 50% 50%; transform: scale(1) rotate(0deg); }
+            33%  { border-radius: 40% 60% 60% 40%; transform: scale(1.2) rotate(90deg); }
+            66%  { border-radius: 60% 40% 40% 60%; transform: scale(0.9) rotate(180deg); }
+            100% { border-radius: 50% 50% 50% 50%; transform: scale(1) rotate(360deg); }
+        }
+
+        /* 27. Confetti-like burst */
+        .burst {
+            animation: burst 0.8s cubic-bezier(.2, 1.4, .4, 1) both;
+        }
+        @keyframes burst {
+            0%   { opacity: 0; transform: scale(0) rotate(-30deg); }
+            50%  { opacity: 1; transform: scale(1.3) rotate(5deg); }
+            100% { opacity: 1; transform: scale(1) rotate(0deg); }
+        }
+
+        /* 28. Scroll reveal (used with JS scroll observer) */
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.6s ease, transform 0.6s cubic-bezier(.2, 1.4, .4, 1);
+        }
+        .reveal.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* 29. Notification badge bounce */
+        .badge-bounce {
+            animation: badge-bounce 2s ease-in-out infinite;
+        }
+        @keyframes badge-bounce {
+            0%, 100% { transform: translateY(0); }
+            30%      { transform: translateY(-4px); }
+            50%      { transform: translateY(-2px); }
+            70%      { transform: translateY(-4px); }
+        }
+
+        /* 30. Loading dots bounce */
+        .loading-dots span {
+            display: inline-block;
+            width: 6px; height: 6px;
+            border-radius: 50%;
+            background: var(--ink-soft);
+            animation: loading-dots 1.2s ease-in-out infinite;
+        }
+        .loading-dots span:nth-child(2) { animation-delay: 0.15s; }
+        .loading-dots span:nth-child(3) { animation-delay: 0.3s; }
+        @keyframes loading-dots {
+            0%, 80%, 100% { transform: scale(0.6); opacity: 0.3; }
+            40%           { transform: scale(1); opacity: 1; }
+        }
     </style>
 </head>
 
@@ -4977,9 +5391,9 @@
             <span><i class="fa-solid fa-star"></i></span>
             <span><i class="fa-solid fa-rocket"></i></span>
         </div>
-        <div class="splash-star"><i class="fa-solid fa-star"></i></div>
-        <div class="splash-brand">YO'lCHI</div>
-        <div class="splash-sub">AI sayohat hamrohi</div>
+        <div class="splash-star sparkle"><i class="fa-solid fa-star"></i></div>
+        <div class="splash-brand text-gradient-anim">YO'lCHI</div>
+        <div class="splash-sub bounce-in">AI sayohat hamrohi</div>
         <div class="splash-loader">
             <div class="splash-loader-bar"></div>
         </div>
@@ -4989,6 +5403,8 @@
 
         <!-- ============ HOME ============ -->
         <section class="screen active" data-screen="home">
+            <div class="ambient-glow" style="top:-100px;right:-120px;opacity:0.15;"></div>
+            <div class="ambient-glow" style="bottom:-80px;left:-100px;opacity:0.1;animation-delay:-3s;"></div>
             <!-- Simple top bar -->
             <div class="home-topbar">
                 <div class="home-greeting-sm"><i class="fa-solid fa-hand-wave"></i> Salom, <span id="homeUserName">Sayohatchi</span></div>
@@ -5001,26 +5417,26 @@
 
             <!-- Main greeting -->
             <div class="home-greeting">
-                <div class="home-subtitle">Xush kelibsiz <i class="fa-solid fa-hand-wave"></i></div>
-                <h1 class="home-title">Bugun qayerga <span>sayohat</span> qilamiz?</h1>
+                <div class="home-subtitle slide-left">Xush kelibsiz <i class="fa-solid fa-hand-wave"></i></div>
+                <h1 class="home-title slide-right">Bugun qayerga <span class="text-gradient-anim">sayohat</span> qilamiz?</h1>
             </div>
 
             <!-- Search -->
-            <div class="search-wrapper" onclick="startChat()">
+            <div class="search-wrapper glow-pulse heartbeat" onclick="startChat()">
                 <i class="fa-solid fa-search"></i>
                 <input type="text" placeholder="Bugun nima qilmoqchisiz?" readonly>
-                <button class="search-ai-btn"><i class="fa-solid fa-wand-magic-sparkles"></i> AI</button>
+                <button class="search-ai-btn glow-pulse"><i class="fa-solid fa-wand-magic-sparkles"></i> AI</button>
             </div>
 
             <!-- Suggestions -->
             <div class="suggestion-section">
                 <div class="suggestion-label">Sinab ko'ring</div>
                 <div class="suggestion-chips">
-                    <button class="suggestion-chip" onclick="startChat()"><i class="fa-solid fa-landmark"></i> Tarixiy joylar</button>
-                    <button class="suggestion-chip" onclick="startChat()"><i class="fa-solid fa-leaf"></i> Tabiat</button>
-                    <button class="suggestion-chip" onclick="startChat()"><i class="fa-solid fa-people-group"></i> Oilaviy</button>
-                    <button class="suggestion-chip" onclick="startChat()"><i class="fa-solid fa-utensils"></i> Halol taomlar</button>
-                    <button class="suggestion-chip" onclick="startChat()"><i class="fa-solid fa-wallet"></i> Arzon sayohat</button>
+                    <button class="suggestion-chip btn-lift" onclick="startChat()"><i class="fa-solid fa-landmark"></i> Tarixiy joylar</button>
+                    <button class="suggestion-chip btn-lift" onclick="startChat()"><i class="fa-solid fa-leaf"></i> Tabiat</button>
+                    <button class="suggestion-chip btn-lift" onclick="startChat()"><i class="fa-solid fa-people-group"></i> Oilaviy</button>
+                    <button class="suggestion-chip btn-lift" onclick="startChat()"><i class="fa-solid fa-utensils"></i> Halol taomlar</button>
+                    <button class="suggestion-chip btn-lift" onclick="startChat()"><i class="fa-solid fa-wallet"></i> Arzon sayohat</button>
                 </div>
             </div>
 
@@ -5058,6 +5474,7 @@
 
         <!-- ============ DISCOVER ============ -->
         <section class="screen" data-screen="discover">
+            <div class="ambient-glow" style="top:-100px;left:-80px;opacity:0.12;"></div>
             <div class="topbar">
                 <h2 data-tr="discover_title">Kashfiyot</h2><button class="icon-btn" onclick="toggleDark()"><i
                         class="fa-solid fa-moon"></i></button>
@@ -5086,6 +5503,7 @@
 
         <!-- ============ PROFILE ============ -->
         <section class="screen" data-screen="profile">
+            <div class="ambient-glow" style="top:-80px;right:-60px;opacity:0.08;"></div>
             <div class="topbar">
                 <h2 data-tr="profile_title">Profil</h2><button class="icon-btn" onclick="toggleDark()"><i
                         class="fa-solid fa-moon"></i></button>
@@ -5188,6 +5606,7 @@
 
         <!-- ============ DO"KON (SHOP) ============ -->
         <section class="screen" data-screen="shop">
+            <div class="ambient-glow" style="top:-60px;right:-100px;opacity:0.1;"></div>
             <div class="topbar">
                 <div class="topbar-left"><button class="back-btn" onclick="goHome()"><i
                             class="fa-solid fa-arrow-left"></i></button>
@@ -5200,6 +5619,7 @@
 
         <!-- ============ ADMIN PANEL ============ -->
         <section class="screen" data-screen="admin">
+            <div class="ambient-glow" style="top:-50px;left:-50px;opacity:0.1;"></div>
             <div class="topbar">
                 <h2 data-tr="admin_title"><i class="fa-solid fa-screwdriver-wrench"></i> Admin Panel</h2>
                 <button class="icon-btn" onclick="goHome()"><i class="fa-solid fa-house"></i></button>
@@ -5276,6 +5696,7 @@
 
         <!-- ============ KUNLIK MISSIYA ============ -->
         <section class="screen" data-screen="scheduler">
+            <div class="ambient-glow" style="top:-100px;right:-80px;opacity:0.12;"></div>
             <div class="topbar">
                 <div class="topbar-left"><button class="back-btn" onclick="goHome()"><i
                             class="fa-solid fa-arrow-left"></i></button>
@@ -5304,7 +5725,7 @@
         </div>
 
         <!-- Scroll to top FAB -->
-        <button class="fab-top" id="fabTop" onclick="window.scrollTo({top:0,behavior:'smooth'})"
+        <button class="fab-top float-gentle" id="fabTop" onclick="window.scrollTo({top:0,behavior:'smooth'})"
             title="Tepaga chiqish"><i class="fa-solid fa-arrow-up"></i></button>
 
         <div class="toast" id="toast"><span class="tic"><i class="fa-solid fa-key"></i></span><span id="toastText">Kalit
@@ -7471,7 +7892,7 @@
                     ? `background:linear-gradient(rgba(0,0,0,0.1),rgba(0,0,0,0.65)),url('${imgUrl}') center/cover`
                     : `background:${grad(i)}`;
                 return `
-    <div class="city-card card-3d stagger-enter" style="${bgStyle}" onclick="quickStartCity('${c.name}')">
+    <div class="city-card card-3d stagger-enter fade-up reveal" style="${bgStyle}" onclick="quickStartCity('${c.name}')">
       <div><div class="cname">${c.name}</div><div class="ccount"><i class="fa-solid fa-location-dot"></i> ${c.count || 0} joy</div></div>
     </div>`;
             }).join('');
@@ -7726,7 +8147,7 @@
     <div id="tlView" class="timeline">
       ${trip.stops.map((s, i) => `
         ${s.travel ? `<div class="tl-travel"><i class="fa-solid fa-car"></i> ${s.travel.min} daq · ${s.travel.km} km</div>` : ''}
-        <div class="tl-item">
+        <div class="tl-item reveal">
           <div class="tl-dot">${i + 1}</div>
           <div class="tl-card">
             <div class="tl-photo">${locationPhotoHTML(s.emoji, i, 'height:90px;', s.image || null, trip.city)}</div>
@@ -7743,7 +8164,7 @@
       <span class="map-pin"><i class="fa-solid fa-location-dot"></i> ${trip.city}</span>
       <span class="map-caption">${trip.stops.length} ${t('itinerary_stops')} · ${t('itinerary_map_view')}</span>
     </div>
-    <button class="cta-btn" onclick="beginLiveTrip('${trip.id}')">${t('itinerary_start')}</button>
+    <button class="cta-btn" onclick="beginLiveTrip('${trip.id}')" style="animation-delay:0.3s;">${t('itinerary_start')}</button>
   `;
         }
 
@@ -8006,15 +8427,15 @@
                 if (emailEl) emailEl.textContent = t('profile_guest_mail') || 'mehmon@yolchi.uz';
             }
             document.getElementById('profileStats').innerHTML = `
-    <div class="st"><div class="n">${state.trips.length}</div><div class="l">Sayohatlar</div></div>
-    <div class="st"><div class="n">${state.stars}</div><div class="l"><i class="fa-solid fa-star"></i> Yulduzlar</div></div>
-    <div class="st"><div class="n">${cities}</div><div class="l">Shaharlar</div></div>`;
+    <div class="st fade-up"><div class="n">${state.trips.length}</div><div class="l">Sayohatlar</div></div>
+    <div class="st fade-up"><div class="n">${state.stars}</div><div class="l"><i class="fa-solid fa-star"></i> Yulduzlar</div></div>
+    <div class="st fade-up"><div class="n">${cities}</div><div class="l">Shaharlar</div></div>`;
 
             const unlockedCount = ACHIEVEMENTS.filter(a => a.test(state)).length;
             document.getElementById('achCount').textContent = unlockedCount;
             document.getElementById('achRow').innerHTML = ACHIEVEMENTS.map(a => {
                 const unlocked = a.test(state);
-                return `<div class="ach-card ${unlocked ? 'unlocked' : 'locked'}"><div class="aic">${unlocked ? a.icon : '<i class="fa-solid fa-lock"></i>'}</div><div class="al">${t(a.labelKey)}</div></div>`;
+                return `<div class="ach-card ${unlocked ? 'unlocked' : 'locked'} reveal"><div class="aic">${unlocked ? a.icon : '<i class="fa-solid fa-lock"></i>'}</div><div class="al">${t(a.labelKey)}</div></div>`;
             }).join('');
 
             const langs = [{ code: 'uz', label: "O'zbekcha" }, { code: 'en', label: 'English' }, { code: 'ru', label: 'Русский' }];
@@ -8102,7 +8523,7 @@
                 }
 
                 html += `
-            <div class="shop-card stagger-enter">
+            <div class="shop-card stagger-enter reveal">
                 <div class="scover" style="background:linear-gradient(rgba(0,0,0,0.2),rgba(0,0,0,0.6)),url('${item.image || ''}') center/cover;background-color:${item.color};">
                     <div class="scover-icon">${item.icon}</div>
                 </div>
@@ -8374,7 +8795,7 @@
                 const imgContent = p.image ? '' : '<span><i class="fa-solid fa-location-dot"></i></span>';
                 const coordsStr = (p.lat && p.lng) ? `<span style="font-size:11px;color:var(--ink-soft);"><i class='fa-solid fa-location-dot'></i> ${p.lat}, ${p.lng}</span>` : '';
                 html += `
-      <div style="background:var(--surface);padding:18px;border-radius:16px;margin-bottom:16px;border:1px solid var(--line);">
+      <div class="reveal" style="background:var(--surface);padding:18px;border-radius:16px;margin-bottom:16px;border:1px solid var(--line);">
         <div style="width:100%;height:160px;border-radius:12px;${imgStyle}">${imgContent}</div>
         <div style="margin-top:10px;">
           <span style="font-size:12px;color:var(--ink-soft);">${p.city || 'Noma\'lum'}</span>
@@ -8491,6 +8912,54 @@
 
         showScreen('home');
         renderAll();
+
+        /* ================= SCROLL REVEAL OBSERVER ================= */
+        // Automatically animates elements with the 'reveal' class when they scroll into view
+        (function initScrollReveal() {
+            if ('IntersectionObserver' in window) {
+                const observer = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            entry.target.classList.add('visible');
+                            observer.unobserve(entry.target);
+                        }
+                    });
+                }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+
+                // Observe all elements with 'reveal' class
+                document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+                // Also observe stagger-enter elements for re-triggering
+                document.querySelectorAll('.stagger-enter').forEach(el => observer.observe(el));
+
+                // Observe newly added elements via MutationObserver
+                const mutationObserver = new MutationObserver(() => {
+                    document.querySelectorAll('.reveal:not(.observed)').forEach(el => {
+                        el.classList.add('observed');
+                        observer.observe(el);
+                    });
+                });
+                mutationObserver.observe(document.body, { childList: true, subtree: true });
+            }
+        })();
+
+        /* ================= PARADE ANIMATION ================= */
+        // Adds a subtle entrance parade to new dynamic content
+        (function initParadeAnimation() {
+            // Watch for new elements added with .stagger-enter class
+            const paradeObserver = new MutationObserver(() => {
+                document.querySelectorAll('.stagger-enter:not(.parade-ready)').forEach(el => {
+                    el.classList.add('parade-ready');
+                    // Re-trigger stagger animation
+                    el.style.animation = 'none';
+                    el.offsetHeight; // reflow
+                    el.style.animation = '';
+                });
+            });
+            paradeObserver.observe(document.body, { childList: true, subtree: true });
+        })();
+
+        console.log('🎨 Animatsiyalar yuklandi!');
     </script>
 
     <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
