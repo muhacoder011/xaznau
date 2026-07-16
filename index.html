@@ -4551,6 +4551,330 @@
                 gap: 24px;
             }
         }
+
+        /* ================= NEW HOME DESIGN (Artifact-inspired) ================= */
+        .home-topbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px 20px 0;
+            animation: fadeIn 0.6s ease both;
+        }
+        .home-greeting-sm {
+            font-size: 13px;
+            color: var(--ink-soft);
+        }
+        .home-top-actions {
+            display: flex;
+            gap: 6px;
+        }
+
+        .home-greeting {
+            padding: 12px 20px 0;
+            animation: fadeInUp 0.7s ease both;
+        }
+        .home-subtitle {
+            font-size: 14px;
+            color: var(--ink-soft);
+            margin-bottom: 4px;
+        }
+        .home-subtitle i {
+            color: var(--gold);
+        }
+        .home-title {
+            font-size: 26px;
+            font-weight: 800;
+            line-height: 1.2;
+            color: var(--ink);
+            max-width: 300px;
+        }
+        .home-title span {
+            background: linear-gradient(135deg, var(--gold), #e6b458);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* Search Input */
+        .search-wrapper {
+            margin: 18px 20px 0;
+            background: var(--surface-2);
+            border: 1px solid var(--line);
+            border-radius: 16px;
+            padding: 6px 6px 6px 16px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            animation: fadeInUp 0.7s ease 0.1s both;
+        }
+        .search-wrapper:hover,
+        .search-wrapper:focus-within {
+            border-color: var(--gold);
+            box-shadow: 0 0 0 3px rgba(221, 162, 58, 0.15);
+        }
+        .search-wrapper input {
+            flex: 1;
+            background: none;
+            border: none;
+            outline: none;
+            font-size: 14px;
+            color: var(--ink);
+            pointer-events: none;
+        }
+        .search-wrapper input::placeholder {
+            color: var(--ink-soft);
+        }
+        .search-wrapper .fa-search {
+            color: var(--ink-soft);
+            font-size: 15px;
+        }
+        .search-ai-btn {
+            background: linear-gradient(135deg, var(--gold), #e6b458);
+            border: none;
+            color: #3a2708;
+            padding: 8px 14px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            transition: transform 0.2s;
+            white-space: nowrap;
+        }
+        .search-ai-btn:hover {
+            transform: scale(1.05);
+        }
+        .search-ai-btn i {
+            font-size: 13px;
+        }
+
+        /* Suggestion Chips */
+        .suggestion-section {
+            padding: 16px 20px 0;
+            animation: fadeInUp 0.7s ease 0.2s both;
+        }
+        .suggestion-label {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--ink-soft);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 10px;
+        }
+        .suggestion-chips {
+            display: flex;
+            gap: 8px;
+            overflow-x: auto;
+            padding-bottom: 4px;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none;
+        }
+        .suggestion-chips::-webkit-scrollbar {
+            display: none;
+        }
+        .suggestion-chip {
+            background: var(--surface-2);
+            border: 1px solid var(--line);
+            border-radius: 20px;
+            padding: 8px 16px;
+            font-size: 13px;
+            color: var(--ink);
+            cursor: pointer;
+            white-space: nowrap;
+            transition: all 0.25s ease;
+            flex-shrink: 0;
+        }
+        .suggestion-chip:hover {
+            background: var(--surface-3);
+            border-color: var(--gold);
+            transform: translateY(-2px);
+        }
+        .suggestion-chip:active {
+            transform: scale(0.96);
+        }
+
+        /* Explore Section */
+        .explore-section {
+            padding: 20px 20px 100px;
+            animation: fadeInUp 0.7s ease 0.3s both;
+        }
+        .explore-title {
+            font-size: 18px;
+            font-weight: 800;
+            margin-bottom: 14px;
+            color: var(--ink);
+        }
+
+        /* Modern City Cards Grid */
+        .city-cards-modern {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+        .city-cards-modern .city-card {
+            border-radius: 16px;
+            aspect-ratio: 1/1;
+            display: flex;
+            align-items: flex-end;
+            padding: 16px;
+            border: 1px solid var(--line);
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+            transition: all 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+        .city-cards-modern .city-card:hover {
+            transform: translateY(-6px) scale(1.02);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.2);
+        }
+        .city-cards-modern .city-card:active {
+            transform: scale(0.96);
+        }
+        .city-cards-modern .city-card .cname {
+            font-size: 18px;
+            font-weight: 800;
+            color: #fff;
+            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+        }
+        .city-cards-modern .city-card .ccount {
+            font-size: 11px;
+            color: rgba(255, 255, 255, 0.8);
+            margin-top: 2px;
+        }
+        .city-cards-modern .city-card > div:first-child {
+            position: relative;
+            z-index: 2;
+        }
+
+        /* Stagger entrance for city cards */
+        .city-cards-modern .city-card:nth-child(1) {
+            animation: cardEntrance 0.5s ease 0.1s both;
+        }
+        .city-cards-modern .city-card:nth-child(2) {
+            animation: cardEntrance 0.5s ease 0.15s both;
+        }
+        .city-cards-modern .city-card:nth-child(3) {
+            animation: cardEntrance 0.5s ease 0.2s both;
+        }
+        .city-cards-modern .city-card:nth-child(4) {
+            animation: cardEntrance 0.5s ease 0.25s both;
+        }
+        .city-cards-modern .city-card:nth-child(5) {
+            animation: cardEntrance 0.5s ease 0.3s both;
+        }
+        .city-cards-modern .city-card:nth-child(6) {
+            animation: cardEntrance 0.5s ease 0.35s both;
+        }
+
+        /* Keep discover page city cards intact */
+        #discover .city-grid .city-card {
+            aspect-ratio: auto;
+            min-height: 140px;
+            display: flex;
+            align-items: flex-end;
+            padding: 16px;
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+        @keyframes cardEntrance {
+            from {
+                opacity: 0;
+                transform: translateY(30px) scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+        @keyframes shimmer {
+            0% {
+                background-position: -200% 0;
+            }
+            100% {
+                background-position: 200% 0;
+            }
+        }
+        @keyframes float {
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-6px);
+            }
+        }
+        @keyframes pulse {
+            0%,
+            100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+        }
+
+        /* Bottom Nav update */
+        .bottom-nav .nav-indicator {
+            position: absolute;
+            top: 0;
+            height: 3px;
+            width: 40px;
+            background: var(--gold);
+            border-radius: 0 0 4px 4px;
+            transition: left 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+        .bottom-nav button {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 2px;
+            background: none;
+            border: none;
+            color: var(--ink-soft);
+            font-size: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            padding: 8px 0 6px;
+            transition: all 0.25s ease;
+            position: relative;
+        }
+        .bottom-nav button.active {
+            color: var(--gold);
+        }
+        .bottom-nav button .ic {
+            font-size: 20px;
+            transition: all 0.3s ease;
+        }
+        .bottom-nav button.active .ic {
+            transform: translateY(-2px);
+        }
+        .bottom-nav button .nav-label {
+            font-size: 9px;
+            letter-spacing: 0.3px;
+        }
     </style>
 </head>
 
@@ -4656,98 +4980,70 @@
 
         <!-- ============ HOME ============ -->
         <section class="screen active" data-screen="home">
-            <div class="topbar">
-                <div class="brand">
-                    <svg class="mark" viewBox="0 0 24 24">
-                        <path d="M12 2 L15 9 L22 9 L16 14 L18 21 L12 17 L6 21 L8 14 L2 9 L9 9 Z" fill="none"
-                            stroke="#dda23a" stroke-width="1.6" />
-                    </svg>
-                    YO'LCHI
-                </div>
-                <div style="display:flex;gap:6px;">
+            <!-- Simple top bar -->
+            <div class="home-topbar">
+                <div class="home-greeting-sm">Xush kelibsiz <i class="fa-solid fa-hand-wave"></i></div>
+                <div class="home-top-actions">
                     <button class="icon-btn" onclick="openScanner()" title="QR Skanner"><i
                             class="fa-solid fa-qrcode"></i></button>
                     <button class="icon-btn" onclick="toggleDark()"><i class="fa-solid fa-moon"></i></button>
                 </div>
             </div>
-            <div style="padding-top:6px;position:relative;">
-                <div id="particlesContainer"></div>
-                <div class="greet" data-tr="welcome">Xush kelibsiz <i class="fa-solid fa-hand-wave"></i></div>
-                <div class="hero-title" data-tr="hero">O"zbekistonni <span>AI bilan</span> kashf eting</div>
 
-                <div class="search-box" onclick="startChat()">
-                    <span><i class="fa-solid fa-search" style="color:var(--ink-soft);font-size:15px;"></i></span>
-                    <span class="ph" data-tr="search_ph">Ideal kuningizni tasvirlab bering...</span>
-                    <span class="ai-pill"><i class="fa-solid fa-wand-magic-sparkles"></i> AI</span>
+            <!-- Main greeting -->
+            <div class="home-greeting">
+                <div class="home-subtitle">Xush kelibsiz, <span id="homeUserName">Sayohatchi</span>! <i class="fa-solid fa-hand-wave"></i></div>
+                <h1 class="home-title">Bugun qayerga <span>sayohat</span> qilamiz?</h1>
+            </div>
+
+            <!-- Search -->
+            <div class="search-wrapper" onclick="startChat()">
+                <i class="fa-solid fa-search"></i>
+                <input type="text" placeholder="Bugun nima qilmoqchisiz?" readonly>
+                <button class="search-ai-btn"><i class="fa-solid fa-wand-magic-sparkles"></i> AI</button>
+            </div>
+
+            <!-- Suggestions -->
+            <div class="suggestion-section">
+                <div class="suggestion-label">Sinab ko'ring</div>
+                <div class="suggestion-chips">
+                    <button class="suggestion-chip" onclick="startChat()"><i class="fa-solid fa-landmark"></i> Tarixiy joylar</button>
+                    <button class="suggestion-chip" onclick="startChat()"><i class="fa-solid fa-leaf"></i> Tabiat</button>
+                    <button class="suggestion-chip" onclick="startChat()"><i class="fa-solid fa-people-group"></i> Oilaviy</button>
+                    <button class="suggestion-chip" onclick="startChat()"><i class="fa-solid fa-utensils"></i> Halol taomlar</button>
+                    <button class="suggestion-chip" onclick="startChat()"><i class="fa-solid fa-wallet"></i> Arzon sayohat</button>
                 </div>
+            </div>
 
+            <!-- Explore Cities -->
+            <div class="explore-section">
+                <div class="explore-title">Shaharlarni kashf eting</div>
+                <div class="city-cards-modern" id="cityGridHome"></div>
+            </div>
+
+            <!-- Scheduler widget (compact) -->
+            <div class="home-scheduler-widget" id="homeSchedulerWidget" onclick="goTab('scheduler')" style="background:var(--surface-2);border-radius:16px;padding:16px;margin:0 20px 20px;cursor:pointer;border:1px solid var(--line);animation:cardEntrance 0.5s ease 0.4s both;">
+                <div style="display:flex;align-items:center;gap:12px;">
+                    <div style="font-size:28px;" id="homeSchedulerIcon"><i class="fa-solid fa-robot"></i></div>
+                    <div style="flex:1;">
+                        <div style="font-size:13px;font-weight:700;"><i class="fa-solid fa-bullseye"></i> Kunlik Missiya</div>
+                        <div id="homeSchedulerPreview" style="font-size:12px;color:var(--ink-soft);margin-top:2px;">Bugungi vazifalarni ko'rish</div>
+                    </div>
+                    <span style="font-size:16px;">›</span>
+                </div>
+            </div>
+
+            <!-- Hidden compat elements for existing JS -->
+            <div style="display:none;">
                 <div class="chip-row" id="chipRow">
-                    <div class="chip active" data-chip="all" data-tr="filter_all"><i class="fa-solid fa-star"></i>
-                        Hammasi</div>
-                    <div class="chip" data-chip="tarixiy" data-tr="filter_tarixiy"><i class="fa-solid fa-landmark"></i>
-                        Tarixiy joylar</div>
-                    <div class="chip" data-chip="tabiat" data-tr="filter_tabiat"><i class="fa-solid fa-leaf"></i> Tabiat
-                    </div>
-                    <div class="chip" data-chip="oilaviy" data-tr="filter_oilaviy"><i
-                            class="fa-solid fa-people-group"></i> Oilaviy</div>
-                    <div class="chip" data-chip="taom" data-tr="filter_taom"><i class="fa-solid fa-utensils"></i> Taom
-                    </div>
-                    <div class="chip" data-chip="xarid" data-tr="filter_xarid"><i class="fa-solid fa-bag-shopping"></i>
-                        Xarid</div>
+                    <div class="chip active" data-chip="all"><i class="fa-solid fa-star"></i> Hammasi</div>
+                    <div class="chip" data-chip="tarixiy"><i class="fa-solid fa-landmark"></i> Tarixiy joylar</div>
+                    <div class="chip" data-chip="tabiat"><i class="fa-solid fa-leaf"></i> Tabiat</div>
+                    <div class="chip" data-chip="oilaviy"><i class="fa-solid fa-people-group"></i> Oilaviy</div>
+                    <div class="chip" data-chip="taom"><i class="fa-solid fa-utensils"></i> Taom</div>
+                    <div class="chip" data-chip="xarid"><i class="fa-solid fa-bag-shopping"></i> Xarid</div>
                 </div>
-
-                <div class="sec-title" data-tr="sec_cities">Mashhur shaharlar</div>
-                <div class="city-grid" id="cityGridHome"></div>
-
                 <div class="stats-card" id="statsCardHome"></div>
-
-                <div class="home-scheduler-widget" id="homeSchedulerWidget" onclick="goTab('scheduler')"
-                    style="background:var(--surface-2);border-radius:16px;padding:16px;margin-bottom:20px;cursor:pointer;border:1px solid var(--line);">
-                    <div style="display:flex;align-items:center;gap:12px;">
-                        <div style="font-size:28px;" id="homeSchedulerIcon"><i class="fa-solid fa-robot"></i></div>
-                        <div style="flex:1;">
-                            <div style="font-size:13px;font-weight:700;"><i class="fa-solid fa-bullseye"></i> Kunlik
-                                Missiya</div>
-                            <div id="homeSchedulerPreview" style="font-size:12px;color:var(--ink-soft);margin-top:2px;">
-                                Bugungi vazifalarni ko'rish</div>
-                        </div>
-                        <span style="font-size:16px;">›</span>
-                    </div>
-                </div>
-
-                <div class="sec-title"
-                    style="cursor:pointer;display:flex;align-items:center;justify-content:space-between;"
-                    onclick="toggleWhySection()" id="whySectionToggle">
-                    <span data-tr="sec_why">Nega YO'LCHI?</span>
-                    <span id="whyToggleIcon"
-                        style="font-size:14px;color:var(--ink-soft);transition:transform 0.3s ease;"><i
-                            class='fa-solid fa-chevron-down'></i></span>
-                </div>
-                <div class="why-grid" id="whyGrid">
-                    <div class="why-card">
-                        <div class="ic"><i class="fa-solid fa-robot"></i></div>
-                        <h4 data-tr="why_ai_title">AI reja tuzish</h4>
-                        <p data-tr="why_ai_desc">15 soniyada shaxsiy marshrut</p>
-                    </div>
-                    <div class="why-card">
-                        <div class="ic"><i class="fa-solid fa-map"></i></div>
-                        <h4 data-tr="why_map_title">Yo'l ko'rsatish</h4>
-                        <p data-tr="why_map_desc">Optimallashtirilgan tartib</p>
-                    </div>
-                    <div class="why-card">
-                        <div class="ic"><i class="fa-solid fa-key"></i></div>
-                        <h4 data-tr="why_key_title">Kalit yig"ish</h4>
-                        <p data-tr="why_key_desc">Har bir joydan sovg'a ol</p>
-                    </div>
-                    <div class="why-card" onclick="shareApp()" style="cursor:pointer;">
-                        <div class="ic"><i class="fa-solid fa-share-from-square"></i></div>
-                        <h4 data-tr="why_share_title">Ulashish</h4>
-                        <p data-tr="why_share_desc">Rejani do"stlaringga yubor</p>
-                    </div>
-                </div>
-
-                <button class="cta-btn" onclick="startChat()" data-tr="cta_start"><i class="fa-solid fa-bolt"></i> AI
-                    bilan boshlash →</button>
             </div>
         </section>
 
@@ -5216,6 +5512,8 @@
                 landing.classList.add('visible');
                 generateLandingParticles();
             }
+            // Hide auth overlay so it doesn't block landing page clicks
+            overlay.classList.add('hidden');
         }
 
         function generateLandingParticles() {
