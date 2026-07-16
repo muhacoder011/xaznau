@@ -20,24 +20,49 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <style>
         :root {
-            --bg: #f6f2e8;
+            --bg: #f5f0e6;
             --surface: #ffffff;
             --surface-2: #eef3ea;
             --surface-3: #e2e8de;
             --ink: #16241d;
             --ink-soft: #5c6c60;
-            --green: #1f6d4c;
-            --green-deep: #123a28;
-            --green-glow: rgba(31, 109, 76, 0.3);
-            --gold: #dda23a;
-            --gold-deep: #a86b1f;
-            --gold-glow: rgba(221, 162, 58, 0.3);
-            --line: rgba(22, 36, 29, 0.12);
+            --green: #1f8b5c;
+            --green-deep: #0f3d2a;
+            --green-glow: rgba(31, 139, 92, 0.25);
+            --gold: #d4a94b;
+            --gold-deep: #a8751f;
+            --gold-glow: rgba(212, 169, 75, 0.25);
+            --coral: #e0756a;
+            --coral-deep: #b04a3f;
+            --coral-glow: rgba(224, 117, 106, 0.2);
+            --teal: #3a9d8c;
+            --teal-deep: #1d6b5d;
+            --teal-glow: rgba(58, 157, 140, 0.2);
+            --rose: #d4657a;
+            --rose-glow: rgba(212, 101, 122, 0.2);
+            --lavender: #8b7bb8;
+            --lavender-glow: rgba(139, 123, 184, 0.2);
+            --line: rgba(22, 36, 29, 0.08);
             --danger: #b1502e;
-            --danger-glow: rgba(177, 80, 46, 0.3);
+            --danger-glow: rgba(177, 80, 46, 0.25);
             --radius: 18px;
             --radius-sm: 12px;
+            --radius-xs: 8px;
             --ease: cubic-bezier(.2, 1.4, .4, 1);
+            --ease-out: cubic-bezier(0, 0, .2, 1);
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.04), 0 1px 2px rgba(0,0,0,0.04);
+            --shadow-md: 0 4px 12px rgba(0,0,0,0.05), 0 2px 4px rgba(0,0,0,0.03);
+            --shadow-lg: 0 10px 30px rgba(0,0,0,0.06), 0 4px 8px rgba(0,0,0,0.03);
+            --shadow-xl: 0 20px 50px rgba(0,0,0,0.08);
+            --grad-primary: linear-gradient(135deg, #1f8b5c, #3a9d8c);
+            --grad-accent: linear-gradient(135deg, #d4a94b, #e0756a);
+            --grad-hero: linear-gradient(135deg, #1f8b5c, #d4a94b);
+            --grad-surface: linear-gradient(135deg, #f5f0e6, #eef3ea);
+            --grad-gold: linear-gradient(135deg, #d4a94b, #a8751f);
+            --grad-coral: linear-gradient(135deg, #e0756a, #b04a3f);
+            --grad-teal: linear-gradient(135deg, #3a9d8c, #1d6b5d);
+            --grad-rose: linear-gradient(135deg, #d4657a, #a8435a);
+            --grad-lavender: linear-gradient(135deg, #8b7bb8, #6b5a9e);
         }
 
         html[data-theme="dark"] {
@@ -53,8 +78,26 @@
             --gold: #e6b458;
             --gold-deep: #c79236;
             --gold-glow: rgba(230, 180, 88, 0.25);
+            --coral: #e8836a;
+            --coral-deep: #c06050;
+            --coral-glow: rgba(232, 131, 106, 0.2);
+            --teal: #4ab3a0;
+            --teal-deep: #2d8a7a;
+            --teal-glow: rgba(74, 179, 160, 0.2);
+            --rose: #d87a8a;
+            --rose-glow: rgba(216, 122, 138, 0.2);
+            --lavender: #9b8bca;
+            --lavender-glow: rgba(155, 139, 202, 0.2);
             --line: rgba(238, 242, 234, 0.10);
             --danger-glow: rgba(200, 90, 50, 0.25);
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.2), 0 1px 2px rgba(0,0,0,0.3);
+            --shadow-md: 0 4px 12px rgba(0,0,0,0.25), 0 2px 4px rgba(0,0,0,0.2);
+            --shadow-lg: 0 10px 30px rgba(0,0,0,0.3), 0 4px 8px rgba(0,0,0,0.2);
+            --shadow-xl: 0 20px 50px rgba(0,0,0,0.35);
+            --grad-primary: linear-gradient(135deg, #3fae7c, #4ab3a0);
+            --grad-accent: linear-gradient(135deg, #e6b458, #e8836a);
+            --grad-hero: linear-gradient(135deg, #3fae7c, #e6b458);
+            --grad-surface: linear-gradient(135deg, #0a120d, #16241d);
         }
 
         * {
@@ -188,6 +231,19 @@
             justify-content: space-between;
             padding: 18px 20px 14px;
             gap: 10px;
+            position: relative;
+            z-index: 1;
+        }
+        .topbar::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 20px;
+            right: 20px;
+            height: 1px;
+            background: var(--grad-hero);
+            opacity: 0.12;
+            border-radius: 10px;
         }
 
         .topbar-left {
@@ -349,8 +405,18 @@
             -webkit-backdrop-filter: blur(16px);
             position: relative;
             z-index: 100;
-            box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.04);
+            box-shadow: 0 -4px 20px var(--shadow-sm);
             justify-content: space-around;
+        }
+        .bottom-nav::before {
+            content: '';
+            position: absolute;
+            top: -1px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: var(--grad-hero);
+            opacity: 0.15;
         }
 
         html[data-theme="dark"] .bottom-nav {
@@ -561,12 +627,13 @@
             font-size: 32px;
             font-weight: 800;
             margin-top: 10px;
-            background: linear-gradient(135deg, var(--green), var(--gold));
+            background: var(--grad-hero);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
             letter-spacing: -0.5px;
             animation: splash-fade-in 0.8s ease 0.2s both;
+            filter: drop-shadow(0 0 20px var(--green-glow));
         }
 
         #splashScreen .splash-sub {
@@ -874,6 +941,11 @@
             border: 1px solid var(--line);
             transition: transform 0.3s cubic-bezier(.2, 1.4, .4, 1), box-shadow 0.3s ease;
             will-change: transform;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .city-card:hover {
+            box-shadow: var(--shadow-lg);
         }
 
         .city-card::after {
@@ -967,12 +1039,14 @@
             border: 1px solid var(--line);
             border-radius: 14px;
             padding: 14px;
-            transition: transform 0.25s cubic-bezier(.2, 1.4, .4, 1), box-shadow 0.25s ease;
+            transition: transform 0.25s cubic-bezier(.2, 1.4, .4, 1), box-shadow 0.25s ease, border-color 0.25s ease;
+            box-shadow: var(--shadow-sm);
         }
 
         .why-card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.06);
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-lg);
+            border-color: var(--green-glow);
         }
 
         .why-card .ic {
@@ -1998,8 +2072,14 @@
             overflow: hidden;
             display: flex;
             flex-direction: column;
-            transition: transform 0.3s cubic-bezier(.2, 1.4, .4, 1), box-shadow 0.3s ease;
+            transition: transform 0.3s cubic-bezier(.2, 1.4, .4, 1), box-shadow 0.3s ease, border-color 0.3s ease;
             will-change: transform;
+            box-shadow: var(--shadow-sm);
+        }
+        .shop-card:hover {
+            box-shadow: var(--shadow-lg);
+            border-color: var(--green-glow);
+            transform: translateY(-3px);
         }
 
         .shop-card .scover {
@@ -2309,16 +2389,16 @@
             }
         }
 
-        /* ========== GLASSMORPHISM THEME ========== */
+        /* ========== GLASSMORPHISM THEME — ULTRA ========== */
         html.glass-theme {
-            --glass-bg: rgba(255, 255, 255, 0.1);
-            --glass-border: rgba(255, 255, 255, 0.2);
-            --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
-            --glass-blur: 14px;
+            --glass-bg: rgba(255, 255, 255, 0.08);
+            --glass-border: rgba(255, 255, 255, 0.18);
+            --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+            --glass-blur: 16px;
         }
 
         html.glass-theme .app-shell {
-            background: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
+            background: linear-gradient(135deg, #0f0c29 0%, #1a1745 30%, #302b63 60%, #24243e 100%);
         }
 
         html.glass-theme .app-shell::before {
@@ -2329,11 +2409,30 @@
             right: 0;
             bottom: 0;
             background:
-                radial-gradient(ellipse at 20% 20%, rgba(102, 126, 234, 0.15) 0%, transparent 50%),
-                radial-gradient(ellipse at 80% 80%, rgba(118, 75, 162, 0.15) 0%, transparent 50%),
-                radial-gradient(ellipse at 50% 50%, rgba(238, 130, 238, 0.05) 0%, transparent 50%);
+                radial-gradient(ellipse at 15% 20%, rgba(102, 126, 234, 0.2) 0%, transparent 50%),
+                radial-gradient(ellipse at 85% 30%, rgba(118, 75, 162, 0.18) 0%, transparent 50%),
+                radial-gradient(ellipse at 50% 80%, rgba(238, 130, 238, 0.08) 0%, transparent 50%),
+                radial-gradient(ellipse at 20% 70%, rgba(74, 179, 160, 0.1) 0%, transparent 40%);
             pointer-events: none;
             z-index: 0;
+            animation: glass-bg-shift 12s ease-in-out infinite alternate;
+        }
+
+        @keyframes glass-bg-shift {
+            0% { background-position: 0% 0%; }
+            100% { background-position: 100% 100%; }
+        }
+
+        /* Dark variant for glass theme when dark mode is active */
+        html.glass-theme[data-theme="dark"] .app-shell {
+            background: linear-gradient(135deg, #050510 0%, #0f0c29 40%, #1a1745 70%, #0a0a1a 100%);
+        }
+
+        html.glass-theme[data-theme="dark"] .app-shell::before {
+            background:
+                radial-gradient(ellipse at 20% 20%, rgba(80, 100, 220, 0.15) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 80%, rgba(100, 60, 160, 0.12) 0%, transparent 50%),
+                radial-gradient(ellipse at 50% 50%, rgba(200, 100, 200, 0.05) 0%, transparent 50%);
         }
 
         html.glass-theme .screen {
@@ -4599,7 +4698,7 @@
             max-width: 300px;
         }
         .home-title span {
-            background: linear-gradient(135deg, var(--gold), #e6b458);
+            background: var(--grad-hero);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
@@ -4616,13 +4715,15 @@
             align-items: center;
             gap: 10px;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: all 0.3s ease, border-color 0.3s ease;
             animation: fadeInUp 0.7s ease 0.1s both;
+            box-shadow: var(--shadow-sm);
         }
         .search-wrapper:hover,
         .search-wrapper:focus-within {
-            border-color: var(--gold);
-            box-shadow: 0 0 0 3px rgba(221, 162, 58, 0.15);
+            border-color: var(--green);
+            box-shadow: var(--shadow-md), 0 0 0 3px var(--green-glow);
+            transform: translateY(-1px);
         }
         .search-wrapper input {
             flex: 1;
@@ -4888,6 +4989,186 @@
         .bottom-nav button.active .ic i {
             animation: glow-pulse 2s ease-in-out infinite;
             filter: drop-shadow(0 0 6px var(--gold));
+        }
+
+        /* ================= DECORATIVE REFINEMENTS — ELEGANCE COLLECTION ================= */
+
+        /* Gradient text utility */
+        .grad-text {
+            background: var(--grad-hero);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .grad-text-green {
+            background: var(--grad-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .grad-text-gold {
+            background: var(--grad-gold);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .grad-text-coral {
+            background: var(--grad-coral);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* Elegant card refinement with new shadows */
+        .card-elegant {
+            background: var(--surface);
+            border: 1px solid var(--line);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-md);
+            transition: transform 0.3s var(--ease), box-shadow 0.3s ease, border-color 0.3s ease;
+        }
+        .card-elegant:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+            border-color: var(--green-glow);
+        }
+
+        /* Subtle inner glow for cards */
+        .card-glow {
+            position: relative;
+            overflow: hidden;
+        }
+        .card-glow::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle at 30% 20%, var(--green-glow) 0%, transparent 50%);
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.5s ease;
+        }
+        .card-glow:hover::before {
+            opacity: 1;
+        }
+
+        /* Decorative gradient border */
+        .border-glow {
+            position: relative;
+        }
+        .border-glow::after {
+            content: '';
+            position: absolute;
+            inset: -1px;
+            border-radius: inherit;
+            background: var(--grad-hero);
+            z-index: -1;
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+        .border-glow:hover::after {
+            opacity: 0.5;
+        }
+
+        /* Glass card variant for light theme — subtle translucency */
+        .card-glass {
+            background: rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            box-shadow: var(--shadow-md);
+        }
+        html[data-theme="dark"] .card-glass {
+            background: rgba(22, 36, 29, 0.6);
+            border-color: rgba(255, 255, 255, 0.08);
+        }
+
+        /* Decorative floating dot patterns */
+        .dot-pattern {
+            position: relative;
+        }
+        .dot-pattern::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 120px;
+            height: 120px;
+            background-image: radial-gradient(var(--green-glow) 1.5px, transparent 1.5px);
+            background-size: 12px 12px;
+            opacity: 0.3;
+            pointer-events: none;
+            mask-image: radial-gradient(ellipse at center, black 20%, transparent 70%);
+            -webkit-mask-image: radial-gradient(ellipse at center, black 20%, transparent 70%);
+        }
+
+        /* Soft divider with gradient */
+        .divider-grad {
+            height: 2px;
+            background: var(--grad-hero);
+            border-radius: 10px;
+            opacity: 0.3;
+            margin: 16px 0;
+        }
+
+        /* Status badge refinement */
+        .badge-gradient {
+            background: var(--grad-primary);
+            color: #fff;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 700;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            box-shadow: 0 2px 8px var(--green-glow);
+        }
+        .badge-gradient.gold {
+            background: var(--grad-gold);
+            box-shadow: 0 2px 8px var(--gold-glow);
+        }
+        .badge-gradient.coral {
+            background: var(--grad-coral);
+            box-shadow: 0 2px 8px var(--coral-glow);
+        }
+
+        /* Improved tag styles */
+        .tag-soft {
+            background: var(--surface-2);
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 11px;
+            color: var(--ink-soft);
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            border: 1px solid var(--line);
+            transition: all 0.2s ease;
+        }
+        .tag-soft:hover {
+            border-color: var(--green-glow);
+            color: var(--green);
+        }
+
+        /* Section title enhancement */
+        .section-title {
+            font-size: 16px;
+            font-weight: 800;
+            margin: 22px 0 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .section-title::after {
+            content: '';
+            flex: 1;
+            height: 2px;
+            background: var(--grad-hero);
+            border-radius: 10px;
+            opacity: 0.2;
         }
 
         /* ================= ULTRA ANIMATIONS — MASTER COLLECTION ================= */
@@ -5418,11 +5699,11 @@
             <!-- Main greeting -->
             <div class="home-greeting">
                 <div class="home-subtitle slide-left">Xush kelibsiz <i class="fa-solid fa-hand-wave"></i></div>
-                <h1 class="home-title slide-right">Bugun qayerga <span class="text-gradient-anim">sayohat</span> qilamiz?</h1>
+                <h1 class="home-title slide-right">Bugun qayerga <span class="grad-text">sayohat</span> qilamiz?</h1>
             </div>
 
             <!-- Search -->
-            <div class="search-wrapper glow-pulse heartbeat" onclick="startChat()">
+            <div class="search-wrapper glow-pulse heartbeat card-glass" onclick="startChat()">
                 <i class="fa-solid fa-search"></i>
                 <input type="text" placeholder="Bugun nima qilmoqchisiz?" readonly>
                 <button class="search-ai-btn glow-pulse"><i class="fa-solid fa-wand-magic-sparkles"></i> AI</button>
@@ -5430,7 +5711,7 @@
 
             <!-- Suggestions -->
             <div class="suggestion-section">
-                <div class="suggestion-label">Sinab ko'ring</div>
+                <div class="suggestion-label grad-text-green" style="font-weight:700;">Sinab ko'ring</div>
                 <div class="suggestion-chips">
                     <button class="suggestion-chip btn-lift" onclick="startChat()"><i class="fa-solid fa-landmark"></i> Tarixiy joylar</button>
                     <button class="suggestion-chip btn-lift" onclick="startChat()"><i class="fa-solid fa-leaf"></i> Tabiat</button>
@@ -5441,13 +5722,14 @@
             </div>
 
             <!-- Explore Cities -->
-            <div class="explore-section">
-                <div class="explore-title">Shaharlarni kashf eting</div>
+            <div class="divider-grad" style="margin:8px 20px 4px;"></div>
+            <div class="explore-section dot-pattern">
+                <div class="explore-title grad-text">Shaharlarni kashf eting</div>
                 <div class="city-cards-modern" id="cityGridHome"></div>
             </div>
 
             <!-- Scheduler widget (compact) -->
-            <div class="home-scheduler-widget" id="homeSchedulerWidget" onclick="goTab('scheduler')" style="background:var(--surface-2);border-radius:16px;padding:16px;margin:0 20px 20px;cursor:pointer;border:1px solid var(--line);animation:cardEntrance 0.5s ease 0.4s both;">
+            <div class="home-scheduler-widget card-elegant" id="homeSchedulerWidget" onclick="goTab('scheduler')" style="padding:16px;margin:0 20px 20px;cursor:pointer;animation:cardEntrance 0.5s ease 0.4s both;">
                 <div style="display:flex;align-items:center;gap:12px;">
                     <div style="font-size:28px;" id="homeSchedulerIcon"><i class="fa-solid fa-robot"></i></div>
                     <div style="flex:1;">
@@ -5748,11 +6030,14 @@
     <script>
         /* ================= DATA ================= */
         const GRADIENTS = [
-            'linear-gradient(135deg,#1f6d4c,#123a28)',
-            'linear-gradient(135deg,#dda23a,#a86b1f)',
-            'linear-gradient(135deg,#2f8f6a,#1f6d4c)',
-            'linear-gradient(135deg,#c96b3e,#8a3f22)',
-            'linear-gradient(135deg,#3a7d94,#1f4b5c)'
+            'linear-gradient(135deg,#1f8b5c,#3a9d8c)',
+            'linear-gradient(135deg,#d4a94b,#e0756a)',
+            'linear-gradient(135deg,#3a9d8c,#1f8b5c)',
+            'linear-gradient(135deg,#e0756a,#b04a3f)',
+            'linear-gradient(135deg,#8b7bb8,#3a9d8c)',
+            'linear-gradient(135deg,#d4657a,#e0756a)',
+            'linear-gradient(135deg,#1f8b5c,#d4a94b)',
+            'linear-gradient(135deg,#3a9d8c,#d4657a)'
         ];
 
         const CITIES = [
@@ -7892,7 +8177,7 @@
                     ? `background:linear-gradient(rgba(0,0,0,0.1),rgba(0,0,0,0.65)),url('${imgUrl}') center/cover`
                     : `background:${grad(i)}`;
                 return `
-    <div class="city-card card-3d stagger-enter fade-up reveal" style="${bgStyle}" onclick="quickStartCity('${c.name}')">
+    <div class="city-card card-3d stagger-enter fade-up reveal border-glow" style="${bgStyle}" onclick="quickStartCity('${c.name}')">
       <div><div class="cname">${c.name}</div><div class="ccount"><i class="fa-solid fa-location-dot"></i> ${c.count || 0} joy</div></div>
     </div>`;
             }).join('');
