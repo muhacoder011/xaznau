@@ -6,8 +6,7 @@ import { Button } from '../ui/Button'
 import { MapPicker } from './MapPicker'
 import type { LocationFormData, LocationCategory } from '../../types'
 
-const ADMIN_LOGIN = 'Xazina'
-const ADMIN_PASSWORD = 'xazina2026'
+// Admin autentifikatsiyasi backend API orqali amalga oshiriladi
 
 const CATEGORY_OPTIONS = [
   { value: 'masjid', label: '<i className="fa-solid fa-mosque"></i> Masjid' },
@@ -49,12 +48,12 @@ function saveLocations(locations: StoredLocation[]) {
 }
 
 export const AddLocationForm: React.FC<Props> = ({ onSubmit }) => {
-  // Auth state
+  // Auth state — backend API orqali tekshiriladi
   const [isAdminAuth, setIsAdminAuth] = useState(false)
   const [adminLogin, setAdminLogin] = useState('')
   const [adminPassword, setAdminPassword] = useState('')
   const [adminError, setAdminError] = useState('')
-  const [showPassword, setShowPassword] = useState(false)
+  const [isLoggingIn, setIsLoggingIn] = useState(false)
   const [activeTab, setActiveTab] = useState<'add' | 'list' | 'stats'>('add')
 
   // Form state
@@ -84,14 +83,38 @@ export const AddLocationForm: React.FC<Props> = ({ onSubmit }) => {
     if (saved === 'true') setIsAdminAuth(true)
   }, [])
 
-  const handleAdminLogin = (e: React.FormEvent) => {
+  const handleAdminLogin = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (adminLogin === ADMIN_LOGIN && adminPassword === ADMIN_PASSWORD) {
-      setIsAdminAuth(true)
-      setAdminError('')
-      localStorage.setItem('admin_auth', 'true')
-    } else {
-      setAdminError('Login yoki parol notogri!')
+    if (!adminLogin || !adminPassword) {
+      setAdminError('Login va parolni kiriting!')
+      return
+    }
+    setIsLoggingIn(true)
+    setAdminError('')
+    
+    try {
+      // Backend API orqali autentifikatsiya
+      const response = await fetch('/api/admin/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ login: adminLogin, password: adminPassword })
+      })
+      
+      if (!response.ok) throw new Error('Login yoki parol notog\'ri!')
+      
+      const data = await response.json()
+      if (data.success) {
+        setIsAdminAuth(true)
+        setAdminError('')
+        localStorage.setItem('admin_auth', 'true')
+        localStorage.setItem('admin_token', data.token || '')
+      } else {
+        throw new Error(data.message || 'Login yoki parol notog\'ri!')
+      }
+    } catch (err) {
+      setAdminError(err instanceof Error ? err.message : 'Serverga ulanishda xatolik')
+    } finally {
+      setIsLoggingIn(false)
     }
   }
 
@@ -100,6 +123,7 @@ export const AddLocationForm: React.FC<Props> = ({ onSubmit }) => {
     setAdminLogin('')
     setAdminPassword('')
     localStorage.removeItem('admin_auth')
+    localStorage.removeItem('admin_token')
   }
 
   // ===== ALL HOOKS MUST BE BEFORE CONDITIONAL RETURN =====
@@ -189,17 +213,17 @@ export const AddLocationForm: React.FC<Props> = ({ onSubmit }) => {
     setEditingId(null)
   }
 
-  // ===== CONDITIONAL RETURN — Login form =====
+  // ===== CONDITIONAL RETURN — Login form (backend API orqali) =====
   if (!isAdminAuth) {
     return (
       <div className="min-h-[60vh] flex items-center justify-center">
         <div className="w-full max-w-md">
           <div className="text-center mb-8">
             <div className="w-20 h-20 rounded-3xl bg-gradient-to-br from-emerald-500 to-emerald-700 flex items-center justify-center text-white text-4xl shadow-lg mx-auto mb-4 ring-4 ring-emerald-100">
-              <i className="fa-solid fa-lock"></i>
+              <i className="fa-solid fa-shield-halved"></i>
             </div>
             <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Admin Panel</h2>
-            <p className="text-gray-500 dark:text-gray-400 mt-1">Faqat adminlar uchun</p>
+            <p className="text-gray-500 dark:text-gray-400 mt-1">Autentifikatsiya talab qilinadi</p>
           </div>
           <form onSubmit={handleAdminLogin} className="bg-white dark:bg-gray-800 rounded-3xl p-8 shadow-xl border border-gray-100 dark:border-gray-700 space-y-5">
             <div className="space-y-2">
@@ -214,15 +238,16 @@ export const AddLocationForm: React.FC<Props> = ({ onSubmit }) => {
               <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Parol</label>
               <div className="relative">
                 <span className="absolute left-3 top-1/2 -translate-y-1/2 text-lg"><i className="fa-solid fa-key"></i></span>
-                <input type={showPassword ? 'text' : 'password'} value={adminPassword} onChange={(e) => setAdminPassword(e.target.value)} placeholder="Parolni kiriting"
-                  className="w-full pl-10 pr-12 py-3 rounded-xl border border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white text-sm focus:ring-2 focus:ring-emerald-500 focus:border-transparent outline-none transition-all" />
-                <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600">{showPassword ? '<i className="fa-solid fa-eye-slash"></i>' : '<i className="fa-solid fa-eye"></i>'}</button>
+                <input type="password" value={adminPassword} onChange={(e) => setAdminPassword(e.target.value)} placeholder="Parolni kiriting"
+                  className="w-full pl-10 pr-4 py-3 rounded-xl border border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white text-sm focus:ring-2 focus:ring-emerald-500 focus:border-transparent outline-none transition-all" />
               </div>
             </div>
             {adminError && <div className="p-4 bg-red-50 dark:bg-red-900/30 border border-red-200 dark:border-red-800 rounded-xl text-sm text-red-600 dark:text-red-400 text-center font-medium"><i className="fa-solid fa-xmark"></i> {adminError}</div>}
-            <button type="submit" disabled={!adminLogin || !adminPassword}
-              className="w-full py-3.5 bg-gradient-to-r from-emerald-500 to-emerald-700 hover:from-emerald-600 hover:to-emerald-800 disabled:from-gray-300 disabled:to-gray-300 text-white rounded-xl font-semibold text-sm transition-all disabled:cursor-not-allowed active:scale-[0.98] shadow-lg hover:shadow-xl"><i className="fa-solid fa-unlock"></i> Kirish</button>
-            <p className="text-xs text-gray-400 dark:text-gray-500 text-center">Admin panelga kirish uchun maxsus login va parol talab qilinadi</p>
+            <button type="submit" disabled={isLoggingIn || !adminLogin || !adminPassword}
+              className="w-full py-3.5 bg-gradient-to-r from-emerald-500 to-emerald-700 hover:from-emerald-600 hover:to-emerald-800 disabled:from-gray-300 disabled:to-gray-300 text-white rounded-xl font-semibold text-sm transition-all disabled:cursor-not-allowed active:scale-[0.98] shadow-lg hover:shadow-xl">
+              {isLoggingIn ? '<i className="fa-solid fa-hourglass"></i> Tekshirilmoqda...' : '<i className="fa-solid fa-unlock"></i> Kirish'}
+            </button>
+            <p className="text-xs text-gray-400 dark:text-gray-500 text-center">Admin panelga kirish backend orqali amalga oshiriladi</p>
           </form>
         </div>
       </div>

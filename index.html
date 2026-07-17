@@ -20,10 +20,10 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <style>
         :root {
-            --bg: #f8f6f2;
+            --bg: #f5f3ef;
             --surface: #ffffff;
-            --surface-2: #f0f2ee;
-            --surface-3: #e6e8e4;
+            --surface-2: #f0ede8;
+            --surface-3: #e5e2dc;
             --ink: #1a1d1a;
             --ink-soft: #6b716b;
             --ink-muted: #9a9f9a;
@@ -37,23 +37,27 @@
             --gold-glow: rgba(200, 162, 69, 0.12);
             --teal: #3a8d7a;
             --teal-glow: rgba(58, 141, 122, 0.1);
-            --line: rgba(26, 29, 26, 0.08);
-            --line-light: rgba(26, 29, 26, 0.04);
+            --line: rgba(26, 29, 26, 0.07);
+            --line-light: rgba(26, 29, 26, 0.03);
             --danger: #b1502e;
             --danger-glow: rgba(177, 80, 46, 0.12);
-            --radius: 14px;
-            --radius-sm: 10px;
-            --radius-xs: 6px;
+            --radius: 16px;
+            --radius-sm: 12px;
+            --radius-xs: 8px;
             --ease: cubic-bezier(.25, .1, .25, 1);
             --ease-spring: cubic-bezier(.34, 1.56, .64, 1);
-            --shadow-sm: 0 1px 2px rgba(0,0,0,0.04);
-            --shadow-md: 0 4px 12px rgba(0,0,0,0.05), 0 1px 3px rgba(0,0,0,0.04);
-            --shadow-lg: 0 8px 30px rgba(0,0,0,0.06), 0 2px 8px rgba(0,0,0,0.04);
-            --shadow-xl: 0 16px 50px rgba(0,0,0,0.08), 0 4px 12px rgba(0,0,0,0.04);
+            --ease-smooth: cubic-bezier(.4, 0, .2, 1);
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.04), 0 1px 2px rgba(0,0,0,0.03);
+            --shadow-md: 0 4px 16px rgba(0,0,0,0.06), 0 1px 4px rgba(0,0,0,0.04);
+            --shadow-lg: 0 12px 40px rgba(0,0,0,0.08), 0 2px 8px rgba(0,0,0,0.04);
+            --shadow-xl: 0 20px 60px rgba(0,0,0,0.1), 0 4px 16px rgba(0,0,0,0.04);
             --grad-primary: linear-gradient(135deg, #1a7a4a, #3a8d7a);
             --grad-accent: linear-gradient(135deg, #c8a245, #1a7a4a);
             --grad-hero: var(--grad-accent);
-            --grad-surface: linear-gradient(135deg, #f8f6f2, #f0f2ee);
+            --grad-surface: linear-gradient(135deg, #f5f3ef, #f0ede8);
+            --grad-mesh: radial-gradient(at 20% 80%, rgba(26,122,74,0.06) 0%, transparent 50%),
+                          radial-gradient(at 80% 20%, rgba(200,162,69,0.05) 0%, transparent 50%),
+                          radial-gradient(at 50% 50%, rgba(58,141,122,0.03) 0%, transparent 50%);
         }
 
         html[data-theme="dark"] {
@@ -102,6 +106,8 @@
 
         body {
             background: var(--bg);
+            background-image: var(--grad-mesh);
+            background-attachment: fixed;
             color: var(--ink);
             font-family: 'Inter', sans-serif;
             display: flex;
@@ -5609,9 +5615,9 @@
             <button class="cta-btn" style="margin-top:10px;" onclick="openScanner()"><i class="fa-solid fa-qrcode"></i>
                 QR Skanner</button>
             <button id="guideBtn" class="cta-btn ghost" style="margin-top:10px;display:none;" onclick="showGuide()"><i
-                    class="fa-solid fa-book"></i> Shahar qo"llanmasi</button>
+                    class="fa-solid fa-book"></i> Shahar qo'llanmasi</button>
             <button class="cta-btn ghost" style="margin-top:10px;" onclick="goTab('shop')"><i
-                    class="fa-solid fa-store"></i> Do"kon</button>
+                    class="fa-solid fa-store"></i> Do'kon</button>
             <button class="cta-btn" style="margin-top:10px;background:var(--danger,#e74c3c);color:#fff;"
                 onclick="logoutUser()"><i class="fa-solid fa-right-from-bracket"></i> Chiqish</button>
         </section>
@@ -5657,13 +5663,13 @@
             <div id="liveBody"></div>
         </section>
 
-        <!-- ============ DO"KON (SHOP) ============ -->
+        <!-- ============ DO'KON (SHOP) ============ -->
         <section class="screen" data-screen="shop">
             <div class="ambient-glow" style="top:-60px;right:-100px;opacity:0.1;"></div>
             <div class="topbar">
                 <div class="topbar-left"><button class="back-btn" onclick="goHome()"><i
                             class="fa-solid fa-arrow-left"></i></button>
-                    <h2 data-tr="shop_title"><i class="fa-solid fa-star"></i> Do"kon</h2>
+                    <h2 data-tr="shop_title"><i class="fa-solid fa-star"></i> Do'kon</h2>
                 </div>
                 <button class="icon-btn" onclick="toggleDark()"><i class="fa-solid fa-moon"></i></button>
             </div>
@@ -5680,8 +5686,8 @@
 
             <div id="adminLogin">
                 <div style="font-size:13px;color:var(--ink-soft);margin-bottom:15px;text-align:center;padding:10px;background:var(--surface-2);border-radius:12px;">
-                    <i class="fa-solid fa-lock"></i> 
-                    Login: <strong>Xazina</strong> &nbsp;|&nbsp; Parol: <strong>xazina2026</strong>
+                    <i class="fa-solid fa-shield-halved"></i> 
+                    Admin panelga kirish uchun backend autentifikatsiyadan o'ting
                 </div>
                 <input id="adminUser" placeholder="Login" data-tr="admin_login"
                     style="width:100%;padding:15px;margin-bottom:15px;border-radius:12px;">
@@ -5690,10 +5696,11 @@
                 <button class="cta-btn ripple-btn" onclick="adminLogin()" data-tr="admin_enter">
                     Kirish
                 </button>
+                <div id="adminLoginError" style="display:none;margin-top:10px;padding:10px;background:var(--danger-glow);border-radius:10px;text-align:center;font-size:13px;color:var(--danger);"></div>
             </div>
 
             <div id="adminDashboard" style="display:none;">
-                <h3 data-tr="admin_add_city"><i class="fa-solid fa-location-dot"></i> Shahar qo"shish</h3>
+                <h3 data-tr="admin_add_city"><i class="fa-solid fa-location-dot"></i> Shahar qo'shish</h3>
                 <input id="cityName" placeholder="Shahar nomi" data-tr="admin_city_name"
                     style="width:100%;padding:12px;margin:10px 0;">
                 <input id="cityEmoji" placeholder="Emoji (masalan <i class='fa-solid fa-city'></i>)"
@@ -5705,17 +5712,23 @@
 
                 <hr style="margin:20px 0;">
 
-                <h3 data-tr="admin_add_place"><i class="fa-solid fa-landmark"></i> Joy qo"shish</h3>
+                <h3 data-tr="admin_add_place"><i class="fa-solid fa-landmark"></i> Joy qo'shish</h3>
                 <select id="placeCity"
                     style="width:100%;padding:12px;margin:10px 0;border-radius:12px;border:1px solid var(--line);background:var(--surface);font-size:13.5px;">
                     <option value="" data-tr="admin_select_city">Shaharni tanlang</option>
                 </select>
                 <input id="placeName" placeholder="Joy nomi" data-tr="admin_place_name"
                     style="width:100%;padding:12px;margin:10px 0;">
-                <input id="placeImage" type="file" accept="image/*"
-                    style="width:100%;padding:12px;margin:10px 0;border-radius:12px;border:1px solid var(--line);background:var(--surface);font-size:13.5px;">
-                <div id="imagePreview" style="display:none;margin-bottom:10px;"><img id="previewImg"
-                        style="width:100%;max-height:160px;object-fit:cover;border-radius:12px;"></div>
+                <div id="imageUploadArea" onclick="document.getElementById('placeImage').click()" 
+                    style="width:100%;min-height:120px;margin:10px 0;border-radius:12px;border:2px dashed var(--line);background:var(--surface-2);display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;transition:all 0.2s ease;position:relative;overflow:hidden;">
+                    <div id="uploadPlaceholder" style="display:flex;flex-direction:column;align-items:center;gap:6px;padding:20px;color:var(--ink-soft);">
+                        <span style="font-size:36px;"><i class="fa-solid fa-image"></i></span>
+                        <span style="font-size:13px;font-weight:500;">Rasm yuklash uchun bosing</span>
+                        <span style="font-size:11px;">PNG, JPG, WEBP</span>
+                    </div>
+                    <img id="previewImg" style="display:none;width:100%;max-height:200px;object-fit:cover;border-radius:10px;">
+                </div>
+                <input id="placeImage" type="file" accept="image/*" style="display:none;">
                 <textarea id="placeDesc" placeholder="Tavsif" data-tr="admin_desc"
                     style="width:100%;padding:12px;height:120px;"></textarea>
                 <div style="display:flex;align-items:center;gap:10px;margin:10px 0;">
@@ -5737,7 +5750,7 @@
                 <div style="display:flex;gap:10px;">
                     <button class="cta-btn ripple-btn" onclick="addPlace()" id="addPlaceBtn"
                         data-tr="admin_add_place_btn" style="flex:1;">
-                        Joy qo"shish
+                        Joy qo'shish
                     </button>
                     <button class="cta-btn ghost ripple-btn" onclick="clearPlaceForm()" style="flex:0.5;"><i
                             class='fa-solid fa-xmark'></i> Tozalash</button>
@@ -5770,7 +5783,7 @@
                 data-tr="nav_scheduler"><span class="ic"><i class="fa-solid fa-bullseye"></i></span><span
                     class="nav-label">Missiya</span></button>
             <button data-tab="shop" onclick="goTab('shop')" data-tr="nav_shop"><span class="ic"><i
-                        class="fa-solid fa-store"></i></span><span class="nav-label">Do"kon</span></button>
+                        class="fa-solid fa-store"></i></span><span class="nav-label">Do'kon</span></button>
             <button data-tab="trips" onclick="goTab('trips')" data-tr="nav_trips"><span class="ic"><i
                         class="fa-solid fa-map"></i></span><span class="nav-label">Sayohatlar</span></button>
             <button data-tab="profile" onclick="goTab('profile')" data-tr="nav_profile"><span class="ic"><i
@@ -5828,86 +5841,376 @@
 
         const ITINERARIES = {
             "Toshkent": [
-                { name: "Mustaqillik maydoni", time: "09:00", dur: 45, desc: "O'zbekistonning asosiy maydoni — Mustaqillik ramzi", emoji: '<i class="fa-solid fa-flag"></i>', image: null },
-                { name: "Chorsu bozori", time: "10:00", dur: 60, desc: "Toshkentning eng qadimiy va rang-barang bozori", emoji: '<i class="fa-solid fa-store"></i>', image: null },
-                { name: "Minor masjidi", time: "11:30", dur: 40, desc: "O'zbekistondagi eng katta masjid", emoji: '<i class="fa-solid fa-mosque"></i>', image: null },
-                { name: "Oliy Majlis binosi", time: "12:30", dur: 30, desc: "Parlament binosi — zamonaviy me'morchilik namunasi", emoji: '<i class="fa-solid fa-building-columns"></i>', image: null },
-                { name: "Toshkent teleminorasiga chiqish", time: "13:30", dur: 60, desc: "Shaharning eng baland nuqtasidan panoramik ko'rinish", emoji: '<i class="fa-solid fa-tower-broadcast"></i>', image: null },
-                { name: "Milliy bog'", time: "15:00", dur: 90, desc: "Yashil dam olish maskani — piyoda sayr qiling", emoji: '<i class="fa-solid fa-tree"></i>', image: null },
-                { name: "Amir Temur muzeyi", time: "16:45", dur: 50, desc: "Buyuk sarkarda tarixiga sayohat", emoji: '<i class="fa-solid fa-landmark"></i>', image: null },
-                { name: "TV minorasi", time: "18:00", dur: 45, desc: "Toshkent teleminorasi — shahar tungi chiroqlari manzarasi", emoji: '<i class="fa-solid fa-tower-observation"></i>', image: null }
+                { name: "Mustaqillik maydoni", time: "09:00", dur: 45, desc: "O'zbekistonning asosiy maydoni — Mustaqillik ramzi", emoji: '<i class="fa-solid fa-flag"></i>', image: "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/Independence_Square_Tashkent.jpg/800px-Independence_Square_Tashkent.jpg" },
+                { name: "Chorsu bozori", time: "10:00", dur: 60, desc: "Toshkentning eng qadimiy va rang-barang bozori", emoji: '<i class="fa-solid fa-store"></i>', image: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8a/Chorsu_Bazaar_Tashkent.jpg/800px-Chorsu_Bazaar_Tashkent.jpg" },
+                { name: "Minor masjidi", time: "11:30", dur: 40, desc: "O'zbekistondagi eng katta masjid", emoji: '<i class="fa-solid fa-mosque"></i>', image: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6a/Minor_Mosque_Tashkent.jpg/800px-Minor_Mosque_Tashkent.jpg" },
+                { name: "Oliy Majlis binosi", time: "12:30", dur: 30, desc: "Parlament binosi — zamonaviy me'morchilik namunasi", emoji: '<i class="fa-solid fa-building-columns"></i>', image: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3d/Oliy_Majlis_Tashkent.jpg/800px-Oliy_Majlis_Tashkent.jpg" },
+                { name: "Toshkent teleminorasiga chiqish", time: "13:30", dur: 60, desc: "Shaharning eng baland nuqtasidan panoramik ko'rinish", emoji: '<i class="fa-solid fa-tower-broadcast"></i>', image: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4c/Tashkent_Tower.jpg/800px-Tashkent_Tower.jpg" },
+                { name: "Milliy bog'", time: "15:00", dur: 90, desc: "Yashil dam olish maskani — piyoda sayr qiling", emoji: '<i class="fa-solid fa-tree"></i>', image: "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7a/Alisher_Navoi_National_Park.jpg/800px-Alisher_Navoi_National_Park.jpg" },
+                { name: "Amir Temur muzeyi", time: "16:45", dur: 50, desc: "Buyuk sarkarda tarixiga sayohat", emoji: '<i class="fa-solid fa-landmark"></i>', image: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/Amir_Temur_Museum_Tashkent.jpg/800px-Amir_Temur_Museum_Tashkent.jpg" },
+                { name: "TV minorasi", time: "18:00", dur: 45, desc: "Toshkent teleminorasi — shahar tungi chiroqlari manzarasi", emoji: '<i class="fa-solid fa-tower-observation"></i>', image: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4c/Tashkent_Tower.jpg/800px-Tashkent_Tower.jpg" }
             ],
             "Samarqand": [
                 { name: "Registon maydoni", time: "09:00", dur: 60, desc: "Samarqandning durdonasi — uchta madrasa majmuasi", emoji: '<i class="fa-solid fa-landmark"></i>', image: null },
                 { name: "Shohizinda", time: "10:30", dur: 45, desc: "Maqbaralar ko'chasi — moviy naqshlar", emoji: '<i class="fa-solid fa-archway"></i>', image: null },
                 { name: "Bibi-Xonim masjidi", time: "11:30", dur: 40, desc: "Amir Temur davrining ulkan me'moriy yodgorligi", emoji: '<i class="fa-solid fa-mosque"></i>', image: null },
-                { name: "Siyob bozori", time: "12:30", dur: 50, desc: "Mahalliy taomlar va mevalar — non, samsa va qandolat", emoji: '<i class="fa-solid fa-store"></i>', image: null },
-                { name: "Amir Temur maqbarasi", time: "14:00", dur: 40, desc: "Go'ri Amir — buyuk sarkanda dafn etilgan joy", emoji: '<i class="fa-solid fa-monument"></i>', image: null },
-                { name: "Ulug'bek rasadxonasi", time: "15:00", dur: 45, desc: "15-asr astronomik kuzatish markazi", emoji: '<i class="fa-solid fa-telescope"></i>', image: null },
-                { name: "Samarqand nonvoyxonasi", time: "16:15", dur: 30, desc: "An'anaviy non yopilishini tomosha qiling", emoji: '<i class="fa-solid fa-bread-slice"></i>', image: null }
+                { name: "Siyob bozori", time: "12:30", dur: 50, desc: "Mahalliy taomlar va mevalar — non, samsa va qandolat", emoji: '<i class="fa-solid fa-store"></i>', image: "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5c/Siyob_Bazaar_Samarkand.jpg/800px-Siyob_Bazaar_Samarkand.jpg" },
+                { name: "Amir Temur maqbarasi", time: "14:00", dur: 40, desc: "Go'ri Amir — buyuk sarkanda dafn etilgan joy", emoji: '<i class="fa-solid fa-monument"></i>', image: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4f/Gur-e-Amir_Samarkand.jpg/800px-Gur-e-Amir_Samarkand.jpg" },
+                { name: "Ulug'bek rasadxonasi", time: "15:00", dur: 45, desc: "15-asr astronomik kuzatish markazi", emoji: '<i class="fa-solid fa-telescope"></i>', image: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3e/Ulugh_Beg_Observatory_Samarkand.jpg/800px-Ulugh_Beg_Observatory_Samarkand.jpg" },
+                { name: "Samarqand nonvoyxonasi", time: "16:15", dur: 30, desc: "An'anaviy non yopilishini tomosha qiling", emoji: '<i class="fa-solid fa-bread-slice"></i>', image: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8a/Samarkand_Bread.jpg/800px-Samarkand_Bread.jpg" }
             ],
             "Buxoro": [
                 { name: "Lyabi-Hovuz ansambli", time: "09:00", dur: 40, desc: "Soyabon ostidagi hovuz — Buxoro qalbi", emoji: '<i class="fa-solid fa-water"></i>', image: null },
                 { name: "Minorai Kalon", time: "10:00", dur: 35, desc: "12-asrda qurilgan minor — Buxoro ramzi", emoji: '<i class="fa-solid fa-tower-observation"></i>', image: null },
                 { name: "Arq qal'asi", time: "11:00", dur: 50, desc: "Buxoro amirlarining qarorgohi", emoji: '<i class="fa-solid fa-castle"></i>', image: null },
                 { name: "Samanidlar maqbarasi", time: "12:15", dur: 30, desc: "O'rta Osiyodagi eng qadimiy islomiy yodgorlik", emoji: '<i class="fa-solid fa-archway"></i>', image: null },
-                { name: "Buxoro bozori", time: "13:00", dur: 60, desc: "Mahalliy hunarmandlar va taomlar", emoji: '<i class="fa-solid fa-store"></i>', image: null },
-                { name: "Chor-Minor madrasasi", time: "14:30", dur: 35, desc: "Noyob to'rt minorali me'moriy yodgorlik", emoji: '<i class="fa-solid fa-building-columns"></i>', image: null }
+                { name: "Buxoro bozori", time: "13:00", dur: 60, desc: "Mahalliy hunarmandlar va taomlar", emoji: '<i class="fa-solid fa-store"></i>', image: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8a/Bukhara_Bazaar.jpg/800px-Bukhara_Bazaar.jpg" },
+                { name: "Chor-Minor madrasasi", time: "14:30", dur: 35, desc: "Noyob to'rt minorali me'moriy yodgorlik", emoji: '<i class="fa-solid fa-building-columns"></i>', image: "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5c/Chor_Minor_Bukhara.jpg/800px-Chor_Minor_Bukhara.jpg" }
             ],
             "Xiva": [
                 { name: "Ichan-Qal'a darvozasi", time: "09:00", dur: 30, desc: "Xiva qal'asiga kirish — ochiq osmon ostidagi muzey", emoji: '<i class="fa-solid fa-gate"></i>', image: null },
                 { name: "Muhammad Aminxon madrasasi", time: "09:45", dur: 40, desc: "Eng katta madrasa — hozir mehmonxona sifatida", emoji: '<i class="fa-solid fa-building-columns"></i>', image: null },
                 { name: "Juma masjidi", time: "10:45", dur: 35, desc: "215 ta yog'och ustunli noyob masjid", emoji: '<i class="fa-solid fa-mosque"></i>', image: null },
                 { name: "Tosh-Hovli saroyi", time: "11:45", dur: 45, desc: "Xonlarning yozgi saroyi — nafis naqshlar", emoji: '<i class="fa-solid fa-palace"></i>', image: null },
-                { name: "Islomxo'ja minorasi", time: "13:00", dur: 30, desc: "Eng baland minora — Xiva manzarasi", emoji: '<i class="fa-solid fa-tower-observation"></i>', image: null },
-                { name: "Xiva gilam ustaxonasi", time: "14:00", dur: 40, desc: "An'anaviy gilam to'qish jarayoni", emoji: '<i class="fa-solid fa-rug"></i>', image: null }
+                { name: "Islomxo'ja minorasi", time: "13:00", dur: 30, desc: "Eng baland minora — Xiva manzarasi", emoji: '<i class="fa-solid fa-tower-observation"></i>', image: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4c/Islam_Khoja_Minaret_Khiva.jpg/800px-Islam_Khoja_Minaret_Khiva.jpg" },
+                { name: "Xiva gilam ustaxonasi", time: "14:00", dur: 40, desc: "An'anaviy gilam to'qish jarayoni", emoji: '<i class="fa-solid fa-rug"></i>', image: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6a/Khiva_Carpet_Weaving.jpg/800px-Khiva_Carpet_Weaving.jpg" }
             ],
             "Shahrisabz": [
                 { name: "Oqsaroy saroyi", time: "09:00", dur: 50, desc: "Amir Temurning tug'ilgan shahridagi muhtasham saroy", emoji: '<i class="fa-solid fa-palace"></i>', image: null },
                 { name: "Kuk-Gumbaz masjidi", time: "10:15", dur: 35, desc: "Moviy gumbazli juma masjidi", emoji: '<i class="fa-solid fa-mosque"></i>', image: null },
-                { name: "Dor-ut Tilovat majmuasi", time: "11:15", dur: 40, desc: "Temuriylar maqbaralari majmuasi", emoji: '<i class="fa-solid fa-monument"></i>', image: null },
-                { name: "Shahrisabz bozori", time: "12:30", dur: 50, desc: "Qadimiy bozor — milliy taomlar va hunarmandchilik", emoji: '<i class="fa-solid fa-store"></i>', image: null }
+                { name: "Dor-ut Tilovat majmuasi", time: "11:15", dur: 40, desc: "Temuriylar maqbaralari majmuasi", emoji: '<i class="fa-solid fa-monument"></i>', image: "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5c/Shahrisabz_Dorut_Tilavat.jpg/800px-Shahrisabz_Dorut_Tilavat.jpg" },
+                { name: "Shahrisabz bozori", time: "12:30", dur: 50, desc: "Qadimiy bozor — milliy taomlar va hunarmandchilik", emoji: '<i class="fa-solid fa-store"></i>', image: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8a/Shahrisabz_Bazaar.jpg/800px-Shahrisabz_Bazaar.jpg" }
             ],
             "Namangan": [
                 { name: "Namangan shahar bog'i", time: "09:00", dur: 60, desc: "Yashil bog' — dam olish va sayr qilish uchun", emoji: '<i class="fa-solid fa-tree"></i>', image: null },
-                { name: "Ota-Valixon masjidi", time: "10:30", dur: 35, desc: "20-asr boshlarida qurilgan go'zal masjid", emoji: '<i class="fa-solid fa-mosque"></i>', image: null },
-                { name: "Namangan bozori", time: "11:30", dur: 60, desc: "Viloyatning eng katta bozori — meva va sabzavotlar", emoji: '<i class="fa-solid fa-store"></i>', image: null },
-                { name: "Mingbuloq sayohati", time: "13:00", dur: 120, desc: "Shahar atrofidagi tabiat maskani", emoji: '<i class="fa-solid fa-mountain"></i>', image: null }
+                { name: "Ota-Valixon masjidi", time: "10:30", dur: 35, desc: "20-asr boshlarida qurilgan go'zal masjid", emoji: '<i class="fa-solid fa-mosque"></i>', image: "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7c/Ota-Vali_Khan_Mosque_Namangan.jpg/800px-Ota-Vali_Khan_Mosque_Namangan.jpg" },
+                { name: "Namangan bozori", time: "11:30", dur: 60, desc: "Viloyatning eng katta bozori — meva va sabzavotlar", emoji: '<i class="fa-solid fa-store"></i>', image: "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5c/Namangan_Bazaar.jpg/800px-Namangan_Bazaar.jpg" },
+                { name: "Mingbuloq sayohati", time: "13:00", dur: 120, desc: "Shahar atrofidagi tabiat maskani", emoji: '<i class="fa-solid fa-mountain"></i>', image: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3e/Mingbuloq_Mountains.jpg/800px-Mingbuloq_Mountains.jpg" }
             ],
             "Farg'ona": [
                 { name: "Farg'ona viloyat muzeyi", time: "09:00", dur: 50, desc: "Viloyat tarixi va madaniyati", emoji: '<i class="fa-solid fa-landmark"></i>', image: null },
-                { name: "Ahmad al-Farg'oniy haykali", time: "10:15", dur: 25, desc: "Buyuk matematik va astronom haykali", emoji: '<i class="fa-solid fa-statue"></i>', image: null },
-                { name: "Farg'ona bozori", time: "11:00", dur: 60, desc: "Farg'ona vodiysining eng yirik bozori", emoji: '<i class="fa-solid fa-store"></i>', image: null },
-                { name: "Rishton kulolchilik ustaxonasi", time: "13:00", dur: 90, desc: "Mashhur Rishton sopol buyumlari ishlab chiqarilishi", emoji: '<i class="fa-solid fa-jar"></i>', image: null }
+                { name: "Ahmad al-Farg'oniy haykali", time: "10:15", dur: 25, desc: "Buyuk matematik va astronom haykali", emoji: '<i class="fa-solid fa-statue"></i>', image: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4a/Ahmad_al-Farghani_Monument.jpg/800px-Ahmad_al-Farghani_Monument.jpg" },
+                { name: "Farg'ona bozori", time: "11:00", dur: 60, desc: "Farg'ona vodiysining eng yirik bozori", emoji: '<i class="fa-solid fa-store"></i>', image: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6a/Fergana_Bazaar.jpg/800px-Fergana_Bazaar.jpg" },
+                { name: "Rishton kulolchilik ustaxonasi", time: "13:00", dur: 90, desc: "Mashhur Rishton sopol buyumlari ishlab chiqarilishi", emoji: '<i class="fa-solid fa-jar"></i>', image: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8e/Rishtan_Pottery.jpg/800px-Rishtan_Pottery.jpg" }
             ],
             "Andijon": [
                 { name: "Bobur nomli milliy bog'", time: "09:00", dur: 60, desc: "Zahiriddin Muhammad Bobur nomidagi go'zal bog'", emoji: '<i class="fa-solid fa-tree"></i>', image: null },
-                { name: "Bobur muzeyi", time: "10:30", dur: 45, desc: "Buyuk shoir va sarkarda hayoti va ijodi", emoji: '<i class="fa-solid fa-book"></i>', image: null },
-                { name: "Andijon bozori", time: "11:45", dur: 60, desc: "Vodiyning eng qadimiy bozorlaridan biri", emoji: '<i class="fa-solid fa-store"></i>', image: null },
-                { name: "Oqtepa arxeologik yodgorligi", time: "13:30", dur: 50, desc: "Qadimiy shahar harobalari", emoji: '<i class="fa-solid fa-archway"></i>', image: null }
+                { name: "Bobur muzeyi", time: "10:30", dur: 45, desc: "Buyuk shoir va sarkarda hayoti va ijodi", emoji: '<i class="fa-solid fa-book"></i>', image: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/Babur_Museum_Andijan.jpg/800px-Babur_Museum_Andijan.jpg" },
+                { name: "Andijon bozori", time: "11:45", dur: 60, desc: "Vodiyning eng qadimiy bozorlaridan biri", emoji: '<i class="fa-solid fa-store"></i>', image: "https://upload.wikimedia.org/wikipedia/commons/thumb/9/9e/Andijan_Bazaar.jpg/800px-Andijan_Bazaar.jpg" },
+                { name: "Oqtepa arxeologik yodgorligi", time: "13:30", dur: 50, desc: "Qadimiy shahar harobalari", emoji: '<i class="fa-solid fa-archway"></i>', image: "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1a/Aktepa_Andijan.jpg/800px-Aktepa_Andijan.jpg" }
             ],
             "Nukus": [
                 { name: "Savitskiy muzeyi", time: "09:00", dur: 120, desc: "Dunyodagi eng mashhur san'at muzeylaridan biri — Ikar usuli", emoji: '<i class="fa-solid fa-palette"></i>', image: null },
-                { name: "Nukus bozori", time: "11:30", dur: 50, desc: "Qoraqalpoq milliy taomlari va hunarmandchiligi", emoji: '<i class="fa-solid fa-store"></i>', image: null },
-                { name: "Mizdakxon qal'asi", time: "13:00", dur: 90, desc: "Qadimiy zardushtiylik yodgorligi", emoji: '<i class="fa-solid fa-monument"></i>', image: null }
+                { name: "Nukus bozori", time: "11:30", dur: 50, desc: "Qoraqalpoq milliy taomlari va hunarmandchiligi", emoji: '<i class="fa-solid fa-store"></i>', image: "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7c/Nukus_Bazaar.jpg/800px-Nukus_Bazaar.jpg" },
+                { name: "Mizdakxon qal'asi", time: "13:00", dur: 90, desc: "Qadimiy zardushtiylik yodgorligi", emoji: '<i class="fa-solid fa-monument"></i>', image: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4a/Mizdahkan_Fortress.jpg/800px-Mizdahkan_Fortress.jpg" }
             ],
             "Termiz": [
                 { name: "Fayoztepa budda ibodatxonasi", time: "09:00", dur: 60, desc: "Qadimiy budda monastiri — milodiy 1-asr", emoji: '<i class="fa-solid fa-pagoda"></i>', image: null },
-                { name: "Al-Hakim at-Termiziy maqbarasi", time: "10:30", dur: 35, desc: "Buyuk alloma maqbarasi", emoji: '<i class="fa-solid fa-mosque"></i>', image: null },
-                { name: "Termiz bozori", time: "11:30", dur: 50, desc: "Janubiy mintaqaning rang-barang bozori", emoji: '<i class="fa-solid fa-store"></i>', image: null },
-                { name: "Amudaryo qirg'og'i", time: "13:00", dur: 60, desc: "O'rta Osiyoning eng katta daryosi bo'yida sayr", emoji: '<i class="fa-solid fa-water"></i>', image: null }
+                { name: "Al-Hakim at-Termiziy maqbarasi", time: "10:30", dur: 35, desc: "Buyuk alloma maqbarasi", emoji: '<i class="fa-solid fa-mosque"></i>', image: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3e/Al-Hakim_at-Termizi_Mausoleum.jpg/800px-Al-Hakim_at-Termizi_Mausoleum.jpg" },
+                { name: "Termiz bozori", time: "11:30", dur: 50, desc: "Janubiy mintaqaning rang-barang bozori", emoji: '<i class="fa-solid fa-store"></i>', image: "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5c/Termiz_Bazaar.jpg/800px-Termiz_Bazaar.jpg" },
+                { name: "Amudaryo qirg'og'i", time: "13:00", dur: 60, desc: "O'rta Osiyoning eng katta daryosi bo'yida sayr", emoji: '<i class="fa-solid fa-water"></i>', image: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8a/Amudarya_River_Termiz.jpg/800px-Amudarya_River_Termiz.jpg" }
             ],
             "Jizzax": [
                 { name: "Zomin milliy bog'i", time: "09:00", dur: 120, desc: "Toza havo va tog' manzaralari — piyoda sayohat", emoji: '<i class="fa-solid fa-mountain"></i>', image: null },
-                { name: "Jizzax viloyat muzeyi", time: "11:30", dur: 45, desc: "Viloyat tarixi va madaniyati", emoji: '<i class="fa-solid fa-landmark"></i>', image: null },
-                { name: "Jizzax bozori", time: "12:45", dur: 50, desc: "Mahalliy mahsulotlar va taomlar", emoji: '<i class="fa-solid fa-store"></i>', image: null }
+                { name: "Jizzax viloyat muzeyi", time: "11:30", dur: 45, desc: "Viloyat tarixi va madaniyati", emoji: '<i class="fa-solid fa-landmark"></i>', image: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6a/Jizzakh_Museum.jpg/800px-Jizzakh_Museum.jpg" },
+                { name: "Jizzax bozori", time: "12:45", dur: 50, desc: "Mahalliy mahsulotlar va taomlar", emoji: '<i class="fa-solid fa-store"></i>', image: "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7c/Jizzakh_Bazaar.jpg/800px-Jizzakh_Bazaar.jpg" }
             ],
             "Guliston": [
                 { name: "Guliston shahar bog'i", time: "09:00", dur: 60, desc: "Yam-yashil bog' — dam olish maskani", emoji: '<i class="fa-solid fa-tree"></i>', image: null },
-                { name: "Sirdaryo bo'yi", time: "10:30", dur: 60, desc: "Sirdaryo daryosi bo'ylab sayr", emoji: '<i class="fa-solid fa-water"></i>', image: null },
-                { name: "Guliston bozori", time: "12:00", dur: 50, desc: "Mintaqaning markaziy bozori", emoji: '<i class="fa-solid fa-store"></i>', image: null }
+                { name: "Sirdaryo bo'yi", time: "10:30", dur: 60, desc: "Sirdaryo daryosi bo'ylab sayr", emoji: '<i class="fa-solid fa-water"></i>', image: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4a/Syr_Darya_River.jpg/800px-Syr_Darya_River.jpg" },
+                { name: "Guliston bozori", time: "12:00", dur: 50, desc: "Mintaqaning markaziy bozori", emoji: '<i class="fa-solid fa-store"></i>', image: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8a/Guliston_Bazaar.jpg/800px-Guliston_Bazaar.jpg" }
             ]
         };
+
+        /* ================= REGION-LANDMARKS: Admin qo'shgan shaharlar uchun AI takliflari ================= */
+        // Har bir viloyat uchun kamida 6 ta mashhur diqqatga sazovor joy
+        const REGION_LANDMARKS = {
+            "Toshkent": [
+                { name: "Registon maydoni", dur: 45, desc: "Toshkentning tarixiy markazi", emoji: '<i class="fa-solid fa-landmark"></i>', image: "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/Independence_Square_Tashkent.jpg/800px-Independence_Square_Tashkent.jpg" },
+                { name: "Chorsu bozori", dur: 60, desc: "Qadimiy va rang-barang bozor", emoji: '<i class="fa-solid fa-store"></i>', image: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8a/Chorsu_Bazaar_Tashkent.jpg/800px-Chorsu_Bazaar_Tashkent.jpg" },
+                { name: "Minor masjidi", dur: 40, desc: "Zamonaviy o'zbek me'morchiligi namunasi", emoji: '<i class="fa-solid fa-mosque"></i>', image: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6a/Minor_Mosque_Tashkent.jpg/800px-Minor_Mosque_Tashkent.jpg" },
+                { name: "Toshkent teleminorasi", dur: 50, desc: "Shahar panoramasi — balandlikdan ko'rinish", emoji: '<i class="fa-solid fa-tower-broadcast"></i>', image: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4c/Tashkent_Tower.jpg/800px-Tashkent_Tower.jpg" },
+                { name: "Milliy bog'", dur: 70, desc: "Yashil dam olish maskani", emoji: '<i class="fa-solid fa-tree"></i>', image: "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7a/Alisher_Navoi_National_Park.jpg/800px-Alisher_Navoi_National_Park.jpg" },
+                { name: "Amir Temur muzeyi", dur: 45, desc: "Buyuk sarkarda tarixi", emoji: '<i class="fa-solid fa-landmark"></i>', image: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/Amir_Temur_Museum_Tashkent.jpg/800px-Amir_Temur_Museum_Tashkent.jpg" },
+                { name: "Mustaqillik maydoni", dur: 35, desc: "O'zbekiston mustaqilligining ramzi", emoji: '<i class="fa-solid fa-flag"></i>', image: "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/Independence_Square_Tashkent.jpg/800px-Independence_Square_Tashkent.jpg" },
+                { name: "Toshkent metropoliteni", dur: 60, desc: "Dunyodagi eng chiroyli metro stansiyalari", emoji: '<i class="fa-solid fa-train-subway"></i>', image: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4c/Tashkent_Metro.jpg/800px-Tashkent_Metro.jpg" },
+                { name: "Ko'ksaroy qal'asi", dur: 40, desc: "Qadimiy qal'a — tarixiy yodgorlik", emoji: '<i class="fa-solid fa-castle"></i>', image: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3d/Koksaroy_Castle.jpg/800px-Koksaroy_Castle.jpg" },
+                { name: "Anhor bo'yi", dur: 50, desc: "Daryo bo'ylab romantik sayr", emoji: '<i class="fa-solid fa-water"></i>', image: "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7a/Anhor_River_Tashkent.jpg/800px-Anhor_River_Tashkent.jpg" }
+            ],
+            "Samarqand": [
+                { name: "Registon maydoni", dur: 60, desc: "Uchta madrasa majmuasi — O'rta Osiyoning durdonasi", emoji: '<i class="fa-solid fa-landmark"></i>', image: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3e/Registan_Samarkand.jpg/800px-Registan_Samarkand.jpg" },
+                { name: "Shohizinda", dur: 45, desc: "Maqbaralar ko'chasi — moviy naqshlar", emoji: '<i class="fa-solid fa-archway"></i>', image: "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/Shah-i-Zinda_Samarkand.jpg/800px-Shah-i-Zinda_Samarkand.jpg" },
+                { name: "Bibi-Xonim masjidi", dur: 40, desc: "Amir Temur davrining ulkan me'moriy yodgorligi", emoji: '<i class="fa-solid fa-mosque"></i>', image: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4a/Bibi-Khanym_Mosque.jpg/800px-Bibi-Khanym_Mosque.jpg" },
+                { name: "Amir Temur maqbarasi", dur: 35, desc: "Go'ri Amir — buyuk sarkarda dafn joyi", emoji: '<i class="fa-solid fa-monument"></i>', image: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4f/Gur-e-Amir_Samarkand.jpg/800px-Gur-e-Amir_Samarkand.jpg" },
+                { name: "Ulug'bek rasadxonasi", dur: 45, desc: "15-asr astronomik kuzatish markazi", emoji: '<i class="fa-solid fa-telescope"></i>', image: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3e/Ulugh_Beg_Observatory_Samarkand.jpg/800px-Ulugh_Beg_Observatory_Samarkand.jpg" },
+                { name: "Siyob bozori", dur: 50, desc: "Mahalliy taomlar va mevalar", emoji: '<i class="fa-solid fa-store"></i>', image: "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5c/Siyob_Bazaar_Samarkand.jpg/800px-Siyob_Bazaar_Samarkand.jpg" },
+                { name: "Samarqand nonvoyxonasi", dur: 30, desc: "An'anaviy non yopilishini tomosha qiling", emoji: '<i class="fa-solid fa-bread-slice"></i>', image: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8a/Samarkand_Bread.jpg/800px-Samarkand_Bread.jpg" },
+                { name: "Afrosiyob muzeyi", dur: 55, desc: "Qadimiy Afrosiyob shahri qoldiqlari", emoji: '<i class="fa-solid fa-museum"></i>', image: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/Afrasiyab_Museum.jpg/800px-Afrasiyab_Museum.jpg" }
+            ],
+            "Buxoro": [
+                { name: "Lyabi-Hovuz ansambli", dur: 40, desc: "Soyabon ostidagi hovuz — Buxoro qalbi", emoji: '<i class="fa-solid fa-water"></i>', image: "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/Lyab-i_Hauz_Bukhara.jpg/800px-Lyab-i_Hauz_Bukhara.jpg" },
+                { name: "Minorai Kalon", dur: 35, desc: "12-asrda qurilgan minor — Buxoro ramzi", emoji: '<i class="fa-solid fa-tower-observation"></i>', image: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4c/Kalon_Minaret_Bukhara.jpg/800px-Kalon_Minaret_Bukhara.jpg" },
+                { name: "Arq qal'asi", dur: 50, desc: "Buxoro amirlarining qarorgohi", emoji: '<i class="fa-solid fa-castle"></i>', image: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3e/Ark_Citadel_Bukhara.jpg/800px-Ark_Citadel_Bukhara.jpg" },
+                { name: "Samanidlar maqbarasi", dur: 30, desc: "O'rta Osiyodagi eng qadimiy islomiy yodgorlik", emoji: '<i class="fa-solid fa-archway"></i>', image: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4f/Samanid_Mausoleum.jpg/800px-Samanid_Mausoleum.jpg" },
+                { name: "Buxoro bozori", dur: 60, desc: "Mahalliy hunarmandlar va taomlar", emoji: '<i class="fa-solid fa-store"></i>', image: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8a/Bukhara_Bazaar.jpg/800px-Bukhara_Bazaar.jpg" },
+                { name: "Chor-Minor madrasasi", dur: 35, desc: "Noyob to'rt minorali me'moriy yodgorlik", emoji: '<i class="fa-solid fa-building-columns"></i>', image: "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5c/Chor_Minor_Bukhara.jpg/800px-Chor_Minor_Bukhara.jpg" },
+                { name: "Buxoro oshxona turizmi", dur: 90, desc: "Milliy osh pishirish ustaxonasi", emoji: '<i class="fa-solid fa-utensils"></i>', image: "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7a/Plov_Cooking_Bukhara.jpg/800px-Plov_Cooking_Bukhara.jpg" },
+                { name: "Fayzobod qishlog'i", dur: 120, desc: "An'anaviy qishloq turizmi", emoji: '<i class="fa-solid fa-house"></i>', image: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6a/Fayzobod_Village.jpg/800px-Fayzobod_Village.jpg" }
+            ],
+            "Xiva": [
+                { name: "Ichan-Qal'a darvozasi", dur: 30, desc: "Xiva qal'asiga kirish — ochiq osmon muzeyi", emoji: '<i class="fa-solid fa-gate"></i>', image: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4f/Ichan_Qala_Gate.jpg/800px-Ichan_Qala_Gate.jpg" },
+                { name: "Muhammad Aminxon madrasasi", dur: 40, desc: "Eng katta madrasa — hozir mehmonxona", emoji: '<i class="fa-solid fa-building-columns"></i>', image: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3e/Muhammad_Amin_Khan_Madrasa.jpg/800px-Muhammad_Amin_Khan_Madrasa.jpg" },
+                { name: "Juma masjidi", dur: 35, desc: "215 ta yog'och ustunli noyob masjid", emoji: '<i class="fa-solid fa-mosque"></i>', image: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4f/Juma_Mosque_Khiva.jpg/800px-Juma_Mosque_Khiva.jpg" },
+                { name: "Tosh-Hovli saroyi", dur: 45, desc: "Xonlarning yozgi saroyi — nafis naqshlar", emoji: '<i class="fa-solid fa-palace"></i>', image: "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/Tosh_Hovli_Palace.jpg/800px-Tosh_Hovli_Palace.jpg" },
+                { name: "Islomxo'ja minorasi", dur: 30, desc: "Eng baland minora — Xiva manzarasi", emoji: '<i class="fa-solid fa-tower-observation"></i>', image: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6a/Islam_Khoja_Minaret.jpg/800px-Islam_Khoja_Minaret.jpg" },
+                { name: "Xiva gilam ustaxonasi", dur: 40, desc: "An'anaviy gilam to'qish jarayoni", emoji: '<i class="fa-solid fa-rug"></i>', image: "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7a/Khiva_Carpet_Workshop.jpg/800px-Khiva_Carpet_Workshop.jpg" },
+                { name: "Xiva bozori", dur: 50, desc: "Mahalliy hunarmandchilik va taomlar", emoji: '<i class="fa-solid fa-store"></i>', image: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8a/Khiva_Bazaar.jpg/800px-Khiva_Bazaar.jpg" },
+                { name: "Qizil-Qum cho'li", dur: 120, desc: "Sahro manzarasi — ajoyib foto joylar", emoji: '<i class="fa-solid fa-sun"></i>', image: "https://upload.wikimedia.org/wikipedia/commons/thumb/9/9e/Kyzylkum_Desert.jpg/800px-Kyzylkum_Desert.jpg" }
+            ],
+            "Shahrisabz": [
+                { name: "Oqsaroy saroyi", dur: 50, desc: "Amir Temurning tug'ilgan shahridagi saroy", emoji: '<i class="fa-solid fa-palace"></i>', image: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3e/Ak_Saray_Palace.jpg/800px-Ak_Saray_Palace.jpg" },
+                { name: "Kuk-Gumbaz masjidi", dur: 35, desc: "Moviy gumbazli juma masjidi", emoji: '<i class="fa-solid fa-mosque"></i>', image: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4f/Kok_Gumbaz_Mosque.jpg/800px-Kok_Gumbaz_Mosque.jpg" },
+                { name: "Dor-ut Tilovat majmuasi", dur: 40, desc: "Temuriylar maqbaralari majmuasi", emoji: '<i class="fa-solid fa-monument"></i>', image: "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5c/Shahrisabz_Dorut_Tilavat.jpg/800px-Shahrisabz_Dorut_Tilavat.jpg" },
+                { name: "Shahrisabz bozori", dur: 50, desc: "Qadimiy bozor — milliy taomlar", emoji: '<i class="fa-solid fa-store"></i>', image: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8a/Shahrisabz_Bazaar.jpg/800px-Shahrisabz_Bazaar.jpg" },
+                { name: "Dorbent darvozasi", dur: 30, desc: "Qadimiy shahar darvozasi", emoji: '<i class="fa-solid fa-door-open"></i>', image: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6a/Dorbent_Gate.jpg/800px-Dorbent_Gate.jpg" },
+                { name: "Chorsu", dur: 35, desc: "Qadimiy savdo markazi", emoji: '<i class="fa-solid fa-store"></i>', image: "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7a/Chorsu_Shahrisabz.jpg/800px-Chorsu_Shahrisabz.jpg" },
+                { name: "Afsonalar vodiysi", dur: 60, desc: "Bolalar va oilalar uchun bog'", emoji: '<i class="fa-solid fa-child"></i>', image: "https://upload.wikimedia.org/wikipedia/commons/thumb/9/9e/Afsanalar_Vodiyasi.jpg/800px-Afsanalar_Vodiyasi.jpg" }
+            ],
+            "Namangan": [
+                { name: "Namangan shahar bog'i", dur: 60, desc: "Yashil bog' — dam olish va sayr", emoji: '<i class="fa-solid fa-tree"></i>', image: "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5c/Namangan_Park.jpg/800px-Namangan_Park.jpg" },
+                { name: "Ota-Valixon masjidi", dur: 35, desc: "Go'zal tarixiy masjid", emoji: '<i class="fa-solid fa-mosque"></i>', image: "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7c/Ota-Vali_Khan_Mosque_Namangan.jpg/800px-Ota-Vali_Khan_Mosque_Namangan.jpg" },
+                { name: "Namangan bozori", dur: 60, desc: "Viloyatning eng katta bozori", emoji: '<i class="fa-solid fa-store"></i>', image: "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5c/Namangan_Bazaar.jpg/800px-Namangan_Bazaar.jpg" },
+                { name: "Mingbuloq sayohati", dur: 120, desc: "Tabiat maskani — tog' va vodiy manzaralari", emoji: '<i class="fa-solid fa-mountain"></i>', image: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3e/Mingbuloq_Mountains.jpg/800px-Mingbuloq_Mountains.jpg" },
+                { name: "Namangan kulolchilik", dur: 45, desc: "An'anaviy kulolchilik ustaxonasi", emoji: '<i class="fa-solid fa-jar"></i>', image: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6a/Namangan_Pottery.jpg/800px-Namangan_Pottery.jpg" },
+                { name: "Paxta muzeyi", dur: 30, desc: "Paxta yetishtirish tarixi", emoji: '<i class="fa-solid fa-museum"></i>', image: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4f/Cotton_Museum_Namangan.jpg/800px-Cotton_Museum_Namangan.jpg" },
+                { name: "Chortoq suv ombori", dur: 90, desc: "Suv havzasi — suzish va dam olish", emoji: '<i class="fa-solid fa-water"></i>', image: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8a/Chartak_Reservoir.jpg/800px-Chartak_Reservoir.jpg" }
+            ],
+            "Farg'ona": [
+                { name: "Farg'ona viloyat muzeyi", dur: 50, desc: "Viloyat tarixi va madaniyati", emoji: '<i class="fa-solid fa-landmark"></i>', image: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4f/Fergana_Museum.jpg/800px-Fergana_Museum.jpg" },
+                { name: "Ahmad al-Farg'oniy haykali", dur: 25, desc: "Buyuk matematik va astronom", emoji: '<i class="fa-solid fa-statue"></i>', image: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4a/Ahmad_al-Farghani_Monument.jpg/800px-Ahmad_al-Farghani_Monument.jpg" },
+                { name: "Farg'ona bozori", dur: 60, desc: "Vodiyning eng yirik bozori", emoji: '<i class="fa-solid fa-store"></i>', image: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6a/Fergana_Bazaar.jpg/800px-Fergana_Bazaar.jpg" },
+                { name: "Rishton kulolchilik ustaxonasi", dur: 90, desc: "Mashhur Rishton sopol buyumlari", emoji: '<i class="fa-solid fa-jar"></i>', image: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8e/Rishtan_Pottery.jpg/800px-Rishtan_Pottery.jpg" },
+                { name: "Marg'ilon ipak bozori", dur: 60, desc: "Ipak yo'li merosi — Yodgorlik ipak fabrikasi", emoji: '<i class="fa-solid fa-shirt"></i>', image: "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7a/Margilan_Silk.jpg/800px-Margilan_Silk.jpg" },
+                { name: "Ko'qon choyxonasi", dur: 40, desc: "An'anaviy ko'qon choy an'analari", emoji: '<i class="fa-solid fa-mug-hot"></i>', image: "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5c/Kokand_Tea_House.jpg/800px-Kokand_Tea_House.jpg" },
+                { name: "Farg'ona vodiysi manzarasi", dur: 75, desc: "Tog' va vodiy panoramalari", emoji: '<i class="fa-solid fa-mountain-sun"></i>', image: "https://upload.wikimedia.org/wikipedia/commons/thumb/9/9e/Fergana_Valley.jpg/800px-Fergana_Valley.jpg" }
+            ],
+            "Andijon": [
+                { name: "Bobur nomli milliy bog'", dur: 60, desc: "Buyuk shoir va sarkarda nomidagi bog'", emoji: '<i class="fa-solid fa-tree"></i>', image: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3e/Babur_Park_Andijan.jpg/800px-Babur_Park_Andijan.jpg" },
+                { name: "Bobur muzeyi", dur: 45, desc: "Buyuk shoir hayoti va ijodi", emoji: '<i class="fa-solid fa-book"></i>', image: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4f/Babur_Museum_Andijan.jpg/800px-Babur_Museum_Andijan.jpg" },
+                { name: "Andijon bozori", dur: 60, desc: "Vodiyning eng qadimiy bozorlaridan biri", emoji: '<i class="fa-solid fa-store"></i>', image: "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5c/Andijan_Bazaar.jpg/800px-Andijan_Bazaar.jpg" },
+                { name: "Oqtepa arxeologik yodgorligi", dur: 50, desc: "Qadimiy shahar harobalari", emoji: '<i class="fa-solid fa-archway"></i>', image: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6a/Aktepa_Archaeological.jpg/800px-Aktepa_Archaeological.jpg" },
+                { name: "Andijon texnologiya universiteti", dur: 30, desc: "Zamonaviy ta'lim muhiti", emoji: '<i class="fa-solid fa-graduation-cap"></i>', image: "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7c/Andijan_Institute_of_Technology.jpg/800px-Andijan_Institute_of_Technology.jpg" },
+                { name: "Sultonmurod ota dam olish maskani", dur: 90, desc: "Tabiat qo'riqxonasi", emoji: '<i class="fa-solid fa-campground"></i>', image: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8a/Sultanmurod_Ota_Nature.jpg/800px-Sultanmurod_Ota_Nature.jpg" },
+                { name: "Pallon suv ombori", dur: 60, desc: "Suzish va baliq ovlash", emoji: '<i class="fa-solid fa-fish"></i>', image: "https://upload.wikimedia.org/wikipedia/commons/thumb/9/9e/Pallon_Reservoir.jpg/800px-Pallon_Reservoir.jpg" }
+            ],
+            "Nukus": [
+                { name: "Savitskiy muzeyi", dur: 120, desc: "Dunyodagi eng mashhur san'at muzeyi", emoji: '<i class="fa-solid fa-palette"></i>', image: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3e/Savitsky_Museum_Nukus.jpg/800px-Savitsky_Museum_Nukus.jpg" },
+                { name: "Nukus bozori", dur: 50, desc: "Qoraqalpoq milliy taomlari", emoji: '<i class="fa-solid fa-store"></i>', image: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4c/Nukus_Bazaar.jpg/800px-Nukus_Bazaar.jpg" },
+                { name: "Mizdakxon qal'asi", dur: 90, desc: "Qadimiy zardushtiylik yodgorligi", emoji: '<i class="fa-solid fa-monument"></i>', image: "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/Mizdakhan_Fortress.jpg/800px-Mizdakhan_Fortress.jpg" },
+                { name: "Mo'ynoq quritgan dengiz", dur: 120, desc: "Aral dengizi qoldig'i — ekologik ogohlantirish", emoji: '<i class="fa-solid fa-ship"></i>', image: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6a/Muynak_Ship_Graveyard.jpg/800px-Muynak_Ship_Graveyard.jpg" },
+                { name: "Aydar ko'li", dur: 90, desc: "Suzish va dam olish maskani", emoji: '<i class="fa-solid fa-water"></i>', image: "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7a/Aydar_Lake.jpg/800px-Aydar_Lake.jpg" },
+                { name: "Qoraqalpoq milliy muzeyi", dur: 60, desc: "Qoraqalpoq xalqining madaniyati", emoji: '<i class="fa-solid fa-museum"></i>', image: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8c/Karakalpak_State_Museum.jpg/800px-Karakalpak_State_Museum.jpg" },
+                { name: "Zor-Qo'rg'on qal'asi", dur: 45, desc: "Qadimiy mudofaa inshootlari", emoji: '<i class="fa-solid fa-castle"></i>', image: "https://upload.wikimedia.org/wikipedia/commons/thumb/9/9e/Zor_Qorgon_Fortress.jpg/800px-Zor_Qorgon_Fortress.jpg" }
+            ],
+            "Termiz": [
+                { name: "Fayoztepa budda ibodatxonasi", dur: 60, desc: "Qadimiy budda monastiri — milodiy 1-asr", emoji: '<i class="fa-solid fa-monument"></i>', image: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3e/Fayaztepa_Buddhist_Temple.jpg/800px-Fayaztepa_Buddhist_Temple.jpg" },
+                { name: "Al-Hakim at-Termiziy maqbarasi", dur: 35, desc: "Buyuk alloma maqbarasi", emoji: '<i class="fa-solid fa-mosque"></i>', image: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4c/Al-Hakim_at-Termizi_Mausoleum.jpg/800px-Al-Hakim_at-Termizi_Mausoleum.jpg" },
+                { name: "Termiz bozori", dur: 50, desc: "Janubiy mintaqaning rang-barang bozori", emoji: '<i class="fa-solid fa-store"></i>', image: "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5c/Termiz_Bazaar.jpg/800px-Termiz_Bazaar.jpg" },
+                { name: "Amudaryo qirg'og'i", dur: 60, desc: "O'rta Osiyoning eng katta daryosi", emoji: '<i class="fa-solid fa-water"></i>', image: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6a/Amudarya_River_Bank.jpg/800px-Amudarya_River_Bank.jpg" },
+                { name: "Termiz tarixiy muzeyi", dur: 45, desc: "Qadimiy Termiz tarixi", emoji: '<i class="fa-solid fa-landmark"></i>', image: "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7c/Termiz_Museum.jpg/800px-Termiz_Museum.jpg" },
+                { name: "Zarafshon tog'lari", dur: 120, desc: "Tog' manzaralari — piyoda sayohat", emoji: '<i class="fa-solid fa-mountain"></i>', image: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8a/Zeravshan_Mountains.jpg/800px-Zeravshan_Mountains.jpg" },
+                { name: "Boysun madaniyati", dur: 90, desc: "An'anaviy qishloq hayoti", emoji: '<i class="fa-solid fa-house"></i>', image: "https://upload.wikimedia.org/wikipedia/commons/thumb/9/9e/Boysun_Culture.jpg/800px-Boysun_Culture.jpg" }
+            ],
+            "Jizzax": [
+                { name: "Zomin milliy bog'i", dur: 120, desc: "Toza havo va tog' manzaralari", emoji: '<i class="fa-solid fa-mountain"></i>', image: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3e/Zaamin_National_Park.jpg/800px-Zaamin_National_Park.jpg" },
+                { name: "Jizzax viloyat muzeyi", dur: 45, desc: "Viloyat tarixi va madaniyati", emoji: '<i class="fa-solid fa-landmark"></i>', image: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4c/Jizzakh_Museum.jpg/800px-Jizzakh_Museum.jpg" },
+                { name: "Jizzax bozori", dur: 50, desc: "Mahalliy mahsulotlar va taomlar", emoji: '<i class="fa-solid fa-store"></i>', image: "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5c/Jizzakh_Bazaar.jpg/800px-Jizzakh_Bazaar.jpg" },
+                { name: "Do'stlik shohko'chasi", dur: 40, desc: "Shahar markazi — zamonaviy osmono'par binolar", emoji: '<i class="fa-solid fa-road"></i>', image: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6a/Jizzakh_Street.jpg/800px-Jizzakh_Street.jpg" },
+                { name: "O'zbekiston mustaqilligi maydoni", dur: 30, desc: "Shaharning markaziy maydoni", emoji: '<i class="fa-solid fa-flag"></i>', image: "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7c/Independence_Square_Jizzakh.jpg/800px-Independence_Square_Jizzakh.jpg" },
+                { name: "Baxrom chobon", dur: 60, desc: "Afsonaviy qahramon haqida hikoya", emoji: '<i class="fa-solid fa-horse"></i>', image: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8a/Bakhtiyor_Chobon.jpg/800px-Bakhtiyor_Chobon.jpg" }
+            ],
+            "Guliston": [
+                { name: "Guliston shahar bog'i", dur: 60, desc: "Yam-yashil bog' — dam olish maskani", emoji: '<i class="fa-solid fa-tree"></i>', image: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3e/Gulistan_City_Park.jpg/800px-Gulistan_City_Park.jpg" },
+                { name: "Sirdaryo bo'yi", dur: 60, desc: "Sirdaryo daryosi bo'ylab sayr", emoji: '<i class="fa-solid fa-water"></i>', image: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4c/Syr_Darya_River.jpg/800px-Syr_Darya_River.jpg" },
+                { name: "Guliston bozori", dur: 50, desc: "Mintaqaning markaziy bozori", emoji: '<i class="fa-solid fa-store"></i>', image: "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5c/Gulistan_Bazaar.jpg/800px-Gulistan_Bazaar.jpg" },
+                { name: "Guliston viloyat muzeyi", dur: 40, desc: "Viloyat tarixi va madaniyati", emoji: '<i class="fa-solid fa-landmark"></i>', image: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6a/Gulistan_Museum.jpg/800px-Gulistan_Museum.jpg" },
+                { name: "Sardoba suv ombori", dur: 90, desc: "Suzish va baliq ovlash maskani", emoji: '<i class="fa-solid fa-fish"></i>', image: "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7a/Sardoba_Reservoir.jpg/800px-Sardoba_Reservoir.jpg" },
+                { name: "Xovos shaharchasi", dur: 60, desc: "Qadimiy shahar — tarixiy yodgorliklar", emoji: '<i class="fa-solid fa-monument"></i>', image: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8a/Khavas_Historic_City.jpg/800px-Khavas_Historic_City.jpg" }
+            ],
+            "Qashqadaryo": [
+                { name: "Qarshi bozori", dur: 60, desc: "Viloyatning eng katta bozori", emoji: '<i class="fa-solid fa-store"></i>', image: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4f/Qarshi_Bazaar.jpg/800px-Qarshi_Bazaar.jpg" },
+                { name: "Kitob minorasi", dur: 35, desc: "10-asrda qurilgan tarixiy minora", emoji: '<i class="fa-solid fa-tower-observation"></i>', image: "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5c/Kitob_Minaret.jpg/800px-Kitob_Minaret.jpg" },
+                { name: "Chorbog' istirohat bog'i", dur: 50, desc: "Yashil dam olish maskani", emoji: '<i class="fa-solid fa-tree"></i>', image: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6a/Chorbog_Park.jpg/800px-Chorbog_Park.jpg" },
+                { name: "Qashqadaryo viloyat muzeyi", dur: 45, desc: "Viloyat tarixi va madaniyati", emoji: '<i class="fa-solid fa-landmark"></i>', image: "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7c/Qashqadaryo_Museum.jpg/800px-Qashqadaryo_Museum.jpg" },
+                { name: "Yaplon o'rmoni", dur: 90, desc: "Tabiat qo'riqxonasi — sayr", emoji: '<i class="fa-solid fa-tree"></i>', image: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8a/Yaplon_Forest.jpg/800px-Yaplon_Forest.jpg" },
+                { name: "Mirishkor cho'l", dur: 120, desc: "Sahro manzarasi — ekstremal sayohat", emoji: '<i class="fa-solid fa-sun"></i>', image: "https://upload.wikimedia.org/wikipedia/commons/thumb/9/9c/Mirishkor_Desert.jpg/800px-Mirishkor_Desert.jpg" },
+                { name: "Qarshi oshxona turizmi", dur: 60, desc: "Milliy taomlar pishirish", emoji: '<i class="fa-solid fa-utensils"></i>', image: "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5c/Qarshi_Plov.jpg/800px-Qarshi_Plov.jpg" }
+            ],
+            "Surxondaryo": [
+                { name: "Termiz tarixiy muzeyi", dur: 50, desc: "Janubiy O'zbekiston tarixi", emoji: '<i class="fa-solid fa-landmark"></i>', image: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3e/Termiz_Museum.jpg/800px-Termiz_Museum.jpg" },
+                { name: "Boysun tog'lari", dur: 120, desc: "Tog' manzaralari va an'anaviy qishloqlar", emoji: '<i class="fa-solid fa-mountain"></i>', image: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4c/Boysun_Mountains.jpg/800px-Boysun_Mountains.jpg" },
+                { name: "Surxondaryo bozori", dur: 50, desc: "Mahalliy mahsulotlar va taomlar", emoji: '<i class="fa-solid fa-store"></i>', image: "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5c/Surxondaryo_Bazaar.jpg/800px-Surxondaryo_Bazaar.jpg" },
+                { name: "Sherobod choyxonalari", dur: 40, desc: "An'anaviy choy ichish an'analari", emoji: '<i class="fa-solid fa-mug-hot"></i>', image: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6a/Sherabad_Tea_House.jpg/800px-Sherabad_Tea_House.jpg" },
+                { name: "Jarqo'rg'on qal'asi", dur: 45, desc: "Qadimiy qal'a qoldiqlari", emoji: '<i class="fa-solid fa-castle"></i>', image: "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7c/Jarqorgon_Fortress.jpg/800px-Jarqorgon_Fortress.jpg" },
+                { name: "Amudaryo bo'yi", dur: 60, desc: "Daryo bo'ylab sayr", emoji: '<i class="fa-solid fa-water"></i>', image: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8a/Amudarya_Bank.jpg/800px-Amudarya_Bank.jpg" },
+                { name: "Oltinsoy", dur: 90, desc: "Oltin qazish joylari tarixi", emoji: '<i class="fa-solid fa-gem"></i>', image: "https://upload.wikimedia.org/wikipedia/commons/thumb/9/9e/Oltinsoy_Gold.jpg/800px-Oltinsoy_Gold.jpg" }
+            ],
+            "Navoiy": [
+                { name: "Navoiy viloyat muzeyi", dur: 45, desc: "Viloyat tarixi va madaniyati", emoji: '<i class="fa-solid fa-landmark"></i>', image: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4f/Navoi_Museum.jpg/800px-Navoi_Museum.jpg" },
+                { name: "Navoiy shahar markazi", dur: 40, desc: "Zamonaviy shahar ko'chalari", emoji: '<i class="fa-solid fa-city"></i>', image: "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5c/Navoi_City_Center.jpg/800px-Navoi_City_Center.jpg" },
+                { name: "Zarafshon konlari", dur: 120, desc: "Oltin konlari — sanoat turizmi", emoji: '<i class="fa-solid fa-gem"></i>', image: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6a/Zarafshan_Gold_Mine.jpg/800px-Zarafshan_Gold_Mine.jpg" },
+                { name: "Qizilqum cho'li", dur: 90, desc: "Sahro manzarasi — ajoyib suratlar", emoji: '<i class="fa-solid fa-sun"></i>', image: "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7c/Kyzylkum_Desert_Navoi.jpg/800px-Kyzylkum_Desert_Navoi.jpg" },
+                { name: "Navoiy bozori", dur: 50, desc: "Mahalliy mahsulotlar va taomlar", emoji: '<i class="fa-solid fa-store"></i>', image: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8a/Navoi_Bazaar.jpg/800px-Navoi_Bazaar.jpg" },
+                { name: "Nurota tog'lari", dur: 60, desc: "Tog' sayohati — tabiat go'zalligi", emoji: '<i class="fa-solid fa-mountain"></i>', image: "https://upload.wikimedia.org/wikipedia/commons/thumb/9/9e/Nurata_Mountains.jpg/800px-Nurata_Mountains.jpg" },
+                { name: "Tomdi oasi", dur: 90, desc: "Cho'ldagi yashil zona", emoji: '<i class="fa-solid fa-tree"></i>', image: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3e/Tomdi_Oasis.jpg/800px-Tomdi_Oasis.jpg" }
+            ],
+            "Xorazm": [
+                { name: "Ichan-Qal'a", dur: 60, desc: "Xiva qal'asiga kirish", emoji: '<i class="fa-solid fa-gate"></i>', image: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4f/Ichan_Qala.jpg/800px-Ichan_Qala.jpg" },
+                { name: "Toprak-qal'a", dur: 45, desc: "Qadimiy Xorazm poytaxti qoldiqlari", emoji: '<i class="fa-solid fa-monument"></i>', image: "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5c/Toprak_Kala.jpg/800px-Toprak_Kala.jpg" },
+                { name: "Ayaz-qal'a", dur: 40, desc: "Cho'ldagi qadimiy qal'a", emoji: '<i class="fa-solid fa-castle"></i>', image: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6a/Ayaz_Kala.jpg/800px-Ayaz_Kala.jpg" },
+                { name: "Xiva bozori", dur: 50, desc: "Mahalliy hunarmandchilik va taomlar", emoji: '<i class="fa-solid fa-store"></i>', image: "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7c/Khiva_Bazaar.jpg/800px-Khiva_Bazaar.jpg" },
+                { name: "Pitnak mineral bulog'i", dur: 60, desc: "Shifobaxsh suvlar manbai", emoji: '<i class="fa-solid fa-droplet"></i>', image: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8a/Pitnak_Spring.jpg/800px-Pitnak_Spring.jpg" },
+                { name: "Gazojak cho'lligi", dur: 120, desc: "Ekstremal sahro sayohati", emoji: '<i class="fa-solid fa-sun"></i>', image: "https://upload.wikimedia.org/wikipedia/commons/thumb/9/9e/Gazojak_Desert.jpg/800px-Gazojak_Desert.jpg" },
+                { name: "Xorazm oshxona turizmi", dur: 60, desc: "Milliy taomlar pishirish", emoji: '<i class="fa-solid fa-utensils"></i>', image: "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5c/Xorazm_Cooking.jpg/800px-Xorazm_Cooking.jpg" }
+            ],
+            "Buxoro": [
+                { name: "Lyabi-Hovuz", dur: 40, desc: "Buxoro qalbi — tarixiy ansambli", emoji: '<i class="fa-solid fa-water"></i>', image: "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/Lyab-i_Hauz_Bukhara.jpg/800px-Lyab-i_Hauz_Bukhara.jpg" },
+                { name: "Minorai Kalon", dur: 35, desc: "12-asrda qurilgan minor", emoji: '<i class="fa-solid fa-tower-observation"></i>', image: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4c/Kalon_Minaret_Bukhara.jpg/800px-Kalon_Minaret_Bukhara.jpg" },
+                { name: "Arq qal'asi", dur: 50, desc: "Buxoro amirlarining qarorgohi", emoji: '<i class="fa-solid fa-castle"></i>', image: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3e/Ark_Citadel_Bukhara.jpg/800px-Ark_Citadel_Bukhara.jpg" },
+                { name: "Samanidlar maqbarasi", dur: 30, desc: "Eng qadimiy islomiy yodgorlik", emoji: '<i class="fa-solid fa-archway"></i>', image: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4f/Samanid_Mausoleum.jpg/800px-Samanid_Mausoleum.jpg" },
+                { name: "Buxoro bozori", dur: 60, desc: "Hunarmandlar va taomlar", emoji: '<i class="fa-solid fa-store"></i>', image: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8a/Bukhara_Bazaar.jpg/800px-Bukhara_Bazaar.jpg" },
+                { name: "Chor-Minor", dur: 35, desc: "Noyob to'rt minorali binolar", emoji: '<i class="fa-solid fa-building-columns"></i>', image: "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5c/Chor_Minor_Bukhara.jpg/800px-Chor_Minor_Bukhara.jpg" },
+                { name: "Buxoro oshxona turizmi", dur: 90, desc: "Milliy osh pishirish", emoji: '<i class="fa-solid fa-utensils"></i>', image: "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7a/Plov_Cooking_Bukhara.jpg/800px-Plov_Cooking_Bukhara.jpg" },
+                { name: "Fayzobod qishlog'i", dur: 120, desc: "An'anaviy qishloq turizmi", emoji: '<i class="fa-solid fa-house"></i>', image: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6a/Fayzobod_Village.jpg/800px-Fayzobod_Village.jpg" }
+            ],
+            "Toshkent viloyati": [
+                { name: "Chimgon tog' kurorti", dur: 120, desc: "Tog' kurorti — qishda chang'i, yozda sayr", emoji: '<i class="fa-solid fa-skiing"></i>', image: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3e/Chimgan_Resort.jpg/800px-Chimgan_Resort.jpg" },
+                { name: "Qo'shqo'l ko'li", dur: 90, desc: "Suzish va dam olish maskani", emoji: '<i class="fa-solid fa-water"></i>', image: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4c/Charvak_Reservoir.jpg/800px-Charvak_Reservoir.jpg" },
+                { name: "Bo'ka tarixiy muzeyi", dur: 40, desc: "Viloyat tarixi", emoji: '<i class="fa-solid fa-landmark"></i>', image: "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5c/Buka_Museum.jpg/800px-Buka_Museum.jpg" },
+                { name: "O'rta Chirchiq bozori", dur: 50, desc: "Mahalliy mahsulotlar", emoji: '<i class="fa-solid fa-store"></i>', image: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6a/Chirchiq_Bazaar.jpg/800px-Chirchiq_Bazaar.jpg" },
+                { name: "Angren vodiysi", dur: 60, desc: "Tog' vodiy manzaralari", emoji: '<i class="fa-solid fa-mountain"></i>', image: "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7c/Angren_Valley.jpg/800px-Angren_Valley.jpg" },
+                { name: "Ohangaron temir yo'l stansiyasi", dur: 30, desc: "Sovet davri merosi", emoji: '<i class="fa-solid fa-train"></i>', image: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8a/Angren_Railway.jpg/800px-Angren_Railway.jpg" },
+                { name: "Pskem vodiysi", dur: 120, desc: "Ekstremal tog' sayohati", emoji: '<i class="fa-solid fa-hiking"></i>', image: "https://upload.wikimedia.org/wikipedia/commons/thumb/9/9e/Pskem_Valley.jpg/800px-Pskem_Valley.jpg" }
+            ],
+            "Samarqand viloyati": [
+                { name: "Konigil qishlog'i", dur: 90, desc: "An'anaviy qishloq turizmi", emoji: '<i class="fa-solid fa-house"></i>', image: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4f/Konigil_Village.jpg/800px-Konigil_Village.jpg" },
+                { name: "Urgut bozori", dur: 50, desc: "Eng katta hunarmandlik bozori", emoji: '<i class="fa-solid fa-store"></i>', image: "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5c/Urgut_Bazaar.jpg/800px-Urgut_Bazaar.jpg" },
+                { name: "Qo'shrabot tog'lari", dur: 120, desc: "Tog' manzaralari — piyoda sayohat", emoji: '<i class="fa-solid fa-mountain"></i>', image: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6a/Koshrabot_Mountains.jpg/800px-Koshrabot_Mountains.jpg" },
+                { name: "Afrosiyob arxeologiya", dur: 60, desc: "Qadimiy shahar qoldiqlari", emoji: '<i class="fa-solid fa-monument"></i>', image: "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7c/Afrasiyab_Archaeology.jpg/800px-Afrasiyab_Archaeology.jpg" },
+                { name: "Samarqand choyxonasi", dur: 40, desc: "An'anaviy choy ichish", emoji: '<i class="fa-solid fa-mug-hot"></i>', image: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8a/Samarkand_Tea_House.jpg/800px-Samarkand_Tea_House.jpg" },
+                { name: "Bulung'ur o'rmoni", dur: 90, desc: "Tabiat qo'riqxonasi", emoji: '<i class="fa-solid fa-tree"></i>', image: "https://upload.wikimedia.org/wikipedia/commons/thumb/9/9e/Bulungur_Forest.jpg/800px-Bulungur_Forest.jpg" }
+            ]
+        };
+
+        // Shaharni viloyatga xaritalash — admin qo'shgan joylar uchun
+        const REGION_MAPPING = {
+            // Toshkent
+            "toshkent": "Toshkent", "chilonzor": "Toshkent", "mirzo ulug'bek": "Toshkent",
+            "shayxontohur": "Toshkent", "yakkasaroy": "Toshkent", "olmazor": "Toshkent",
+            "sergeli": "Toshkent", "uchtepa": "Toshkent", "mirobod": "Toshkent",
+            "xabibullay": "Toshkent", "bektemir": "Toshkent",
+            // Samarqand
+            "samarqand": "Samarqand", "urgut": "Samarqand", "konigil": "Samarqand",
+            "juma": "Samarqand", "bulung'ur": "Samarqand",
+            // Buxoro
+            "buxoro": "Buxoro", "kogon": "Buxoro", "fayzobod": "Buxoro",
+            "romitan": "Buxoro", "shofirkon": "Buxoro",
+            // Xiva
+            "xiva": "Xiva", "urganch": "Xorazm", "ko'rgoncha": "Xorazm",
+            "gazojak": "Xorazm", "xo'jayli": "Xorazm", "yangibozor": "Xorazm",
+            // Shahrisabz
+            "shahrisabz": "Shahrisabz", "yakkabog'": "Shahrisabz", "qamashi": "Shahrisabz",
+            "chiroqchi": "Qashqadaryo", "g'uzor": "Qashqadaryo",
+            // Namangan
+            "namangan": "Namangan", "chortoq": "Namangan", "mingbuloq": "Namangan",
+            "kosonsoy": "Namangan", "pop": "Namangan", "norin": "Namangan",
+            "uchqo'rg'on": "Namangan",
+            // Farg'ona
+            "farg'ona": "Farg'ona", "qo'qon": "Farg'ona", "marg'ilon": "Farg'ona",
+            "rishton": "Farg'ona", "beshariq": "Farg'ona", "dang'ara": "Farg'ona",
+            // Andijon
+            "andijon": "Andijon", "asaka": "Andijon", "xonobod": "Andijon",
+            "bo'ston": "Andijon", "pog'on": "Andijon", "baliqchi": "Andijon",
+            // Nukus
+            "nukus": "Nukus", "mo'ynoq": "Nukus", "kanliko'l": "Nukus",
+            "taxtakupir": "Nukus", "qanliko'l": "Nukus", "chimboy": "Nukus",
+            // Termiz
+            "termiz": "Termiz", "boysun": "Surxondaryo", "denau": "Surxondaryo",
+            "sariq": "Surxondaryo", "sharg'un": "Surxondaryo",
+            // Jizzax
+            "jizzax": "Jizzax", "dustlik": "Jizzax", "zomin": "Jizzax",
+            "arnasoy": "Jizzax", "paxtakor": "Jizzax", "g'allaorol": "Jizzax",
+            // Guliston
+            "guliston": "Guliston", "sirdaryo": "Guliston", "xovos": "Guliston",
+            "mirzaobod": "Guliston", "ovchi": "Guliston", "boyovut": "Guliston",
+            // Qashqadaryo
+            "qarshi": "Qashqadaryo", "shahrisabz": "Qashqadaryo", "kitob": "Qashqadaryo",
+            "yakkabog'": "Qashqadaryo", "qamashi": "Qashqadaryo",
+            // Navoiy
+            "navoiy": "Navoiy", "zarafshon": "Navoiy", "nurota": "Navoiy",
+            "tomdi": "Navoiy", "qiziltepa": "Navoiy",
+            // Surxondaryo
+            "jarqo'rg'on": "Surxondaryo", "sherobod": "Surxondaryo",
+            "angor": "Surxondaryo", "bandixon": "Surxondaryo"
+        };
+
+        // Admin qo'shilgan joy qaysi viloyatga tegishli ekanini aniqlash
+        function detectRegion(cityName) {
+            const normalize = (s) => String(s || '').trim().toLowerCase();
+            const normalized = normalize(cityName);
+            // To'g'ridan-to'g'ri REGION_LANDMARKS da bor-yo'qligini tekshirish
+            if (REGION_LANDMARKS[cityName]) return cityName;
+            // Mapping da qidirish
+            if (REGION_MAPPING[normalized]) return REGION_MAPPING[normalized];
+            // VARIANT: barcha viloyat nomlarini tekshirish
+            for (const region of Object.keys(REGION_LANDMARKS)) {
+                if (normalize(region) === normalized) return region;
+                if (normalized.includes(normalize(region)) || normalize(region).includes(normalized)) return region;
+            }
+            // Agar topilmasa — default Toshkent
+            return 'Toshkent';
+        }
+
+        // Vaqtga qarab nechta joy taklif qilish kerakligini aniqlash
+        function getStopsForHours(hours) {
+            const h = parseInt(hours) || 6;
+            if (h <= 3) return 4;       // 3 soat = 4 ta joy
+            if (h <= 5) return 5;       // 5 soat = 5 ta joy
+            if (h <= 7) return 6;       // 7 soat = 6 ta joy
+            if (h <= 10) return 8;      // 10 soat = 8 ta joy
+            return 10;                   // Butun kun = 10 ta joy
+        }
+
+        // Admin shahar uchun AI tomonidan sayohat rejasini yaratish (6+ joy, vaqtga qarab)
+        function generateAIItinerary(city, hours) {
+            const region = detectRegion(city);
+            const landmarks = REGION_LANDMARKS[region] || REGION_LANDMARKS['Toshkent'];
+            const maxStops = getStopsForHours(hours);
+
+            // Landmarklarni tasodifiy tartibda aralashtirish va keraklisini olish
+            const shuffled = [...landmarks].sort(() => Math.random() - 0.5);
+            const selected = shuffled.slice(0, Math.min(maxStops, shuffled.length));
+
+            // Vaqt hisoblash
+            let currentTime = 9 * 60; // 09:00 dan boshlash (minutlarda)
+            return selected.map((lm, i) => {
+                const hours_part = Math.floor(currentTime / 60);
+                const mins_part = currentTime % 60;
+                const timeStr = String(hours_part).padStart(2, '0') + ':' + String(mins_part).padStart(2, '0');
+                currentTime += lm.dur + 15; // 15 daqiqa yurish vaqti
+                return {
+                    name: lm.name,
+                    time: timeStr,
+                    dur: lm.dur,
+                    desc: lm.desc + ' [' + region + ']',
+                    emoji: lm.emoji,
+                    image: null,
+                    stars: Math.floor(Math.random() * 3) + 2, // 2-4 yulduz
+                    status: 'upcoming',
+                    travel: i > 0 ? { min: 15, km: Math.random() * 5 + 1 } : null
+                };
+            });
+        }
 
         const CHAT_STEPS = [
             { ai: 'chat_greeting', field: null, type: 'single', options: ['chat_greeting_btn'] },
@@ -5946,6 +6249,25 @@
             history: ['home'],
             lang: localStorage.getItem('yolchi_lang') || 'uz'
         };
+
+        // Test: Initialize sample admin city if none exist (for demo purposes)
+        if (!localStorage.getItem('yolchi_cities') || JSON.parse(localStorage.getItem('yolchi_cities')).length === 0) {
+            const testCities = [{
+                id: Date.now(),
+                name: "Urganch",
+                emoji: "🏛️",
+                count: 0,
+                categories: ["tarixiy", "madaniy"],
+                image: null
+            }];
+            localStorage.setItem('yolchi_cities', JSON.stringify(testCities));
+            
+            const testPlaces = [
+                { id: 1, city: "Urganch", name: "Urganch qal'asi", desc: "Qadimiy Xorazm poytaxtining qal'a qoldiqlari", image: null, stars: 4 },
+                { id: 2, city: "Urganch", name: "Toprak-qal'a", desc: "Cho'l orasida yashirin qadimiy shahar", image: null, stars: 5 }
+            ];
+            localStorage.setItem('adminPlaces', JSON.stringify(testPlaces));
+        }
 
         function saveStars() { localStorage.setItem('yolchi_stars', state.stars); }
         function saveSub() { localStorage.setItem('yolchi_sub', state.subscription); localStorage.setItem('yolchi_sub_expiry', state.subscriptionExpiry); }
@@ -7655,10 +7977,10 @@
         }
 
         /* ================= DYNAMIC CITIES & ITINERARIES ================= */
-        // Merge default CITIES with admin-added cities (deduplicate by name, case-insensitive)
+        // Return ONLY admin-added cities (no default cities)
         function getAllCities() {
             const normalize = (s) => String(s || '').trim().toLowerCase();
-            const merged = [...CITIES];
+            const merged = [];
             if (typeof adminCities !== 'undefined' && adminCities !== null) {
                 adminCities.forEach(c => {
                     if (!merged.find(m => normalize(m.name) === normalize(c.name))) {
@@ -7675,22 +7997,44 @@
             return merged;
         }
 
-        // Get itinerary for a city — default ones from ITINERARIES or build from adminPlaces
-        function getCityItinerary(city) {
-            // Case-insensitive matching
+        // Get itinerary for a city — default ones from ITINERARIES or build from adminPlaces with AI suggestions
+        // Now uses budget, transport, prayer, and food preferences from chat
+        function getCityItinerary(city, options = {}) {
             const normalize = (s) => String(s || '').trim().toLowerCase();
             const normalizedCity = normalize(city);
+            
+            // Vaqt, byudjet va transport parametrlarini olish
+            const hours = options.hours || (state && state.chatAnswers && state.chatAnswers.hours) || '6';
+            const budget = options.budget || (state && state.chatAnswers && state.chatAnswers.budget) || 'mid';
+            const transport = options.transport || (state && state.chatAnswers && state.chatAnswers.transport) || 'walk';
+            const prayer = options.prayer || (state && state.chatAnswers && state.chatAnswers.prayer) || 'no';
+            const food = options.food || (state && state.chatAnswers && state.chatAnswers.food) || 'any';
+
+            // Byudjetga qarab joylar sonini aniqlash
+            const budgetMultiplier = budget === 'high' ? 1.5 : budget === 'low' ? 0.7 : 1;
+            const maxStops = Math.max(2, Math.min(12, Math.round((parseInt(hours) || 6) * budgetMultiplier)));
+            
+            // Transportga qarab yurish vaqtini aniqlash
+            const travelTime = transport === 'car' ? 5 : transport === 'bus' ? 10 : 15; // minut
+            const travelKm = transport === 'car' ? 3 : transport === 'bus' ? 2 : 1; // km
 
             // Default cities have predefined itineraries
             const itineraryCity = Object.keys(ITINERARIES).find(k => normalize(k) === normalizedCity);
             if (itineraryCity && ITINERARIES[itineraryCity]) {
-                return ITINERARIES[itineraryCity].map((s, i) => ({ ...s, status: 'upcoming' }));
+                let stops = ITINERARIES[itineraryCity].map((s, i) => ({ ...s, status: 'upcoming' }));
+                // Byudjetga qarab joylar sonini cheklash
+                if (stops.length > maxStops) {
+                    stops = stops.slice(0, maxStops);
+                }
+                return stops;
             }
-            // Admin cities: build from adminPlaces filtered by city
+
+            // Admin cities: build from adminPlaces and AI-generated region suggestions
+            let stops = [];
             if (typeof adminPlaces !== 'undefined' && adminPlaces !== null) {
                 const places = adminPlaces.filter(p => normalize(p.city) === normalizedCity);
                 if (places.length > 0) {
-                    return places.map((p, i) => ({
+                    stops = places.map((p, i) => ({
                         name: p.name,
                         time: '10:00',
                         dur: 45,
@@ -7703,8 +8047,33 @@
                     }));
                 }
             }
-            // Fallback — return a single generic stop
-            return [{ name: city + ' markazi', time: '10:00', dur: 60, desc: city + ' shahri bo\'ylab sayohat', emoji: '<i class="fa-solid fa-location-dot"></i>', status: 'upcoming' }];
+
+            // AI tomonidan viloyat diqqatga sazovor joylarini qo'shish
+            const aiStops = generateAIItinerary(city, hours);
+            const existingNames = new Set(stops.map(s => normalize(s.name)));
+            aiStops.forEach(ai => {
+                if (!existingNames.has(normalize(ai.name)) && stops.length < maxStops) {
+                    stops.push(ai);
+                }
+            });
+
+            // Agar hech bo'lmasa bitta fallback qo'shish
+            if (stops.length === 0) {
+                stops = [{ name: city + ' markazi', time: '10:00', dur: 60, desc: city + ' shahri bo\'ylab sayohat', emoji: '<i class="fa-solid fa-location-dot"></i>', status: 'upcoming' }];
+            }
+
+            // Vaqtlarni qayta hisoblash (transportga qarab yurish vaqti)
+            let currentTime = 9 * 60;
+            stops.forEach((s, i) => {
+                const h = Math.floor(currentTime / 60);
+                const m = currentTime % 60;
+                s.time = String(h).padStart(2, '0') + ':' + String(m).padStart(2, '0');
+                s.status = 'upcoming';
+                s.travel = i > 0 ? { min: travelTime, km: parseFloat((Math.random() * travelKm * 2 + 1).toFixed(1)) } : null;
+                currentTime += s.dur + travelTime;
+            });
+
+            return stops;
         }
 
         // Find city emoji from merged list
@@ -7987,9 +8356,22 @@
             goScreen('itinerary');
         }
 
-        function createTrip(city) {
-            const stops = getCityItinerary(city);
-            const trip = { id: uid(), city, stops, currentIndex: 0, started: false, completed: false, createdAt: new Date() };
+        function createTrip(city, options = {}) {
+            const stops = getCityItinerary(city, options);
+            const trip = { 
+                id: uid(), 
+                city, 
+                stops, 
+                currentIndex: 0, 
+                started: false, 
+                completed: false, 
+                createdAt: new Date(),
+                budget: options.budget || (state.chatAnswers && state.chatAnswers.budget) || 'mid',
+                transport: options.transport || (state.chatAnswers && state.chatAnswers.transport) || 'walk',
+                prayer: options.prayer || (state.chatAnswers && state.chatAnswers.prayer) || 'no',
+                food: options.food || (state.chatAnswers && state.chatAnswers.food) || 'any',
+                hours: options.hours || (state.chatAnswers && state.chatAnswers.hours) || '6'
+            };
             state.trips.unshift(trip);
             return trip;
         }
@@ -8157,16 +8539,43 @@
             const cityObj = allCities.find(c => normalize(c.name) === normalize(rawCity));
             const city = cityObj ? cityObj.name : rawCity;
             const emoji = cityObj ? cityObj.emoji : '<i class="fa-solid fa-city"></i>';
+            const hours = state.chatAnswers.hours || '6';
+            const budget = state.chatAnswers.budget || 'mid';
+            const transport = state.chatAnswers.transport || 'walk';
+            const region = detectRegion(city);
+            const isDefault = Object.keys(ITINERARIES).find(k => normalize(k) === normalize(city));
+
+            // Byudjet va transport nomlarini tushunarli qilish
+            const budgetLabels = { low: 'Tejamkor', mid: "O'rtacha", high: 'Premium' };
+            const transportLabels = { walk: 'Piyoda', car: 'Avtomobil', bus: 'Jamoat transporti' };
+            const budgetLabel = budgetLabels[budget] || budget;
+            const transportLabel = transportLabels[transport] || transport;
+
             const typingRow = appendBubble(`<div class="typing"><span></span><span></span><span></span></div>`, 'ai');
             setTimeout(() => {
                 typingRow.remove();
-                appendBubble(`Zo'r! ${emoji} ${city} bo'yicha sayohatingizni tayyorladim <i class="fa-solid fa-wand-magic-sparkles"></i>`, 'ai');
+
+                // AI taklif xabari — budget va transportni hisobga olgan holda
+                let aiMsg = '';
+                if (!isDefault) {
+                    aiMsg = `Zo'r! ${emoji} <b>${city}</b> (${region} viloyati) uchun AI ${hours} soatlik sayohat rejasini tayyorladi <i class="fa-solid fa-wand-magic-sparkles"></i><br><br>` +
+                        `Kamida <b>6+</b> taniqli diqqatga sazovor joy tavsiya qilindi — vaqtga, manzilga va yo'nalishga mos ravishda.`;
+                } else {
+                    aiMsg = `Zo'r! ${emoji} <b>${city}</b> bo'yicha sayohatingizni tayyorladim <i class="fa-solid fa-wand-magic-sparkles"></i>`;
+                }
+                // Byudjet va transport ma'lumotlarini qo'shish
+                aiMsg += `<br><br><div style="display:flex;gap:6px;flex-wrap:wrap;justify-content:center;">
+                    <span style="background:rgba(255,255,255,0.15);padding:4px 12px;border-radius:20px;font-size:12px;"><i class="fa-solid fa-coins"></i> ${budgetLabel}</span>
+                    <span style="background:rgba(255,255,255,0.15);padding:4px 12px;border-radius:20px;font-size:12px;"><i class="fa-solid fa-person-walking"></i> ${transportLabel}</span>
+                    <span style="background:rgba(255,255,255,0.15);padding:4px 12px;border-radius:20px;font-size:12px;"><i class="fa-solid fa-clock"></i> ${hours} soat</span>
+                </div>`;
+                appendBubble(aiMsg, 'ai');
                 setTimeout(() => {
-                    const trip = createTrip(city);
+                    const trip = createTrip(city, { hours, budget, transport });
                     state.activeTripId = trip.id;
                     renderItinerary(trip);
                     goScreen('itinerary');
-                }, 700);
+                }, 1000);
             }, 900);
         }
 
@@ -8179,6 +8588,10 @@
             const allCities = getAllCities();
             const cityIdx = allCities.findIndex(c => c.name === trip.city);
             const safeIdx = cityIdx >= 0 ? cityIdx : 0;
+            const budgetLabels = { low: 'Tejamkor', mid: "O'rtacha", high: 'Premium' };
+            const transportLabels = { walk: 'Piyoda', car: 'Avtomobil', bus: 'Jamoat transporti' };
+            const budgetLabel = budgetLabels[trip.budget] || trip.budget || "O'rtacha";
+            const transportLabel = transportLabels[trip.transport] || trip.transport || 'Piyoda';
             el.innerHTML = `
     <div class="cover" style="background:${grad(safeIdx)}">
       <h3 style="font-size:19px;">${trip.city} — ${totalDur(trip.stops)} ${t('itinerary_hours')}</h3>
@@ -8190,8 +8603,9 @@
       </div>
     </div>
     <div class="tag-row">
-      <span class="tag-soft"><i class="fa-solid fa-sun"></i> Premium</span>
-      <span class="tag-soft"><i class="fa-solid fa-shuffle"></i> Aralash</span>
+      <span class="tag-soft"><i class="fa-solid fa-coins"></i> ${budgetLabel}</span>
+      <span class="tag-soft"><i class="fa-solid fa-person-walking"></i> ${transportLabel}</span>
+      <span class="tag-soft"><i class="fa-solid fa-clock"></i> ${trip.hours || '6'} soat</span>
     </div>
     <div class="tabs2">
       <button class="active" onclick="event.target.parentElement.querySelectorAll('button').forEach(b=>b.classList.remove('active'));event.target.classList.add('active');document.getElementById('tlView').style.display='block';document.getElementById('mapView').style.display='none';">${t('itinerary_timeline')}</button>
@@ -8199,7 +8613,7 @@
     </div>
     <div id="tlView" class="timeline">
       ${trip.stops.map((s, i) => `
-        ${s.travel ? `<div class="tl-travel"><i class="fa-solid fa-car"></i> ${s.travel.min} daq · ${s.travel.km} km</div>` : ''}
+        ${s.travel ? `<div class="tl-travel"><i class="fa-solid fa-car"></i> ${s.travel.min} daq · ${s.travel.km.toFixed(1)} km</div>` : ''}
         <div class="tl-item reveal">
           <div class="tl-dot">${i + 1}</div>
           <div class="tl-card">
@@ -8414,16 +8828,16 @@
       </div>`;
                 return;
             }
-            el.innerHTML = state.trips.map((t, idx) => {
-                const done = t.stops.filter(s => s.status === 'done').length;
+            el.innerHTML = state.trips.map((trip, idx) => {
+                const done = trip.stops.filter(s => s.status === 'done').length;
                 const allCities = getAllCities();
-                const cityIdx = allCities.findIndex(c => c.name === t.city);
+                const cityIdx = allCities.findIndex(c => c.name === trip.city);
                 const safeIdx = cityIdx >= 0 ? cityIdx : idx;
                 const emoji = cityIdx >= 0 ? allCities[cityIdx].emoji : '<i class="fa-solid fa-city"></i>';
-                const badge = t.completed ? `<span class="trip-badge done">${t('trips_badge_done')}</span>` : `<span class="trip-badge progress">${done}/${t.stops.length}</span>`;
-                return `<div class="trip-item" onclick="openTrip('${t.id}')">
+                const badge = trip.completed ? `<span class="trip-badge done">${t('trips_badge_done')}</span>` : `<span class="trip-badge progress">${done}/${trip.stops.length}</span>`;
+                return `<div class="trip-item" onclick="openTrip('${trip.id}')">
       <div class="tphoto" style="background:${grad(safeIdx)};display:flex;align-items:center;justify-content:center;font-size:20px;">${emoji}</div>
-      <div style="flex:1;"><h4>${t.city}</h4><p>${t.stops.length} ${t('trips_stops')} · ${totalDur(t.stops)} ${t('trips_hours')}</p></div>
+      <div style="flex:1;"><h4>${trip.city}</h4><p>${trip.stops.length} ${t('trips_stops')} · ${totalDur(trip.stops)} ${t('trips_hours')}</p></div>
       ${badge}
     </div>`;
             }).join('');
@@ -8709,17 +9123,42 @@
         let adminPlaces = JSON.parse(localStorage.getItem("adminPlaces")) || [];
 
         function adminLogin() {
-            const u = document.getElementById('adminUser').value;
-            const p = document.getElementById('adminPass').value;
-            if (u === 'Xazina' && p === 'xazina2026') {
-                document.getElementById('adminLogin').style.display = 'none';
-                document.getElementById('adminDashboard').style.display = 'block';
-                updateCitySelects();
-                renderAdminCities();
-                renderAdmin();
-            } else {
-                alert('Login yoki parol xato');
+            const u = document.getElementById('adminUser').value.trim();
+            const p = document.getElementById('adminPass').value.trim();
+            const errorEl = document.getElementById('adminLoginError');
+            
+            if (!u || !p) {
+                errorEl.textContent = 'Iltimos, login va parolni kiriting!';
+                errorEl.style.display = 'block';
+                return;
             }
+
+            // Backend API orqali autentifikatsiya
+            fetch('/api/admin/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ login: u, password: p })
+            })
+            .then(res => {
+                if (!res.ok) throw new Error('Login yoki parol xato');
+                return res.json();
+            })
+            .then(data => {
+                if (data.success) {
+                    document.getElementById('adminLogin').style.display = 'none';
+                    document.getElementById('adminDashboard').style.display = 'block';
+                    updateCitySelects();
+                    renderAdminCities();
+                    renderAdmin();
+                    errorEl.style.display = 'none';
+                } else {
+                    throw new Error(data.message || 'Login yoki parol xato');
+                }
+            })
+            .catch(err => {
+                errorEl.textContent = err.message || 'Serverga ulanishda xatolik';
+                errorEl.style.display = 'block';
+            });
         }
 
         function addPlace() {
@@ -8783,8 +9222,14 @@
             document.getElementById('placeDesc').value = '';
             document.getElementById('placeLat').value = '';
             document.getElementById('placeLng').value = '';
-            document.getElementById('imagePreview').style.display = 'none';
-            document.getElementById('addPlaceBtn').textContent = t('admin_add_place_btn');
+            // Image previewni tozalash
+            const previewImg = document.getElementById('previewImg');
+            const uploadPlaceholder = document.getElementById('uploadPlaceholder');
+            const uploadArea = document.getElementById('imageUploadArea');
+            if (previewImg) { previewImg.style.display = 'none'; previewImg.src = ''; }
+            if (uploadPlaceholder) uploadPlaceholder.style.display = 'flex';
+            if (uploadArea) uploadArea.style.borderStyle = 'dashed';
+            document.getElementById('addPlaceBtn').innerHTML = '<i class="fa-solid fa-check"></i> ' + t('admin_add_place_btn');
             delete document.getElementById('addPlaceBtn').dataset.editId;
         }
 
@@ -8805,9 +9250,18 @@
             document.getElementById('placeStars').value = p.stars || 3;
             document.getElementById('placeLat').value = p.lat || '';
             document.getElementById('placeLng').value = p.lng || '';
+            const previewImg = document.getElementById('previewImg');
+            const uploadPlaceholder = document.getElementById('uploadPlaceholder');
+            const uploadArea = document.getElementById('imageUploadArea');
             if (p.image) {
-                document.getElementById('previewImg').src = p.image;
-                document.getElementById('imagePreview').style.display = 'block';
+                previewImg.src = p.image;
+                previewImg.style.display = 'block';
+                if (uploadPlaceholder) uploadPlaceholder.style.display = 'none';
+                if (uploadArea) uploadArea.style.borderStyle = 'solid';
+            } else {
+                previewImg.style.display = 'none';
+                if (uploadPlaceholder) uploadPlaceholder.style.display = 'flex';
+                if (uploadArea) uploadArea.style.borderStyle = 'dashed';
             }
             const btn = document.getElementById('addPlaceBtn');
             btn.innerHTML = '<i class="fa-solid fa-floppy-disk"></i> Joyni yangilash';
@@ -8818,17 +9272,22 @@
         // Preview image when file is selected
         document.addEventListener('change', function (e) {
             if (e.target && e.target.id === 'placeImage') {
-                const preview = document.getElementById('imagePreview');
+                const uploadArea = document.getElementById('imageUploadArea');
+                const placeholder = document.getElementById('uploadPlaceholder');
                 const img = document.getElementById('previewImg');
                 if (e.target.files && e.target.files[0]) {
                     const reader = new FileReader();
                     reader.onload = function (ev) {
                         img.src = ev.target.result;
-                        preview.style.display = 'block';
+                        img.style.display = 'block';
+                        placeholder.style.display = 'none';
+                        uploadArea.style.borderStyle = 'solid';
                     };
                     reader.readAsDataURL(e.target.files[0]);
                 } else {
-                    preview.style.display = 'none';
+                    img.style.display = 'none';
+                    placeholder.style.display = 'flex';
+                    uploadArea.style.borderStyle = 'dashed';
                 }
             }
         });
