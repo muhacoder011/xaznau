@@ -5677,9 +5677,7 @@
                 <div class="home-greeting-sm"><i class="fa-solid fa-hand-wave"></i> Salom, <span
                         id="homeUserName">Sayohatchi</span></div>
                 <div class="home-top-actions">
-                    <button class="icon-btn" onclick="openScanner()" title="QR Skanner"><i
-                            class="fa-solid fa-qrcode"></i></button>
-                    <button class="icon-btn" onclick="toggleDark()"><i class="fa-solid fa-moon"></i></button>
+                    <button class="icon-btn" onclick="toggleDark()" title="Tungi rejim"><i class="fa-solid fa-moon"></i></button>
                 </div>
             </div>
 
@@ -5692,8 +5690,7 @@
             <!-- Search -->
             <div class="search-wrapper card-glass" onclick="startChat()">
                 <i class="fa-solid fa-search"></i>
-                <input type="text" placeholder="Bugun nima qilmoqchisiz?" readonly>
-                <button class="search-ai-btn"><i class="fa-solid fa-wand-magic-sparkles"></i> AI</button>
+                <input type="text" placeholder="Qayerga sayohat qilmoqchisiz?" readonly>
             </div>
 
             <!-- Suggestions -->
@@ -5702,10 +5699,6 @@
                 <div class="suggestion-chips">
                     <button class="suggestion-chip btn-lift" onclick="startChat()"><i class="fa-solid fa-landmark"></i>
                         Tarixiy joylar</button>
-                    <button class="suggestion-chip btn-lift" onclick="startChat()"><i class="fa-solid fa-leaf"></i>
-                        Tabiat</button>
-                    <button class="suggestion-chip btn-lift" onclick="startChat()"><i
-                            class="fa-solid fa-people-group"></i> Oilaviy</button>
                     <button class="suggestion-chip btn-lift" onclick="startChat()"><i class="fa-solid fa-utensils"></i>
                         Halol taomlar</button>
                     <button class="suggestion-chip btn-lift" onclick="startChat()"><i class="fa-solid fa-wallet"></i>
@@ -5806,12 +5799,8 @@
 
             <div style="margin-top:20px;">
                 <div class="list-row" onclick="goTab('trips')">
-                    <div class="lic"><i class="fa-solid fa-bookmark"></i></div><span class="name"
-                        data-tr="profile_saved">Saqlangan sayohatlar</span><span class="chev">›</span>
-                </div>
-                <div class="list-row" onclick="goTab('trips')">
-                    <div class="lic"><i class="fa-solid fa-heart"></i></div><span class="name"
-                        data-tr="profile_fav">Sevimlilar</span><span class="chev">›</span>
+                    <div class="lic"><i class="fa-solid fa-map"></i></div><span class="name"
+                        data-tr="profile_saved">Sayohatlarim</span><span class="chev">›</span>
                 </div>
                 <div class="list-row"
                     onclick="document.querySelector('.sec-title').scrollIntoView({behavior:'smooth',block:'start'})">
@@ -5822,18 +5811,8 @@
 
             <div class="settings-label" data-tr="profile_settings">Sozlamalar</div>
             <div id="langList"></div>
-            <div class="toggle-row">
-                <span style="font-size:13.5px;font-weight:600;" data-tr="profile_night">Tungi rejim</span>
-                <div class="switch" id="darkSwitch" onclick="toggleDark()">
-                    <div class="knob"></div>
-                </div>
-            </div>
             <button class="cta-btn ghost" style="margin-top:6px;" onclick="shareApp()"><i
-                    class="fa-solid fa-share-nodes"></i> YO'LCHI'ni do'stlarga ulashish</button>
-            <button class="cta-btn" style="margin-top:10px;" onclick="openScanner()"><i class="fa-solid fa-qrcode"></i>
-                QR Skanner</button>
-            <button id="guideBtn" class="cta-btn ghost" style="margin-top:10px;display:none;" onclick="showGuide()"><i
-                    class="fa-solid fa-book"></i> Shahar qo'llanmasi</button>
+                    class="fa-solid fa-share-nodes"></i> Ulashish</button>
             <button class="cta-btn ghost" style="margin-top:10px;" onclick="goTab('shop')"><i
                     class="fa-solid fa-store"></i> Do'kon</button>
             <button class="cta-btn" style="margin-top:10px;background:var(--danger,#e74c3c);color:#fff;"
@@ -8550,7 +8529,7 @@
             const html = document.documentElement;
             const isDark = html.getAttribute('data-theme') === 'dark';
             html.setAttribute('data-theme', isDark ? 'light' : 'dark');
-            document.getElementById('darkSwitch').classList.toggle('on', !isDark);
+            const darkSwitch = document.getElementById('darkSwitch'); if (darkSwitch) darkSwitch.classList.toggle('on', !isDark);
         }
 
         /* ================= HOME / DISCOVER RENDER ================= */
@@ -9187,10 +9166,7 @@
     </div>`).join('');
 
             // Show guide button if user owns it
-            const guideBtn = document.getElementById('guideBtn');
-            if (guideBtn) {
-                guideBtn.style.display = state.ownedItems.includes('guide') ? '' : 'none';
-            }
+            // guideBtn removed — guide feature accessible via shop
         }
         function setLang(code) {
             state.lang = code;

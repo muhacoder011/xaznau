@@ -319,8 +319,7 @@ const Shop: React.FC = () => {
                   className="w-10 h-10 rounded-lg bg-gray-200 dark:bg-gray-600 hover:bg-gray-300 dark:hover:bg-gray-500 flex items-center justify-center font-bold text-lg transition-colors"
                 >
                   -
-                </button>
-                <span className="flex-1 text-center text-2xl font-bold text-gray-800 dark:text-white">{quantity}</span>
+                </button>                <span className="flex-1 text-center text-2xl font-bold text-gray-800 dark:text-white">{quantity}</span>
                 <button
                   onClick={() => setQuantity(Math.min(99, quantity + 1))}
                   className="w-10 h-10 rounded-lg bg-gray-200 dark:bg-gray-600 hover:bg-gray-300 dark:hover:bg-gray-500 flex items-center justify-center font-bold text-lg transition-colors"

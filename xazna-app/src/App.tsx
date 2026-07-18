@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { ChatBot } from './components/chatbot/ChatBot'
-import { AddLocationForm } from './components/admin/AddLocationForm'
+import { AdminPanel } from './components/admin/AdminPanel'
 import { DistanceCalculator } from './components/admin/DistanceCalculator'
 import { LoginForm } from './components/auth/LoginForm'
 import { RegisterForm } from './components/auth/RegisterForm'
@@ -13,8 +13,6 @@ import ShareModal from './components/sharing/ShareModal'
 import Settings from './components/settings/Settings'
 import { AppStoreProvider, useAppStore } from './hooks/useAppStore'
 import { useTheme } from './hooks/useTheme'
-import type { LocationFormData } from './types'
-
 type Tab = 'chat' | 'admin' | 'calculator' | 'shop' | 'missions' | 'inventory' | 'settings'
 
 const AppContent: React.FC = () => {
@@ -24,10 +22,6 @@ const AppContent: React.FC = () => {
   const [showShareModal, setShowShareModal] = useState(false)
   const { user, updateUser, incrementMissionType } = useAppStore()
   useTheme() // Initialize theme on app load
-
-  const handleLocationSubmit = (data: LocationFormData) => {
-    console.log('Yangi lokatsiya qo\'shildi:', data)
-  }
 
   const handleLogin = async (email: string, password: string) => {
     await new Promise(resolve => setTimeout(resolve, 800))
@@ -237,18 +231,8 @@ const AppContent: React.FC = () => {
               )}
 
               {activeTab === 'admin' && (
-                <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 overflow-hidden">
-                  <div className="p-6 border-b border-gray-100 dark:border-gray-700 bg-gradient-to-r from-emerald-50 to-green-50 dark:from-emerald-900/20 dark:to-green-900/20">
-                    <h2 className="text-xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
-                      <i className="fa-solid fa-location-dot"></i> Admin Panel
-                    </h2>
-                    <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
-                      Yangi lokatsiyalar qo'shish va baza boshqarish
-                    </p>
-                  </div>
-                  <div className="p-6">
-                    <AddLocationForm onSubmit={handleLocationSubmit} />
-                  </div>
+                <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 overflow-hidden p-6">
+                  <AdminPanel />
                 </div>
               )}
 
