@@ -7,13 +7,14 @@ import { MapPicker } from './MapPicker'
 import type { LocationFormData, LocationCategory } from '../../types'
 
 // Admin autentifikatsiyasi backend API orqali amalga oshiriladi
+// Agar backend mavjud bo'lmasa, localStorage dagi hash bo'yicha tekshiriladi
 
 const CATEGORY_OPTIONS = [
-  { value: 'masjid', label: '<i className="fa-solid fa-mosque"></i> Masjid' },
-  { value: 'museum', label: '<i className="fa-solid fa-landmark"></i> Muzey' },
-  { value: 'park', label: '<i className="fa-solid fa-tree"></i> Park' },
-  { value: 'restaurant', label: '<i className="fa-solid fa-utensils"></i> Oshxona' },
-  { value: 'historical', label: '<i className="fa-solid fa-chess-rook"></i> Tarixiy' },
+  { value: 'masjid', label: 'Masjid' },
+  { value: 'museum', label: 'Muzey' },
+  { value: 'park', label: 'Park' },
+  { value: 'restaurant', label: 'Oshxona' },
+  { value: 'historical', label: 'Tarixiy' },
 ]
 
 const CITY_OPTIONS = [
@@ -48,10 +49,12 @@ function saveLocations(locations: StoredLocation[]) {
 }
 
 export const AddLocationForm: React.FC<Props> = ({ onSubmit }) => {
-  // Auth state — backend API orqali tekshiriladi
+  // Auth state — backend API orqali tekshiriladi, localStorage fallback
   const [isAdminAuth, setIsAdminAuth] = useState(false)
+  const [isSetupMode, setIsSetupMode] = useState(false)
   const [adminLogin, setAdminLogin] = useState('')
   const [adminPassword, setAdminPassword] = useState('')
+  const [adminPasswordConfirm, setAdminPasswordConfirm] = useState('')
   const [adminError, setAdminError] = useState('')
   const [isLoggingIn, setIsLoggingIn] = useState(false)
   const [activeTab, setActiveTab] = useState<'add' | 'list' | 'stats'>('add')
@@ -80,8 +83,35 @@ export const AddLocationForm: React.FC<Props> = ({ onSubmit }) => {
   useEffect(() => {
     setLocations(loadLocations())
     const saved = localStorage.getItem('admin_auth')
-    if (saved === 'true') setIsAdminAuth(true)
+    if (saved === 'true') {
+      setIsAdminAuth(true)
+    } else {
+      // Check if admin credentials already set up
+      const hash = localStorage.getItem('xazna_admin_hash')
+      setIsSetupMode(!hash)
+    }
   }, [])
+
+  // First-time admin setup
+  const handleAdminSetup = (e: React.FormEvent) => {
+    e.preventDefault()
+    if (!adminLogin || !adminPassword) {
+      setAdminError('Login va parolni kiriting!')
+      return
+    }
+    if (adminPassword !== adminPasswordConfirm) {
+      setAdminError('Parollar bir-biriga mos kelmadi!')
+      return
+    }
+    if (adminPassword.length < 4) {
+      setAdminError('Parol kamida 4 belgidan iborat bo\'lishi kerak!')
+      return
+    }
+    localStorage.setItem('xazna_admin_hash', btoa(adminLogin + ':' + adminPassword))
+    setIsAdminAuth(true)
+    setAdminError('')
+    localStorage.setItem('admin_auth', 'true')
+  }
 
   const handleAdminLogin = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -100,7 +130,7 @@ export const AddLocationForm: React.FC<Props> = ({ onSubmit }) => {
         body: JSON.stringify({ login: adminLogin, password: adminPassword })
       })
       
-      if (!response.ok) throw new Error('Login yoki parol notog\'ri!')
+      if (!response.ok) throw new Error('API xatosi')
       
       const data = await response.json()
       if (data.success) {
@@ -108,11 +138,21 @@ export const AddLocationForm: React.FC<Props> = ({ onSubmit }) => {
         setAdminError('')
         localStorage.setItem('admin_auth', 'true')
         localStorage.setItem('admin_token', data.token || '')
+        setIsLoggingIn(false)
+        return
       } else {
         throw new Error(data.message || 'Login yoki parol notog\'ri!')
       }
     } catch (err) {
-      setAdminError(err instanceof Error ? err.message : 'Serverga ulanishda xatolik')
+      // Fallback: localStorage dagi hash bo'yicha tekshirish
+      const storedHash = localStorage.getItem('xazna_admin_hash')
+      if (storedHash && btoa(adminLogin + ':' + adminPassword) === storedHash) {
+        setIsAdminAuth(true)
+        setAdminError('')
+        localStorage.setItem('admin_auth', 'true')
+      } else {
+        setAdminError('Login yoki parol xato. Serverga ulanish ham muvaffaqiyatsiz.')
+      }
     } finally {
       setIsLoggingIn(false)
     }
@@ -120,10 +160,15 @@ export const AddLocationForm: React.FC<Props> = ({ onSubmit }) => {
 
   const handleAdminLogout = () => {
     setIsAdminAuth(false)
+    setIsSetupMode(false)
     setAdminLogin('')
     setAdminPassword('')
+    setAdminPasswordConfirm('')
     localStorage.removeItem('admin_auth')
     localStorage.removeItem('admin_token')
+    // Check if hash exists for next visit
+    const hash = localStorage.getItem('xazna_admin_hash')
+    setIsSetupMode(!hash)
   }
 
   // ===== ALL HOOKS MUST BE BEFORE CONDITIONAL RETURN =====
@@ -163,11 +208,11 @@ export const AddLocationForm: React.FC<Props> = ({ onSubmit }) => {
         const idx = allLocations.findIndex(l => l.id === editingId)
         if (idx >= 0) {
           allLocations[idx] = { ...formData, id: editingId, createdAt: allLocations[idx].createdAt } as StoredLocation
-          setSubmitMessage({ type: 'success', text: '<i className="fa-solid fa-check"></i> Joy muvaffaqiyatli yangilandi!' })
+          setSubmitMessage({ type: 'success', text: 'Joy muvaffaqiyatli yangilandi!' })
         }
       } else {
         allLocations.push({ ...formData, id: crypto.randomUUID(), createdAt: now } as StoredLocation)
-        setSubmitMessage({ type: 'success', text: '<i className="fa-solid fa-check"></i> Joy muvaffaqiyatli qo\'shildi!' })
+        setSubmitMessage({ type: 'success', text: 'Joy muvaffaqiyatli qo\'shildi!' })
       }
 
       saveLocations(allLocations)
@@ -178,7 +223,7 @@ export const AddLocationForm: React.FC<Props> = ({ onSubmit }) => {
       setEditingId(null)
       setTimeout(() => setSubmitMessage(null), 3000)
     } catch {
-      setSubmitMessage({ type: 'error', text: '<i className="fa-solid fa-xmark"></i> Xatolik yuz berdi' })
+      setSubmitMessage({ type: 'error', text: 'Xatolik yuz berdi' })
     } finally {
       setIsSubmitting(false)
     }
@@ -204,7 +249,7 @@ export const AddLocationForm: React.FC<Props> = ({ onSubmit }) => {
     const allLocations = loadLocations().filter(l => l.id !== id)
     saveLocations(allLocations)
     setLocations(allLocations)
-    setSubmitMessage({ type: 'success', text: '<i className="fa-solid fa-trash-can"></i> Joy ochirildi!' })
+      setSubmitMessage({ type: 'success', text: 'Joy ochirildi!' })
     setTimeout(() => setSubmitMessage(null), 3000)
   }
 
@@ -213,7 +258,7 @@ export const AddLocationForm: React.FC<Props> = ({ onSubmit }) => {
     setEditingId(null)
   }
 
-  // ===== CONDITIONAL RETURN — Login form (backend API orqali) =====
+  // ===== CONDITIONAL RETURN — Login form (backend API + localStorage fallback) =====
   if (!isAdminAuth) {
     return (
       <div className="min-h-[60vh] flex items-center justify-center">
@@ -223,9 +268,9 @@ export const AddLocationForm: React.FC<Props> = ({ onSubmit }) => {
               <i className="fa-solid fa-shield-halved"></i>
             </div>
             <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Admin Panel</h2>
-            <p className="text-gray-500 dark:text-gray-400 mt-1">Autentifikatsiya talab qilinadi</p>
+            <p className="text-gray-500 dark:text-gray-400 mt-1">{isSetupMode ? 'Birinchi marta sozlash' : 'Autentifikatsiya talab qilinadi'}</p>
           </div>
-          <form onSubmit={handleAdminLogin} className="bg-white dark:bg-gray-800 rounded-3xl p-8 shadow-xl border border-gray-100 dark:border-gray-700 space-y-5">
+          <form onSubmit={isSetupMode ? handleAdminSetup : handleAdminLogin} className="bg-white dark:bg-gray-800 rounded-3xl p-8 shadow-xl border border-gray-100 dark:border-gray-700 space-y-5">
             <div className="space-y-2">
               <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Login</label>
               <div className="relative">
@@ -242,12 +287,26 @@ export const AddLocationForm: React.FC<Props> = ({ onSubmit }) => {
                   className="w-full pl-10 pr-4 py-3 rounded-xl border border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white text-sm focus:ring-2 focus:ring-emerald-500 focus:border-transparent outline-none transition-all" />
               </div>
             </div>
+            {isSetupMode && (
+              <div className="space-y-2">
+                <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Parolni takrorlang</label>
+                <div className="relative">
+                  <span className="absolute left-3 top-1/2 -translate-y-1/2 text-lg"><i className="fa-solid fa-key"></i></span>
+                  <input type="password" value={adminPasswordConfirm} onChange={(e) => setAdminPasswordConfirm(e.target.value)} placeholder="Parolni takrorlang"
+                    className="w-full pl-10 pr-4 py-3 rounded-xl border border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white text-sm focus:ring-2 focus:ring-emerald-500 focus:border-transparent outline-none transition-all" />
+                </div>
+              </div>
+            )}
             {adminError && <div className="p-4 bg-red-50 dark:bg-red-900/30 border border-red-200 dark:border-red-800 rounded-xl text-sm text-red-600 dark:text-red-400 text-center font-medium"><i className="fa-solid fa-xmark"></i> {adminError}</div>}
             <button type="submit" disabled={isLoggingIn || !adminLogin || !adminPassword}
               className="w-full py-3.5 bg-gradient-to-r from-emerald-500 to-emerald-700 hover:from-emerald-600 hover:to-emerald-800 disabled:from-gray-300 disabled:to-gray-300 text-white rounded-xl font-semibold text-sm transition-all disabled:cursor-not-allowed active:scale-[0.98] shadow-lg hover:shadow-xl">
-              {isLoggingIn ? '<i className="fa-solid fa-hourglass"></i> Tekshirilmoqda...' : '<i className="fa-solid fa-unlock"></i> Kirish'}
+              {isLoggingIn ? 'Tekshirilmoqda...' : isSetupMode ? 'Sozlash' : 'Kirish'}
             </button>
-            <p className="text-xs text-gray-400 dark:text-gray-500 text-center">Admin panelga kirish backend orqali amalga oshiriladi</p>
+            {isSetupMode ? (
+              <p className="text-xs text-gray-400 dark:text-gray-500 text-center">Iltimos, admin login va parolni yarating. Bu ma'lumotlar faqat brauzeringizda saqlanadi.</p>
+            ) : (
+              <p className="text-xs text-gray-400 dark:text-gray-500 text-center">Admin panelga kirish backend yoki localStorage orqali amalga oshiriladi</p>
+            )}
           </form>
         </div>
       </div>
@@ -299,13 +358,13 @@ export const AddLocationForm: React.FC<Props> = ({ onSubmit }) => {
       {/* Tabs */}
       <div className="flex gap-2 overflow-x-auto pb-1">
         {[
-          { id: 'add' as const, label: '<i className="fa-solid fa-plus"></i> Qo\'shish', desc: 'Yangi joy qo\'shish' },
-          { id: 'list' as const, label: '<i className="fa-solid fa-clipboard"></i> Joylar', desc: 'Barcha joylar ro\'yxati' },
-          { id: 'stats' as const, label: '<i className="fa-solid fa-chart-simple"></i> Statistika', desc: 'Ma\'lumotlar tahlili' },
+          { id: 'add' as const, label: '<i class="fa-solid fa-plus"></i> Qo\'shish', desc: 'Yangi joy qo\'shish' },
+          { id: 'list' as const, label: '<i class="fa-solid fa-clipboard"></i> Joylar', desc: 'Barcha joylar ro\'yxati' },
+          { id: 'stats' as const, label: '<i class="fa-solid fa-chart-simple"></i> Statistika', desc: 'Ma\'lumotlar tahlili' },
         ].map(tab => (
           <button key={tab.id} onClick={() => setActiveTab(tab.id)}
             className={`px-5 py-3 rounded-xl text-sm font-medium transition-all whitespace-nowrap ${activeTab === tab.id ? 'bg-emerald-600 text-white shadow-md scale-105' : 'bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-300 border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700'}`}>
-            <span className="flex items-center gap-2">{tab.label}</span>
+            <span className="flex items-center gap-2" dangerouslySetInnerHTML={{ __html: tab.label }} />
           </button>
         ))}
       </div>
@@ -316,7 +375,7 @@ export const AddLocationForm: React.FC<Props> = ({ onSubmit }) => {
           <div className="bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 p-6 shadow-sm">
             <div className="flex items-center justify-between mb-5">
               <h3 className="text-sm font-semibold text-gray-800 dark:text-gray-200 uppercase tracking-wider">
-                {editingId ? '<i className="fa-solid fa-pencil"></i> Joyni tahrirlash' : '<i className="fa-solid fa-location-dot"></i> Yangi joy qo\'shish'}
+                <span dangerouslySetInnerHTML={{ __html: editingId ? '<i class="fa-solid fa-pencil"></i> Joyni tahrirlash' : '<i class="fa-solid fa-location-dot"></i> Yangi joy qo\'shish' }} />
               </h3>
               {editingId && (
                 <button type="button" onClick={handleCancelEdit} className="text-xs text-red-500 hover:text-red-700 font-medium">Bekor qilish</button>
@@ -338,7 +397,7 @@ export const AddLocationForm: React.FC<Props> = ({ onSubmit }) => {
           </div>
 
           <Button type="submit" variant="primary" size="lg" disabled={isSubmitting} className="w-full">
-            {isSubmitting ? '<i className="fa-solid fa-hourglass"></i> Saqlanmoqda...' : editingId ? '<i className="fa-solid fa-floppy-disk"></i> Yangilash' : '<i className="fa-solid fa-check"></i> Qo\'shish'}
+            <span dangerouslySetInnerHTML={{ __html: isSubmitting ? '<i class="fa-solid fa-hourglass"></i> Saqlanmoqda...' : editingId ? '<i class="fa-solid fa-floppy-disk"></i> Yangilash' : '<i class="fa-solid fa-check"></i> Qo\'shish' }} />
           </Button>
         </form>
       )}
@@ -349,12 +408,12 @@ export const AddLocationForm: React.FC<Props> = ({ onSubmit }) => {
           <div className="flex flex-col sm:flex-row gap-3">
             <select value={filterCity} onChange={(e) => setFilterCity(e.target.value)}
               className="flex-1 px-4 py-2.5 rounded-xl border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-800 text-sm text-gray-600 dark:text-gray-300 outline-none focus:ring-2 focus:ring-emerald-500">
-              <option value="all"><i className="fa-solid fa-city"></i> Barcha shaharlar</option>
+              <option value="all">Barcha shaharlar</option>
               {CITY_OPTIONS.map(c => <option key={c.value} value={c.value}>{c.label}</option>)}
             </select>
             <select value={filterCategory} onChange={(e) => setFilterCategory(e.target.value)}
               className="flex-1 px-4 py-2.5 rounded-xl border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-800 text-sm text-gray-600 dark:text-gray-300 outline-none focus:ring-2 focus:ring-emerald-500">
-              <option value="all"><i className="fa-solid fa-tag"></i> Barcha kategoriyalar</option>
+              <option value="all">Barcha kategoriyalar</option>
               {CATEGORY_OPTIONS.map(c => <option key={c.value} value={c.value}>{c.label}</option>)}
             </select>
             <span className="text-sm text-gray-400 flex items-center px-3">{filteredLocations.length} ta joy</span>
@@ -367,7 +426,7 @@ export const AddLocationForm: React.FC<Props> = ({ onSubmit }) => {
               <p className="text-sm mt-1">Yangi joy qo'shish uchin "Qo'shish" bo'limiga o'ting</p>
             </div>
           ) : (
-            <div className="grid grid-cols-1 gap-3">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
               {filteredLocations.map(loc => (
                 <div key={loc.id} className="bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 p-4 shadow-sm hover:shadow-md transition-all">
                   <div className="flex items-start justify-between gap-3">

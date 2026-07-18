@@ -160,6 +160,7 @@ export const AppStoreProvider: React.FC<{ children: React.ReactNode }> = ({ chil
                 category: shopItem.category,
                 isUsed: false,
                 quantity: 1,
+                image: shopItem.image,
               })
             }
           }
@@ -206,6 +207,7 @@ export const AppStoreProvider: React.FC<{ children: React.ReactNode }> = ({ chil
       category: shopItem.category,
       isUsed: false,
       quantity: 1,
+      image: shopItem.image,
     })
 
     // Mission progress

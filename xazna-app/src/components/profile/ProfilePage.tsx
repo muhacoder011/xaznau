@@ -29,9 +29,9 @@ const ProfilePage: React.FC = () => {
       {/* Tablar */}
       <div className="flex gap-1 bg-gray-100 dark:bg-gray-800 p-1 rounded-xl">
         {[
-          { key: 'profile', label: 'Profil', icon: '<i className="fa-solid fa-user"></i>' },
-          { key: 'stats', label: 'Statistika', icon: '<i className="fa-solid fa-chart-simple"></i>' },
-          { key: 'settings', label: 'Sozlamalar', icon: '<i className="fa-solid fa-gear"></i>' },
+          { key: 'profile', label: 'Profil', icon: '<i class="fa-solid fa-user"></i>' },
+          { key: 'stats', label: 'Statistika', icon: '<i class="fa-solid fa-chart-simple"></i>' },
+          { key: 'settings', label: 'Sozlamalar', icon: '<i class="fa-solid fa-gear"></i>' },
         ].map(tab => (
           <button
             key={tab.key}
@@ -42,7 +42,7 @@ const ProfilePage: React.FC = () => {
                 : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300'
             }`}
           >
-            {tab.icon} {tab.label}
+            <span dangerouslySetInnerHTML={{ __html: tab.icon }} /> {tab.label}
           </button>
         ))}
       </div>
@@ -133,16 +133,16 @@ const ProfilePage: React.FC = () => {
       {activeTab === 'stats' && (
         <div className="grid grid-cols-2 gap-3">
           {[
-            { label: 'Rejalashtirilgan sayohatlar', value: user.tripsPlanned, icon: '<i className="fa-solid fa-map"></i>', color: 'from-blue-400 to-blue-600' },
-            { label: "Tashrif buyurilgan joylar", value: user.destinationsVisited, icon: '<i className="fa-solid fa-location-dot"></i>', color: 'from-emerald-400 to-emerald-600' },
-            { label: 'Bajarilgan missiyalar', value: completedMissions, icon: '<i className="fa-solid fa-trophy"></i>', color: 'from-amber-400 to-amber-600' },
-            { label: 'Jami missiyalar', value: totalMissions, icon: '<i className="fa-solid fa-clipboard"></i>', color: 'from-purple-400 to-purple-600' },
-            { label: 'Inventar buyumlari', value: inventory.length, icon: '<i className="fa-solid fa-backpack"></i>', color: 'from-pink-400 to-pink-600' },
-            { label: 'Daraja', value: user.level, icon: '<i className="fa-solid fa-star"></i>', color: 'from-yellow-400 to-yellow-600' },
+            { label: 'Rejalashtirilgan sayohatlar', value: user.tripsPlanned, icon: '<i class="fa-solid fa-map"></i>', color: 'from-blue-400 to-blue-600' },
+            { label: "Tashrif buyurilgan joylar", value: user.destinationsVisited, icon: '<i class="fa-solid fa-location-dot"></i>', color: 'from-emerald-400 to-emerald-600' },
+            { label: 'Bajarilgan missiyalar', value: completedMissions, icon: '<i class="fa-solid fa-trophy"></i>', color: 'from-amber-400 to-amber-600' },
+            { label: 'Jami missiyalar', value: totalMissions, icon: '<i class="fa-solid fa-clipboard"></i>', color: 'from-purple-400 to-purple-600' },
+            { label: 'Inventar buyumlari', value: inventory.length, icon: '<i class="fa-solid fa-backpack"></i>', color: 'from-pink-400 to-pink-600' },
+            { label: 'Daraja', value: user.level, icon: '<i class="fa-solid fa-star"></i>', color: 'from-yellow-400 to-yellow-600' },
           ].map(stat => (
             <div key={stat.label} className="bg-white dark:bg-gray-800 rounded-2xl p-4 shadow-sm border border-gray-100 dark:border-gray-700">
               <div className={`w-10 h-10 rounded-xl bg-gradient-to-br ${stat.color} flex items-center justify-center text-lg shadow-sm mb-3`}>
-                {stat.icon}
+                <span dangerouslySetInnerHTML={{ __html: stat.icon }} />
               </div>
               <p className="text-2xl font-bold text-gray-800 dark:text-white">{stat.value}</p>
               <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">{stat.label}</p>

@@ -55,12 +55,22 @@ export const LoginForm: React.FC<LoginFormProps> = ({ onLogin, onRegisterClick, 
   const handleGoogleAccountSelect = (account: typeof GOOGLE_ACCOUNTS[0]) => {
     setIsLoading(true)
     setTimeout(() => {
-      setIsLoading(false)
-      setShowGoogleModal(false)
-      if (onGoogleLogin) {
-        onGoogleLogin(account.email, account.name, account.avatar)
+      // localStorage dagi ro'yxatdan o'tgan foydalanuvchilarni tekshirish
+      const users = JSON.parse(localStorage.getItem('xazna_users') || '[]')
+      const found = users.find((u: any) => u.email === account.email)
+      
+      if (found) {
+        setIsLoading(false)
+        setShowGoogleModal(false)
+        if (onGoogleLogin) {
+          onGoogleLogin(account.email, found.name || account.name, (found.name || account.name).charAt(0).toUpperCase())
+        }
+      } else {
+        setIsLoading(false)
+        // Email topilmadi — xatolik ko'rsatish
+        setOtherErrors({ email: `"${account.email}" ro'yxatdan o'tmagan. Avval ro'yxatdan o'ting.` })
       }
-    }, 1200)
+    }, 800)
   }
 
   const handleOtherGoogleSubmit = async (e: React.FormEvent) => {
@@ -84,17 +94,25 @@ export const LoginForm: React.FC<LoginFormProps> = ({ onLogin, onRegisterClick, 
 
     setIsLoading(true)
     setTimeout(() => {
-      setIsLoading(false)
-      // Qat'iy tekshiruv simulyatsiyasi: agar parol 'google123' yoki 'password123' bo'lsa kiradi
-      if (otherPassword === 'google123' || otherPassword === 'password123' || otherPassword.length >= 8) {
+      // localStorage dagi ro'yxatdan o'tgan foydalanuvchilarni tekshirish
+      const users = JSON.parse(localStorage.getItem('xazna_users') || '[]')
+      const found = users.find((u: any) => u.email === otherEmail.trim())
+      
+      if (found && found.password === otherPassword) {
+        setIsLoading(false)
         setShowGoogleModal(false)
         if (onGoogleLogin) {
           const nameFromEmail = otherEmail.split('@')[0]
           const formattedName = nameFromEmail.charAt(0).toUpperCase() + nameFromEmail.slice(1)
-          onGoogleLogin(otherEmail.trim(), formattedName, formattedName.charAt(0))
+          onGoogleLogin(otherEmail.trim(), found.name || formattedName, (found.name || formattedName).charAt(0))
         }
+      } else if (found && found.password !== otherPassword) {
+        setIsLoading(false)
+        setOtherErrors({ password: 'Google hisob paroli noto\'g\'ri' })
       } else {
-        setOtherErrors({ password: 'Google hisob paroli noto\'g\'ri yoki xavfsizlik talablariga javob bermaydi' })
+        // Email topilmadi — ro'yxatdan o'tmagan
+        setIsLoading(false)
+        setOtherErrors({ email: 'Bu Google hisob ro\'yxatdan o\'tmagan. Avval ro\'yxatdan o\'ting.' })
       }
     }, 1500)
   }

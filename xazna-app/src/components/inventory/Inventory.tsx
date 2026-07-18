@@ -66,7 +66,7 @@ const Inventory: React.FC = () => {
                 : 'bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
             }`}
           >
-            {cat === 'all' ? `<i className="fa-solid fa-clipboard"></i> Barchasi (${inventory.length})` : `${SHOP_ITEM_CATEGORY_LABELS[cat]}`}
+            {cat === 'all' ? <span dangerouslySetInnerHTML={{ __html: `<i class="fa-solid fa-clipboard"></i> Barchasi (${inventory.length})` }} /> : <span dangerouslySetInnerHTML={{ __html: SHOP_ITEM_CATEGORY_LABELS[cat] }} />}
           </button>
         ))}
       </div>
@@ -83,8 +83,11 @@ const Inventory: React.FC = () => {
             }`}
           >
             <div className="flex items-start gap-3">
-              <div className="w-12 h-12 rounded-xl bg-gray-100 dark:bg-gray-700 flex items-center justify-center text-2xl flex-shrink-0">
-                {item.icon}
+              <div className="w-12 h-12 rounded-xl bg-gray-100 dark:bg-gray-700 flex items-center justify-center text-2xl flex-shrink-0 relative overflow-hidden">
+                {item.image && (
+                  <img src={item.image} alt="" className="absolute inset-0 w-full h-full object-cover opacity-60" loading="lazy" />
+                )}
+                <span className="relative z-10" dangerouslySetInnerHTML={{ __html: item.icon }} />
               </div>
               <div className="flex-1 min-w-0">
                 <h3 className="font-semibold text-gray-800 dark:text-white text-sm truncate">{item.name}</h3>
@@ -120,8 +123,11 @@ const Inventory: React.FC = () => {
             className="bg-white dark:bg-gray-800 rounded-3xl p-6 max-w-sm w-full shadow-2xl animate-scale-in"
             onClick={e => e.stopPropagation()}
           >
-            <div className="w-16 h-16 rounded-2xl bg-gray-100 dark:bg-gray-700 flex items-center justify-center text-3xl mx-auto mb-4">
-              {selectedItem.icon}
+            <div className="w-16 h-16 rounded-2xl bg-gray-100 dark:bg-gray-700 flex items-center justify-center text-3xl mx-auto mb-4 relative overflow-hidden">
+              {selectedItem.image && (
+                <img src={selectedItem.image} alt="" className="absolute inset-0 w-full h-full object-cover opacity-50" loading="lazy" />
+              )}
+              <span className="relative z-10" dangerouslySetInnerHTML={{ __html: selectedItem.icon }} />
             </div>
             <h3 className="text-xl font-bold text-gray-800 dark:text-white text-center mb-2">{selectedItem.name}</h3>
             <p className="text-sm text-gray-500 dark:text-gray-400 text-center mb-4">{selectedItem.description}</p>

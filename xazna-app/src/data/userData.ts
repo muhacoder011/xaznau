@@ -9,7 +9,7 @@ export const INITIAL_USER: AppUser = {
   level: 1,
   experience: 0,
   experienceToNextLevel: 200,
-  coins: 100, // Yangi foydalanuvchiga bonus sifatida 100 tanga
+  coins: 0,
   tripsPlanned: 0,
   destinationsVisited: 0,
   joinedAt: new Date(),

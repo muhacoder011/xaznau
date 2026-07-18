@@ -5,36 +5,16 @@ interface Props {
   message: ChatMessageType
 }
 
-// Matndagi **bold** va _italic_ ni render qilish
-function renderText(text: string): React.ReactNode[] {
-  const parts: React.ReactNode[] = []
-  const regex = /(\*\*(.+?)\*\*|_(.+?)_)/g
-  let lastIndex = 0
-  let match: RegExpExecArray | null
+// Matndagi **bold**, _italic_ va HTML <i> taglarini render qilish
+function renderText(text: string): string {
+  // Convert **bold** to <strong>
+  // Convert _italic_ to <em>
+  // HTML <i> tags are already in the text and will be rendered by dangerouslySetInnerHTML
+  let html = text
+    .replace(/\*\*(.+?)\*\*/g, '<strong class="font-bold text-gray-900 dark:text-white">$1</strong>')
+    .replace(/_(.+?)_/g, '<em class="italic text-gray-600 dark:text-gray-300">$1</em>')
 
-  while ((match = regex.exec(text)) !== null) {
-    // Oddiy tekst
-    if (match.index > lastIndex) {
-      parts.push(text.slice(lastIndex, match.index))
-    }
-
-    if (match[2]) {
-      // **bold**
-      parts.push(<strong key={match.index} className="font-bold text-gray-900 dark:text-white">{match[2]}</strong>)
-    } else if (match[3]) {
-      // _italic_
-      parts.push(<em key={match.index} className="italic text-gray-600 dark:text-gray-300">{match[3]}</em>)
-    }
-
-    lastIndex = match.index + match[0].length
-  }
-
-  // Qolgan tekst
-  if (lastIndex < text.length) {
-    parts.push(text.slice(lastIndex))
-  }
-
-  return parts.length > 0 ? parts : [text]
+  return html
 }
 
 function formatTimestamp(date: Date): string {
@@ -57,11 +37,13 @@ export const ChatMessage: React.FC<Props> = ({ message }) => {
             : 'bg-gradient-to-br from-amber-400 to-amber-600 text-white'
         }`}
       >
-        {isBot ? '<i className="fa-solid fa-robot"></i>' : '<i className="fa-solid fa-user"></i>'}
+        <span dangerouslySetInnerHTML={{
+          __html: isBot ? '<i class="fa-solid fa-robot"></i>' : '<i class="fa-solid fa-user"></i>'
+        }} />
       </div>
 
       {/* Content */}
-      <div className={`flex flex-col ${isBot ? '' : 'items-end'} max-w-[88%]`}>
+      <div className={`flex flex-col ${isBot ? '' : 'items-end'} max-w-[88%] lg:max-w-[75%]`}>
         <div
           className={`relative px-4 py-3 shadow-sm ${
             isBot
@@ -69,9 +51,10 @@ export const ChatMessage: React.FC<Props> = ({ message }) => {
               : 'chat-bubble-user'
           }`}
         >
-          <p className="text-[15px] leading-relaxed whitespace-pre-wrap">
-            {renderText(message.text)}
-          </p>
+          <p
+            className="text-[15px] leading-relaxed whitespace-pre-wrap"
+            dangerouslySetInnerHTML={{ __html: renderText(message.text) }}
+          />
         </div>
         {/* Vaqt */}
         <span className="text-[10px] text-gray-400 mt-1 px-1 opacity-0 group-hover:opacity-100 transition-opacity">

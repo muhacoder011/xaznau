@@ -3,9 +3,9 @@ import { useAppStore } from '../../hooks/useAppStore'
 import type { Mission, MissionType } from '../../types'
 
 const MISSIONS_TYPE_LABELS: Record<MissionType, { label: string; icon: string }> = {
-  daily: { label: 'Kunlik', icon: '<i className="fa-solid fa-calendar"></i>' },
-  weekly: { label: 'Haftalik', icon: '<i className="fa-solid fa-calendar-check"></i>' },
-  achievement: { label: 'Yutuqlar', icon: '<i className="fa-solid fa-trophy"></i>' },
+  daily: { label: 'Kunlik', icon: '<i class="fa-solid fa-calendar"></i>' },
+  weekly: { label: 'Haftalik', icon: '<i class="fa-solid fa-calendar-check"></i>' },
+  achievement: { label: 'Yutuqlar', icon: '<i class="fa-solid fa-trophy"></i>' },
 }
 
 const MISSIONS_TYPE_COLORS: Record<MissionType, string> = {
@@ -15,9 +15,9 @@ const MISSIONS_TYPE_COLORS: Record<MissionType, string> = {
 }
 
 const DIFFICULTY_BADGES: Record<string, { label: string; color: string; icon: string }> = {
-  easy: { label: 'Oson', color: 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-300', icon: '<i className="fa-solid fa-circle"></i>' },
-  medium: { label: "O'rtacha", color: 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-300', icon: '<i className="fa-solid fa-circle"></i>' },
-  hard: { label: 'Qiyin', color: 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-300', icon: '<i className="fa-solid fa-circle"></i>' },
+  easy: { label: 'Oson', color: 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-300', icon: '<i class="fa-solid fa-circle"></i>' },
+  medium: { label: "O'rtacha", color: 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-300', icon: '<i class="fa-solid fa-circle"></i>' },
+  hard: { label: 'Qiyin', color: 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-300', icon: '<i class="fa-solid fa-circle"></i>' },
 }
 
 // Countdown timer hook
@@ -69,7 +69,7 @@ const MissionCard: React.FC<{
           <div className={`w-14 h-14 rounded-2xl bg-gradient-to-br ${MISSIONS_TYPE_COLORS[mission.type]} flex items-center justify-center flex-shrink-0 shadow-md relative ${
             mission.status === 'completed' ? 'animate-pulse' : ''
           }`}>
-            <span className="text-2xl">{mission.icon}</span>
+            <span className="text-2xl" dangerouslySetInnerHTML={{ __html: mission.icon }} />
             {mission.status === 'completed' && (
               <span className="absolute -top-1 -right-1 text-sm"><i className="fa-solid fa-wand-magic-sparkles"></i></span>
             )}
@@ -80,7 +80,7 @@ const MissionCard: React.FC<{
             <div className="flex items-center gap-2 flex-wrap">
               <h3 className="font-bold text-gray-800 dark:text-white">{mission.title}</h3>
               <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${DIFFICULTY_BADGES[mission.difficulty].color}`}>
-                {DIFFICULTY_BADGES[mission.difficulty].icon} {DIFFICULTY_BADGES[mission.difficulty].label}
+                <span dangerouslySetInnerHTML={{ __html: DIFFICULTY_BADGES[mission.difficulty].icon }} /> {DIFFICULTY_BADGES[mission.difficulty].label}
               </span>
               {mission.status === 'completed' && (
                 <span className="text-xs px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300 font-medium">
@@ -174,13 +174,13 @@ const MissionCard: React.FC<{
               <div className="bg-gray-50 dark:bg-gray-700/50 rounded-xl p-3 text-center">
                 <p className="text-xs text-gray-400 dark:text-gray-500">Turi</p>
                 <p className="font-semibold text-gray-700 dark:text-gray-200 text-sm mt-0.5">
-                  {MISSIONS_TYPE_LABELS[mission.type].icon} {MISSIONS_TYPE_LABELS[mission.type].label}
+                  <span dangerouslySetInnerHTML={{ __html: MISSIONS_TYPE_LABELS[mission.type].icon }} /> {MISSIONS_TYPE_LABELS[mission.type].label}
                 </p>
               </div>
               <div className="bg-gray-50 dark:bg-gray-700/50 rounded-xl p-3 text-center">
                 <p className="text-xs text-gray-400 dark:text-gray-500">Qiyinlik</p>
                 <p className="font-semibold text-gray-700 dark:text-gray-200 text-sm mt-0.5">
-                  {DIFFICULTY_BADGES[mission.difficulty].icon} {DIFFICULTY_BADGES[mission.difficulty].label}
+                  <span dangerouslySetInnerHTML={{ __html: DIFFICULTY_BADGES[mission.difficulty].icon }} /> {DIFFICULTY_BADGES[mission.difficulty].label}
                 </p>
               </div>
               <div className="bg-gray-50 dark:bg-gray-700/50 rounded-xl p-3 text-center">
@@ -346,7 +346,7 @@ const Missions: React.FC = () => {
                 : 'bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
             }`}
           >
-            {type === 'all' ? '<i className="fa-solid fa-clipboard"></i> Barchasi' : `${MISSIONS_TYPE_LABELS[type].icon} ${MISSIONS_TYPE_LABELS[type].label}`}
+            {type === 'all' ? <span dangerouslySetInnerHTML={{ __html: '<i class="fa-solid fa-clipboard"></i> Barchasi' }} /> : <span dangerouslySetInnerHTML={{ __html: `${MISSIONS_TYPE_LABELS[type].icon} ${MISSIONS_TYPE_LABELS[type].label}` }} />}
             {type !== 'all' && missionCounts[type] && (
               <span className={`ml-1.5 px-1.5 py-0.5 text-xs rounded-full ${
                 selectedType === type
@@ -361,7 +361,7 @@ const Missions: React.FC = () => {
       </div>
 
       {/* Missiyalar */}
-      <div className="space-y-3">
+      <div className="space-y-3 lg:grid lg:grid-cols-2 lg:gap-3 lg:space-y-0">
         {filteredMissions.map((mission, index) => (
           <div
             key={mission.id}

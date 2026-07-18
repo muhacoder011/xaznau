@@ -47,17 +47,17 @@
             --ease: cubic-bezier(.25, .1, .25, 1);
             --ease-spring: cubic-bezier(.34, 1.56, .64, 1);
             --ease-smooth: cubic-bezier(.4, 0, .2, 1);
-            --shadow-sm: 0 1px 3px rgba(0,0,0,0.04), 0 1px 2px rgba(0,0,0,0.03);
-            --shadow-md: 0 4px 16px rgba(0,0,0,0.06), 0 1px 4px rgba(0,0,0,0.04);
-            --shadow-lg: 0 12px 40px rgba(0,0,0,0.08), 0 2px 8px rgba(0,0,0,0.04);
-            --shadow-xl: 0 20px 60px rgba(0,0,0,0.1), 0 4px 16px rgba(0,0,0,0.04);
+            --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.04), 0 1px 2px rgba(0, 0, 0, 0.03);
+            --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.06), 0 1px 4px rgba(0, 0, 0, 0.04);
+            --shadow-lg: 0 12px 40px rgba(0, 0, 0, 0.08), 0 2px 8px rgba(0, 0, 0, 0.04);
+            --shadow-xl: 0 20px 60px rgba(0, 0, 0, 0.1), 0 4px 16px rgba(0, 0, 0, 0.04);
             --grad-primary: linear-gradient(135deg, #1a7a4a, #3a8d7a);
             --grad-accent: linear-gradient(135deg, #c8a245, #1a7a4a);
             --grad-hero: var(--grad-accent);
             --grad-surface: linear-gradient(135deg, #f5f3ef, #f0ede8);
-            --grad-mesh: radial-gradient(at 20% 80%, rgba(26,122,74,0.06) 0%, transparent 50%),
-                          radial-gradient(at 80% 20%, rgba(200,162,69,0.05) 0%, transparent 50%),
-                          radial-gradient(at 50% 50%, rgba(58,141,122,0.03) 0%, transparent 50%);
+            --grad-mesh: radial-gradient(at 20% 80%, rgba(26, 122, 74, 0.06) 0%, transparent 50%),
+                radial-gradient(at 80% 20%, rgba(200, 162, 69, 0.05) 0%, transparent 50%),
+                radial-gradient(at 50% 50%, rgba(58, 141, 122, 0.03) 0%, transparent 50%);
         }
 
         html[data-theme="dark"] {
@@ -81,10 +81,10 @@
             --line: rgba(232, 236, 232, 0.08);
             --line-light: rgba(232, 236, 232, 0.04);
             --danger-glow: rgba(200, 90, 50, 0.15);
-            --shadow-sm: 0 1px 2px rgba(0,0,0,0.2);
-            --shadow-md: 0 4px 12px rgba(0,0,0,0.25), 0 1px 3px rgba(0,0,0,0.2);
-            --shadow-lg: 0 8px 30px rgba(0,0,0,0.3), 0 2px 8px rgba(0,0,0,0.2);
-            --shadow-xl: 0 16px 50px rgba(0,0,0,0.35), 0 4px 12px rgba(0,0,0,0.2);
+            --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.2);
+            --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.25), 0 1px 3px rgba(0, 0, 0, 0.2);
+            --shadow-lg: 0 8px 30px rgba(0, 0, 0, 0.3), 0 2px 8px rgba(0, 0, 0, 0.2);
+            --shadow-xl: 0 16px 50px rgba(0, 0, 0, 0.35), 0 4px 12px rgba(0, 0, 0, 0.2);
             --grad-primary: linear-gradient(135deg, #3db87a, #4aaa8a);
             --grad-accent: linear-gradient(135deg, #d4aa4a, #3db87a);
             --grad-hero: var(--grad-accent);
@@ -227,6 +227,7 @@
             position: relative;
             z-index: 1;
         }
+
         .topbar::after {
             content: '';
             position: absolute;
@@ -401,6 +402,7 @@
             box-shadow: 0 -4px 20px var(--shadow-sm);
             justify-content: space-around;
         }
+
         .bottom-nav::before {
             content: '';
             position: absolute;
@@ -1254,8 +1256,9 @@
         /* City selection chips in chat — gradient cards */
         .city-chip:hover {
             transform: scale(1.05) !important;
-            box-shadow: 0 6px 20px rgba(0,0,0,0.25) !important;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25) !important;
         }
+
         .city-chip:active {
             transform: scale(0.95) !important;
         }
@@ -2069,6 +2072,7 @@
             will-change: transform;
             box-shadow: var(--shadow-sm);
         }
+
         .shop-card:hover {
             box-shadow: var(--shadow-lg);
             border-color: var(--green-glow);
@@ -2412,8 +2416,13 @@
         }
 
         @keyframes glass-bg-shift {
-            0% { background-position: 0% 0%; }
-            100% { background-position: 100% 100%; }
+            0% {
+                background-position: 0% 0%;
+            }
+
+            100% {
+                background-position: 100% 100%;
+            }
         }
 
         /* Dark variant for glass theme when dark mode is active */
@@ -4662,10 +4671,12 @@
             padding: 16px 20px 0;
             animation: fadeIn 0.6s ease both;
         }
+
         .home-greeting-sm {
             font-size: 13px;
             color: var(--ink-soft);
         }
+
         .home-top-actions {
             display: flex;
             gap: 6px;
@@ -4675,14 +4686,17 @@
             padding: 12px 20px 0;
             animation: fadeInUp 0.7s ease both;
         }
+
         .home-subtitle {
             font-size: 14px;
             color: var(--ink-soft);
             margin-bottom: 4px;
         }
+
         .home-subtitle i {
             color: var(--gold);
         }
+
         .home-title {
             font-size: 26px;
             font-weight: 800;
@@ -4690,6 +4704,7 @@
             color: var(--ink);
             max-width: 300px;
         }
+
         .home-title span {
             background: var(--grad-hero);
             -webkit-background-clip: text;
@@ -4712,12 +4727,14 @@
             animation: fadeInUp 0.7s ease 0.1s both;
             box-shadow: var(--shadow-sm);
         }
+
         .search-wrapper:hover,
         .search-wrapper:focus-within {
             border-color: var(--green);
             box-shadow: var(--shadow-md), 0 0 0 3px var(--green-glow);
             transform: translateY(-1px);
         }
+
         .search-wrapper input {
             flex: 1;
             background: none;
@@ -4727,13 +4744,16 @@
             color: var(--ink);
             pointer-events: none;
         }
+
         .search-wrapper input::placeholder {
             color: var(--ink-soft);
         }
+
         .search-wrapper .fa-search {
             color: var(--ink-soft);
             font-size: 15px;
         }
+
         .search-ai-btn {
             background: linear-gradient(135deg, var(--gold), #e6b458);
             border: none;
@@ -4749,9 +4769,11 @@
             transition: transform 0.2s;
             white-space: nowrap;
         }
+
         .search-ai-btn:hover {
             transform: scale(1.05);
         }
+
         .search-ai-btn i {
             font-size: 13px;
         }
@@ -4761,6 +4783,7 @@
             padding: 16px 20px 0;
             animation: fadeInUp 0.7s ease 0.2s both;
         }
+
         .suggestion-label {
             font-size: 12px;
             font-weight: 600;
@@ -4769,6 +4792,7 @@
             letter-spacing: 0.5px;
             margin-bottom: 10px;
         }
+
         .suggestion-chips {
             display: flex;
             gap: 8px;
@@ -4777,9 +4801,11 @@
             -webkit-overflow-scrolling: touch;
             scrollbar-width: none;
         }
+
         .suggestion-chips::-webkit-scrollbar {
             display: none;
         }
+
         .suggestion-chip {
             background: var(--surface-2);
             border: 1px solid var(--line);
@@ -4792,11 +4818,13 @@
             transition: all 0.25s ease;
             flex-shrink: 0;
         }
+
         .suggestion-chip:hover {
             background: var(--surface-3);
             border-color: var(--gold);
             transform: translateY(-2px);
         }
+
         .suggestion-chip:active {
             transform: scale(0.96);
         }
@@ -4806,6 +4834,7 @@
             padding: 20px 20px 100px;
             animation: fadeInUp 0.7s ease 0.3s both;
         }
+
         .explore-title {
             font-size: 18px;
             font-weight: 800;
@@ -4819,6 +4848,7 @@
             grid-template-columns: 1fr 1fr;
             gap: 12px;
         }
+
         .city-cards-modern .city-card {
             border-radius: 16px;
             aspect-ratio: 1/1;
@@ -4831,25 +4861,30 @@
             cursor: pointer;
             transition: all 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
         }
+
         .city-cards-modern .city-card:hover {
             transform: translateY(-6px) scale(1.02);
             box-shadow: 0 12px 30px rgba(0, 0, 0, 0.2);
         }
+
         .city-cards-modern .city-card:active {
             transform: scale(0.96);
         }
+
         .city-cards-modern .city-card .cname {
             font-size: 18px;
             font-weight: 800;
             color: #fff;
             text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
         }
+
         .city-cards-modern .city-card .ccount {
             font-size: 11px;
             color: rgba(255, 255, 255, 0.8);
             margin-top: 2px;
         }
-        .city-cards-modern .city-card > div:first-child {
+
+        .city-cards-modern .city-card>div:first-child {
             position: relative;
             z-index: 2;
         }
@@ -4858,18 +4893,23 @@
         .city-cards-modern .city-card:nth-child(1) {
             animation: cardEntrance 0.5s ease 0.1s both;
         }
+
         .city-cards-modern .city-card:nth-child(2) {
             animation: cardEntrance 0.5s ease 0.15s both;
         }
+
         .city-cards-modern .city-card:nth-child(3) {
             animation: cardEntrance 0.5s ease 0.2s both;
         }
+
         .city-cards-modern .city-card:nth-child(4) {
             animation: cardEntrance 0.5s ease 0.25s both;
         }
+
         .city-cards-modern .city-card:nth-child(5) {
             animation: cardEntrance 0.5s ease 0.3s both;
         }
+
         .city-cards-modern .city-card:nth-child(6) {
             animation: cardEntrance 0.5s ease 0.35s both;
         }
@@ -4889,51 +4929,64 @@
                 opacity: 0;
                 transform: translateY(20px);
             }
+
             to {
                 opacity: 1;
                 transform: translateY(0);
             }
         }
+
         @keyframes fadeIn {
             from {
                 opacity: 0;
             }
+
             to {
                 opacity: 1;
             }
         }
+
         @keyframes cardEntrance {
             from {
                 opacity: 0;
                 transform: translateY(30px) scale(0.95);
             }
+
             to {
                 opacity: 1;
                 transform: translateY(0) scale(1);
             }
         }
+
         @keyframes shimmer {
             0% {
                 background-position: -200% 0;
             }
+
             100% {
                 background-position: 200% 0;
             }
         }
+
         @keyframes float {
+
             0%,
             100% {
                 transform: translateY(0);
             }
+
             50% {
                 transform: translateY(-6px);
             }
         }
+
         @keyframes pulse {
+
             0%,
             100% {
                 transform: scale(1);
             }
+
             50% {
                 transform: scale(1.05);
             }
@@ -4949,6 +5002,7 @@
             border-radius: 0 0 4px 4px;
             transition: left 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
         }
+
         .bottom-nav button {
             flex: 1;
             display: flex;
@@ -4965,20 +5019,25 @@
             transition: all 0.25s ease;
             position: relative;
         }
+
         .bottom-nav button.active {
             color: var(--gold);
         }
+
         .bottom-nav button .ic {
             font-size: 20px;
             transition: all 0.3s ease;
         }
+
         .bottom-nav button.active .ic {
             transform: translateY(-2px);
         }
+
         .bottom-nav button .nav-label {
             font-size: 9px;
             letter-spacing: 0.3px;
         }
+
         .bottom-nav button.active .ic i {
             animation: glow-pulse 2s ease-in-out infinite;
             filter: drop-shadow(0 0 6px var(--gold));
@@ -4993,6 +5052,7 @@
             -webkit-text-fill-color: transparent;
             background-clip: text;
         }
+
         .grad-text-primary {
             background: var(--grad-primary);
             -webkit-background-clip: text;
@@ -5008,6 +5068,7 @@
             box-shadow: var(--shadow-md);
             transition: transform 0.3s var(--ease), box-shadow 0.3s ease, border-color 0.3s ease;
         }
+
         .card-elegant:hover {
             transform: translateY(-2px);
             box-shadow: var(--shadow-lg);
@@ -5019,6 +5080,7 @@
             position: relative;
             overflow: hidden;
         }
+
         .card-glow::before {
             content: '';
             position: absolute;
@@ -5031,6 +5093,7 @@
             pointer-events: none;
             transition: opacity 0.5s ease;
         }
+
         .card-glow:hover::before {
             opacity: 1;
         }
@@ -5039,6 +5102,7 @@
         .border-glow {
             position: relative;
         }
+
         .border-glow::after {
             content: '';
             position: absolute;
@@ -5049,6 +5113,7 @@
             opacity: 0;
             transition: opacity 0.4s ease;
         }
+
         .border-glow:hover::after {
             opacity: 0.5;
         }
@@ -5061,6 +5126,7 @@
             border: 1px solid rgba(255, 255, 255, 0.3);
             box-shadow: var(--shadow-md);
         }
+
         html[data-theme="dark"] .card-glass {
             background: rgba(22, 36, 29, 0.6);
             border-color: rgba(255, 255, 255, 0.08);
@@ -5070,6 +5136,7 @@
         .dot-pattern {
             position: relative;
         }
+
         .dot-pattern::before {
             content: '';
             position: absolute;
@@ -5107,6 +5174,7 @@
             gap: 4px;
             box-shadow: 0 2px 8px var(--green-glow);
         }
+
         .badge-gradient.accent {
             background: var(--grad-accent);
             box-shadow: 0 2px 8px var(--gold-glow);
@@ -5125,6 +5193,7 @@
             border: 1px solid var(--line);
             transition: all 0.2s ease;
         }
+
         .tag-soft:hover {
             border-color: var(--green-glow);
             color: var(--green);
@@ -5139,6 +5208,7 @@
             align-items: center;
             gap: 8px;
         }
+
         .section-title::after {
             content: '';
             flex: 1;
@@ -5159,76 +5229,166 @@
             background-clip: text;
             animation: grad-text-shift 4s ease-in-out infinite;
         }
+
         @keyframes grad-text-shift {
-            0%   { background-position: 0% 50%; }
-            50%  { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
+            0% {
+                background-position: 0% 50%;
+            }
+
+            50% {
+                background-position: 100% 50%;
+            }
+
+            100% {
+                background-position: 0% 50%;
+            }
         }
 
         /* 2. Gentle float — premium subtle motion */
         .float-gentle {
             animation: float-gentle 3s ease-in-out infinite;
         }
+
         @keyframes float-gentle {
-            0%, 100% { transform: translateY(0); }
-            50%      { transform: translateY(-6px); }
+
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-6px);
+            }
         }
 
         /* 3. Subtle glow pulse */
         .glow-pulse {
             animation: glow-pulse 2.5s ease-in-out infinite;
         }
+
         @keyframes glow-pulse {
-            0%, 100% { box-shadow: 0 0 6px var(--green-glow); }
-            50%      { box-shadow: 0 0 16px var(--green-glow), 0 0 24px var(--green-glow); }
+
+            0%,
+            100% {
+                box-shadow: 0 0 6px var(--green-glow);
+            }
+
+            50% {
+                box-shadow: 0 0 16px var(--green-glow), 0 0 24px var(--green-glow);
+            }
         }
 
         /* 4. Slide-in from left/right/up */
         .slide-left {
             animation: slide-left 0.5s var(--ease) both;
         }
+
         @keyframes slide-left {
-            from { opacity: 0; transform: translateX(24px); }
-            to   { opacity: 1; transform: translateX(0); }
+            from {
+                opacity: 0;
+                transform: translateX(24px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
         }
+
         .slide-right {
             animation: slide-right 0.5s var(--ease) both;
         }
+
         @keyframes slide-right {
-            from { opacity: 0; transform: translateX(-24px); }
-            to   { opacity: 1; transform: translateX(0); }
+            from {
+                opacity: 0;
+                transform: translateX(-24px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
         }
+
         .slide-up {
             animation: slide-up 0.5s var(--ease) both;
         }
+
         @keyframes slide-up {
-            from { opacity: 0; transform: translateY(20px); }
-            to   { opacity: 1; transform: translateY(0); }
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         /* 5. Fade-in-up staggered — for lists, grids */
         .fade-up {
             animation: fade-up 0.6s ease both;
         }
+
         @keyframes fade-up {
-            from { opacity: 0; transform: translateY(16px); }
-            to   { opacity: 1; transform: translateY(0); }
+            from {
+                opacity: 0;
+                transform: translateY(16px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
-        .fade-up:nth-child(1) { animation-delay: 0.04s; }
-        .fade-up:nth-child(2) { animation-delay: 0.10s; }
-        .fade-up:nth-child(3) { animation-delay: 0.16s; }
-        .fade-up:nth-child(4) { animation-delay: 0.22s; }
-        .fade-up:nth-child(5) { animation-delay: 0.28s; }
-        .fade-up:nth-child(6) { animation-delay: 0.34s; }
-        .fade-up:nth-child(7) { animation-delay: 0.40s; }
-        .fade-up:nth-child(8) { animation-delay: 0.46s; }
-        .fade-up:nth-child(9) { animation-delay: 0.52s; }
-        .fade-up:nth-child(10){ animation-delay: 0.58s; }
+
+        .fade-up:nth-child(1) {
+            animation-delay: 0.04s;
+        }
+
+        .fade-up:nth-child(2) {
+            animation-delay: 0.10s;
+        }
+
+        .fade-up:nth-child(3) {
+            animation-delay: 0.16s;
+        }
+
+        .fade-up:nth-child(4) {
+            animation-delay: 0.22s;
+        }
+
+        .fade-up:nth-child(5) {
+            animation-delay: 0.28s;
+        }
+
+        .fade-up:nth-child(6) {
+            animation-delay: 0.34s;
+        }
+
+        .fade-up:nth-child(7) {
+            animation-delay: 0.40s;
+        }
+
+        .fade-up:nth-child(8) {
+            animation-delay: 0.46s;
+        }
+
+        .fade-up:nth-child(9) {
+            animation-delay: 0.52s;
+        }
+
+        .fade-up:nth-child(10) {
+            animation-delay: 0.58s;
+        }
 
         /* 6. Pulse ring — for premium CTAs */
         .pulse-ring {
             position: relative;
         }
+
         .pulse-ring::before {
             content: '';
             position: absolute;
@@ -5238,9 +5398,17 @@
             animation: pulse-ring 1.8s ease-out infinite;
             pointer-events: none;
         }
+
         @keyframes pulse-ring {
-            0%   { transform: scale(1); opacity: 0.5; }
-            100% { transform: scale(1.25); opacity: 0; }
+            0% {
+                transform: scale(1);
+                opacity: 0.5;
+            }
+
+            100% {
+                transform: scale(1.25);
+                opacity: 0;
+            }
         }
 
         /* 7. Shimmer sweep — loading skeleton */
@@ -5248,22 +5416,29 @@
             position: relative;
             overflow: hidden;
         }
+
         .shimmer-sweep::after {
             content: '';
             position: absolute;
-            top: 0; left: -100%;
-            width: 100%; height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.08), transparent);
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.08), transparent);
             animation: shimmer-sweep 2.2s ease-in-out infinite;
         }
+
         @keyframes shimmer-sweep {
-            to { left: 100%; }
+            to {
+                left: 100%;
+            }
         }
 
         /* 8. Ripple dot — map locations */
         .ripple-dot {
             position: relative;
         }
+
         .ripple-dot::after {
             content: '';
             position: absolute;
@@ -5272,19 +5447,31 @@
             border: 2px solid var(--gold);
             animation: ripple-dot 1.5s ease-out infinite;
         }
+
         @keyframes ripple-dot {
-            0%   { transform: scale(0.8); opacity: 0.6; }
-            100% { transform: scale(3); opacity: 0; }
+            0% {
+                transform: scale(0.8);
+                opacity: 0.6;
+            }
+
+            100% {
+                transform: scale(3);
+                opacity: 0;
+            }
         }
 
         /* 9. Image zoom on hover */
         .img-zoom {
             overflow: hidden;
         }
-        .img-zoom img, .img-zoom div {
+
+        .img-zoom img,
+        .img-zoom div {
             transition: transform 0.5s var(--ease);
         }
-        .img-zoom:hover img, .img-zoom:hover div {
+
+        .img-zoom:hover img,
+        .img-zoom:hover div {
             transform: scale(1.08);
         }
 
@@ -5292,10 +5479,12 @@
         .btn-lift {
             transition: transform 0.2s var(--ease), box-shadow 0.2s ease;
         }
+
         .btn-lift:hover {
             transform: translateY(-2px);
-            box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
         }
+
         .btn-lift:active {
             transform: scale(0.97);
         }
@@ -5312,9 +5501,17 @@
             pointer-events: none;
             animation: ambient-pulse 4s ease-in-out infinite alternate;
         }
+
         @keyframes ambient-pulse {
-            from { opacity: 0.15; transform: scale(1); }
-            to   { opacity: 0.3; transform: scale(1.05); }
+            from {
+                opacity: 0.15;
+                transform: scale(1);
+            }
+
+            to {
+                opacity: 0.3;
+                transform: scale(1.05);
+            }
         }
 
         /* 12. Scroll reveal — IntersectionObserver */
@@ -5323,6 +5520,7 @@
             transform: translateY(24px);
             transition: opacity 0.5s ease, transform 0.5s var(--ease);
         }
+
         .reveal.visible {
             opacity: 1;
             transform: translateY(0);
@@ -5333,17 +5531,22 @@
             opacity: 0;
             animation: count-in 0.5s ease forwards;
         }
+
         @keyframes count-in {
-            to { opacity: 1; }
+            to {
+                opacity: 1;
+            }
         }
 
         /* 14. Scale subtle — professional micro-interaction */
         .scale-subtle {
             transition: transform 0.2s var(--ease);
         }
+
         .scale-subtle:hover {
             transform: scale(1.03);
         }
+
         .scale-subtle:active {
             transform: scale(0.97);
         }
@@ -5352,9 +5555,15 @@
         .fade-in {
             animation: fade-in 0.4s ease both;
         }
+
         @keyframes fade-in {
-            from { opacity: 0; }
-            to   { opacity: 1; }
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
         }
     </style>
 </head>
@@ -5465,7 +5674,8 @@
             <div class="ambient-glow" style="bottom:-80px;left:-100px;opacity:0.1;animation-delay:-3s;"></div>
             <!-- Simple top bar -->
             <div class="home-topbar">
-                <div class="home-greeting-sm"><i class="fa-solid fa-hand-wave"></i> Salom, <span id="homeUserName">Sayohatchi</span></div>
+                <div class="home-greeting-sm"><i class="fa-solid fa-hand-wave"></i> Salom, <span
+                        id="homeUserName">Sayohatchi</span></div>
                 <div class="home-top-actions">
                     <button class="icon-btn" onclick="openScanner()" title="QR Skanner"><i
                             class="fa-solid fa-qrcode"></i></button>
@@ -5490,11 +5700,16 @@
             <div class="suggestion-section">
                 <div class="suggestion-label grad-text" style="font-weight:700;">Sinab ko'ring</div>
                 <div class="suggestion-chips">
-                    <button class="suggestion-chip btn-lift" onclick="startChat()"><i class="fa-solid fa-landmark"></i> Tarixiy joylar</button>
-                    <button class="suggestion-chip btn-lift" onclick="startChat()"><i class="fa-solid fa-leaf"></i> Tabiat</button>
-                    <button class="suggestion-chip btn-lift" onclick="startChat()"><i class="fa-solid fa-people-group"></i> Oilaviy</button>
-                    <button class="suggestion-chip btn-lift" onclick="startChat()"><i class="fa-solid fa-utensils"></i> Halol taomlar</button>
-                    <button class="suggestion-chip btn-lift" onclick="startChat()"><i class="fa-solid fa-wallet"></i> Arzon sayohat</button>
+                    <button class="suggestion-chip btn-lift" onclick="startChat()"><i class="fa-solid fa-landmark"></i>
+                        Tarixiy joylar</button>
+                    <button class="suggestion-chip btn-lift" onclick="startChat()"><i class="fa-solid fa-leaf"></i>
+                        Tabiat</button>
+                    <button class="suggestion-chip btn-lift" onclick="startChat()"><i
+                            class="fa-solid fa-people-group"></i> Oilaviy</button>
+                    <button class="suggestion-chip btn-lift" onclick="startChat()"><i class="fa-solid fa-utensils"></i>
+                        Halol taomlar</button>
+                    <button class="suggestion-chip btn-lift" onclick="startChat()"><i class="fa-solid fa-wallet"></i>
+                        Arzon sayohat</button>
                 </div>
             </div>
 
@@ -5506,12 +5721,15 @@
             </div>
 
             <!-- Scheduler widget (compact) -->
-            <div class="home-scheduler-widget card-elegant" id="homeSchedulerWidget" onclick="goTab('scheduler')" style="padding:16px;margin:0 20px 20px;cursor:pointer;animation:cardEntrance 0.5s ease 0.4s both;">
+            <div class="home-scheduler-widget card-elegant" id="homeSchedulerWidget" onclick="goTab('scheduler')"
+                style="padding:16px;margin:0 20px 20px;cursor:pointer;animation:cardEntrance 0.5s ease 0.4s both;">
                 <div style="display:flex;align-items:center;gap:12px;">
                     <div style="font-size:28px;" id="homeSchedulerIcon"><i class="fa-solid fa-robot"></i></div>
                     <div style="flex:1;">
-                        <div style="font-size:13px;font-weight:700;"><i class="fa-solid fa-bullseye"></i> Kunlik Missiya</div>
-                        <div id="homeSchedulerPreview" style="font-size:12px;color:var(--ink-soft);margin-top:2px;">Bugungi vazifalarni ko'rish</div>
+                        <div style="font-size:13px;font-weight:700;"><i class="fa-solid fa-bullseye"></i> Kunlik Missiya
+                        </div>
+                        <div id="homeSchedulerPreview" style="font-size:12px;color:var(--ink-soft);margin-top:2px;">
+                            Bugungi vazifalarni ko'rish</div>
                     </div>
                     <span style="font-size:16px;">›</span>
                 </div>
@@ -5684,20 +5902,7 @@
                 <button class="icon-btn" onclick="goHome()"><i class="fa-solid fa-house"></i></button>
             </div>
 
-            <div id="adminLogin">
-                <div style="font-size:13px;color:var(--ink-soft);margin-bottom:15px;text-align:center;padding:10px;background:var(--surface-2);border-radius:12px;">
-                    <i class="fa-solid fa-shield-halved"></i> 
-                    Admin panelga kirish uchun backend autentifikatsiyadan o'ting
-                </div>
-                <input id="adminUser" placeholder="Login" data-tr="admin_login"
-                    style="width:100%;padding:15px;margin-bottom:15px;border-radius:12px;">
-                <input id="adminPass" type="password" placeholder="Parol" data-tr="admin_pass"
-                    style="width:100%;padding:15px;margin-bottom:15px;border-radius:12px;">
-                <button class="cta-btn ripple-btn" onclick="adminLogin()" data-tr="admin_enter">
-                    Kirish
-                </button>
-                <div id="adminLoginError" style="display:none;margin-top:10px;padding:10px;background:var(--danger-glow);border-radius:10px;text-align:center;font-size:13px;color:var(--danger);"></div>
-            </div>
+            <div id="adminLogin"></div>
 
             <div id="adminDashboard" style="display:none;">
                 <h3 data-tr="admin_add_city"><i class="fa-solid fa-location-dot"></i> Shahar qo'shish</h3>
@@ -5719,14 +5924,16 @@
                 </select>
                 <input id="placeName" placeholder="Joy nomi" data-tr="admin_place_name"
                     style="width:100%;padding:12px;margin:10px 0;">
-                <div id="imageUploadArea" onclick="document.getElementById('placeImage').click()" 
+                <div id="imageUploadArea" onclick="document.getElementById('placeImage').click()"
                     style="width:100%;min-height:120px;margin:10px 0;border-radius:12px;border:2px dashed var(--line);background:var(--surface-2);display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;transition:all 0.2s ease;position:relative;overflow:hidden;">
-                    <div id="uploadPlaceholder" style="display:flex;flex-direction:column;align-items:center;gap:6px;padding:20px;color:var(--ink-soft);">
+                    <div id="uploadPlaceholder"
+                        style="display:flex;flex-direction:column;align-items:center;gap:6px;padding:20px;color:var(--ink-soft);">
                         <span style="font-size:36px;"><i class="fa-solid fa-image"></i></span>
                         <span style="font-size:13px;font-weight:500;">Rasm yuklash uchun bosing</span>
                         <span style="font-size:11px;">PNG, JPG, WEBP</span>
                     </div>
-                    <img id="previewImg" style="display:none;width:100%;max-height:200px;object-fit:cover;border-radius:10px;">
+                    <img id="previewImg"
+                        style="display:none;width:100%;max-height:200px;object-fit:cover;border-radius:10px;">
                 </div>
                 <input id="placeImage" type="file" accept="image/*" style="display:none;">
                 <textarea id="placeDesc" placeholder="Tavsif" data-tr="admin_desc"
@@ -5757,6 +5964,10 @@
                 </div>
                 <hr style="margin:20px 0;">
                 <div id="adminPlaces"></div>
+                <hr style="margin:20px 0;">
+                <button class="cta-btn ghost ripple-btn" onclick="adminLogout()" style="width:100%;">
+                    <i class='fa-solid fa-right-from-bracket'></i> Admin paneldan chiqish
+                </button>
             </div>
         </section>
 
@@ -6182,14 +6393,22 @@
         }
 
         // Admin shahar uchun AI tomonidan sayohat rejasini yaratish (6+ joy, vaqtga qarab)
-        function generateAIItinerary(city, hours) {
+        function generateAIItinerary(city, hours, budget = 'mid', transport = 'walk') {
             const region = detectRegion(city);
             const landmarks = REGION_LANDMARKS[region] || REGION_LANDMARKS['Toshkent'];
             const maxStops = getStopsForHours(hours);
 
+            // Byudjetga qarab joylar sonini o'zgartirish
+            const budgetMultiplier = budget === 'high' ? 1.2 : budget === 'low' ? 0.6 : 1;
+            const adjustedStops = Math.max(2, Math.round(maxStops * budgetMultiplier));
+
+            // Transportga qarab yurish vaqtini sozlash
+            const travelTime = transport === 'car' ? 5 : transport === 'bus' ? 10 : 15;
+            const travelKm = transport === 'car' ? 4 : transport === 'bus' ? 2.5 : 1.2;
+
             // Landmarklarni tasodifiy tartibda aralashtirish va keraklisini olish
             const shuffled = [...landmarks].sort(() => Math.random() - 0.5);
-            const selected = shuffled.slice(0, Math.min(maxStops, shuffled.length));
+            const selected = shuffled.slice(0, Math.min(adjustedStops, shuffled.length));
 
             // Vaqt hisoblash
             let currentTime = 9 * 60; // 09:00 dan boshlash (minutlarda)
@@ -6197,17 +6416,20 @@
                 const hours_part = Math.floor(currentTime / 60);
                 const mins_part = currentTime % 60;
                 const timeStr = String(hours_part).padStart(2, '0') + ':' + String(mins_part).padStart(2, '0');
-                currentTime += lm.dur + 15; // 15 daqiqa yurish vaqti
+                // Budget bo'yicha ko'rish vaqtini o'zgartirish
+                const durMultiplier = budget === 'low' ? 0.7 : budget === 'high' ? 1.4 : 1;
+                const adjustedDur = Math.round(lm.dur * durMultiplier);
+                currentTime += adjustedDur + travelTime;
                 return {
                     name: lm.name,
                     time: timeStr,
-                    dur: lm.dur,
+                    dur: adjustedDur,
                     desc: lm.desc + ' [' + region + ']',
                     emoji: lm.emoji,
-                    image: null,
-                    stars: Math.floor(Math.random() * 3) + 2, // 2-4 yulduz
+                    image: lm.image || null,
+                    stars: budget === 'high' ? Math.floor(Math.random() * 3) + 3 : Math.floor(Math.random() * 3) + 2,
                     status: 'upcoming',
-                    travel: i > 0 ? { min: 15, km: Math.random() * 5 + 1 } : null
+                    travel: i > 0 ? { min: travelTime, km: parseFloat((Math.random() * travelKm + 0.5).toFixed(1)) } : null
                 };
             });
         }
@@ -6249,25 +6471,6 @@
             history: ['home'],
             lang: localStorage.getItem('yolchi_lang') || 'uz'
         };
-
-        // Test: Initialize sample admin city if none exist (for demo purposes)
-        if (!localStorage.getItem('yolchi_cities') || JSON.parse(localStorage.getItem('yolchi_cities')).length === 0) {
-            const testCities = [{
-                id: Date.now(),
-                name: "Urganch",
-                emoji: "🏛️",
-                count: 0,
-                categories: ["tarixiy", "madaniy"],
-                image: null
-            }];
-            localStorage.setItem('yolchi_cities', JSON.stringify(testCities));
-            
-            const testPlaces = [
-                { id: 1, city: "Urganch", name: "Urganch qal'asi", desc: "Qadimiy Xorazm poytaxtining qal'a qoldiqlari", image: null, stars: 4 },
-                { id: 2, city: "Urganch", name: "Toprak-qal'a", desc: "Cho'l orasida yashirin qadimiy shahar", image: null, stars: 5 }
-            ];
-            localStorage.setItem('adminPlaces', JSON.stringify(testPlaces));
-        }
 
         function saveStars() { localStorage.setItem('yolchi_stars', state.stars); }
         function saveSub() { localStorage.setItem('yolchi_sub', state.subscription); localStorage.setItem('yolchi_sub_expiry', state.subscriptionExpiry); }
@@ -6860,19 +7063,11 @@
                     document.getElementById('loginPassword')?.focus();
                     if (btn) { btn.textContent = 'Kirish'; btn.disabled = false; }
                 } else {
-                    // Auto-register: if email not found, create account
-                    state.user = {
-                        name: email.split('@')[0],
-                        email: email,
-                        method: 'email',
-                        avatar: '<i class=\"fa-solid fa-user\"></i>',
-                        joinedAt: new Date().toISOString()
-                    };
-                    saveUser();
-                    // Save to registered users
-                    users.push({ name: email.split('@')[0], email: email, password: pass });
-                    localStorage.setItem('yolchi_users', JSON.stringify(users));
-                    renderAuthStep('success');
+                    // Email topilmadi — ruxsat berilmaydi
+                    if (genErr) genErr.textContent = '<i class="fa-solid fa-xmark"></i> Email topilmadi. Avval ro\'yxatdan o\'ting.';
+                    document.getElementById('loginEmail')?.classList.add('error');
+                    document.getElementById('loginEmail')?.focus();
+                    if (btn) { btn.textContent = 'Kirish'; btn.disabled = false; }
                 }
             }, 800);
         }
@@ -6971,22 +7166,23 @@
                 if (users.find(u => u.email === email)) {
                     if (genErr) genErr.textContent = `<i class=\"fa-solid fa-xmark\"></i> Bu email allaqachon ro'yxatdan o'tgan`;
                     if (btn) {
-                        btn.textContent = "Ro'yxatdan o'tish"; btn.disabled = false; }
-                        return;
+                        btn.textContent = "Ro'yxatdan o'tish"; btn.disabled = false;
                     }
-                    users.push({ name: name, email: email, password: pass });
-                    localStorage.setItem('yolchi_users', JSON.stringify(users));
+                    return;
+                }
+                users.push({ name: name, email: email, password: pass });
+                localStorage.setItem('yolchi_users', JSON.stringify(users));
 
-                    state.user = {
-                        name: name,
-                        email: email,
-                        method: 'email',
-                        avatar: '<i class=\"fa-solid fa-user\"></i>',
-                        joinedAt: new Date().toISOString()
-                    };
-                    saveUser();
-                    renderAuthStep('success');
-                }, 1000);
+                state.user = {
+                    name: name,
+                    email: email,
+                    method: 'email',
+                    avatar: '<i class=\"fa-solid fa-user\"></i>',
+                    joinedAt: new Date().toISOString()
+                };
+                saveUser();
+                renderAuthStep('success');
+            }, 1000);
         }
 
         function sendPasswordReset() {
@@ -7026,7 +7222,7 @@
             if (!inp || !err) return;
             const phone = inp.value.replace(/\D/g, '');
             if (phone.length < 9) {
-                err.textContent = '<i class="fa-solid fa-xmark"></i> Iltimos, to\"liq telefon raqamini kiriting (9 ta raqam)';
+                err.textContent = '<i class="fa-solid fa-xmark"></i> Iltimos, to\'liq telefon raqamini kiriting (9 ta raqam)';
                 inp.focus();
                 return;
             }
@@ -7119,7 +7315,7 @@
 
             // Check if code matches
             if (authGeneratedCode && code !== authGeneratedCode) {
-                err.textContent = '<i class="fa-solid fa-xmark"></i> Noto\"g\'ri kod. Qayta urinib ko\'ring.';
+                err.textContent = '<i class="fa-solid fa-xmark"></i> Noto\'g\'ri kod. Qayta urinib ko\'ring.';
                 inp.value = '';
                 inp.focus();
                 // Shake animation
@@ -7358,15 +7554,37 @@
                 `;
             }
             setTimeout(() => {
-                state.user = {
-                    name: name || email.split('@')[0],
-                    email: email,
-                    method: 'google',
-                    avatar: '<i class="fa-solid fa-user-tie"></i>',
-                    joinedAt: new Date().toISOString()
-                };
-                saveUser();
-                renderAuthStep('success');
+                // localStorage dagi ro'yxatdan o'tgan foydalanuvchilarni tekshirish
+                const users = JSON.parse(localStorage.getItem('yolchi_users') || '[]');
+                const found = users.find(u => u.email === email);
+
+                if (found) {
+                    state.user = {
+                        name: found.name || name || email.split('@')[0],
+                        email: email,
+                        method: 'google',
+                        avatar: '<i class="fa-solid fa-user-tie"></i>',
+                        joinedAt: new Date().toISOString()
+                    };
+                    saveUser();
+                    renderAuthStep('success');
+                } else {
+                    // Email topilmadi — ro'yxatdan o'tishni taklif qilish
+                    const container = document.getElementById('authContent');
+                    if (container) {
+                        container.innerHTML = `
+                            <div class="auth-title" style="color:var(--danger,#e74c3c);"><i class="fa-solid fa-circle-exclamation"></i> Hisob topilmadi</div>
+                            <div class="auth-desc" style="margin-bottom:16px;">
+                                <div style="font-size:48px;margin:8px 0;"><i class="fa-solid fa-user-slash" style="color:var(--ink-soft);"></i></div>
+                                <div style="font-size:13px;color:var(--ink-soft);">${email} — bu email ro'yxatdan o'tmagan</div>
+                            </div>
+                            <button class="auth-btn auth-btn-primary" onclick="renderAuthStep('email_register')" style="margin-top:8px;">
+                                <i class="fa-solid fa-user-plus"></i> Ro'yxatdan o'tish
+                            </button>
+                            <button class="auth-back" onclick="renderAuthStep('welcome')">← Ortga</button>
+                        `;
+                    }
+                }
             }, 1000);
         }
 
@@ -7434,20 +7652,58 @@
             `;
 
             setTimeout(() => {
-                closeGooglePicker();
-                const nameFromEmail = email.split('@')[0];
-                const formattedName = nameFromEmail.charAt(0).toUpperCase() + nameFromEmail.slice(1);
-                state.user = {
-                    name: formattedName,
-                    email: email,
-                    method: 'google',
-                    avatar: '<i class="fa-solid fa-user-tie"></i>',
-                    joinedAt: new Date().toISOString()
-                };
-                saveUser();
-                renderAuthStep('success');
+                // localStorage dagi ro'yxatdan o'tgan foydalanuvchilarni tekshirish
+                const users = JSON.parse(localStorage.getItem('yolchi_users') || '[]');
+                const found = users.find(u => u.email === email);
+
+                if (found && found.password === pass) {
+                    closeGooglePicker();
+                    state.user = {
+                        name: found.name,
+                        email: email,
+                        method: 'google',
+                        avatar: '<i class="fa-solid fa-user-tie"></i>',
+                        joinedAt: new Date().toISOString()
+                    };
+                    saveUser();
+                    renderAuthStep('success');
+                } else if (found && found.password !== pass) {
+                    // Parol xato
+                    const modalBody = document.querySelector('.google-modal-body');
+                    if (modalBody) {
+                        modalBody.innerHTML = `
+                            <div style="text-align:center;padding:20px 0;">
+                                <div style="font-size:48px;margin-bottom:10px;"><i class="fa-solid fa-xmark" style="color:var(--danger,#e74c3c);"></i></div>
+                                <div style="font-size:14px;font-weight:600;color:var(--ink);">Parol noto'g'ri!</div>
+                                <div style="font-size:12px;color:var(--ink-soft);margin:4px 0 16px;">${email}</div>
+                                <button class="cta-btn ghost" onclick="showOtherGoogleAccount()" style="font-size:12px;padding:10px 16px;">
+                                    <i class="fa-solid fa-arrow-left"></i> Qayta urinish
+                                </button>
+                            </div>
+                        `;
+                    }
+                } else {
+                    // Email topilmadi
+                    const modalBody = document.querySelector('.google-modal-body');
+                    if (modalBody) {
+                        modalBody.innerHTML = `
+                            <div style="text-align:center;padding:20px 0;">
+                                <div style="font-size:48px;margin-bottom:10px;"><i class="fa-solid fa-circle-exclamation" style="color:var(--danger,#e74c3c);"></i></div>
+                                <div style="font-size:14px;font-weight:600;color:var(--ink);">Hisob topilmadi!</div>
+                                <div style="font-size:12px;color:var(--ink-soft);margin:4px 0 16px;">${email} — bu email ro'yxatdan o'tmagan</div>
+                                <button class="cta-btn ghost" onclick="closeGooglePicker();renderAuthStep('email_register');" style="font-size:12px;padding:10px 16px;">
+                                    <i class="fa-solid fa-user-plus"></i> Ro'yxatdan o'tish
+                                </button>
+                                <button class="cta-btn ghost" onclick="showOtherGoogleAccount()" style="font-size:12px;padding:10px 16px;">
+                                    <i class="fa-solid fa-arrow-left"></i> Qayta urinish
+                                </button>
+                            </div>
+                        `;
+                    }
+                }
             }, 1500);
-        }
+        };
+        
 
         function loginWithGoogle() {
             showGooglePicker();
@@ -7977,7 +8233,7 @@
         }
 
         /* ================= DYNAMIC CITIES & ITINERARIES ================= */
-        // Return ONLY admin-added cities (no default cities)
+        // Return ONLY admin-added cities — admin must add cities manually
         function getAllCities() {
             const normalize = (s) => String(s || '').trim().toLowerCase();
             const merged = [];
@@ -8002,7 +8258,7 @@
         function getCityItinerary(city, options = {}) {
             const normalize = (s) => String(s || '').trim().toLowerCase();
             const normalizedCity = normalize(city);
-            
+
             // Vaqt, byudjet va transport parametrlarini olish
             const hours = options.hours || (state && state.chatAnswers && state.chatAnswers.hours) || '6';
             const budget = options.budget || (state && state.chatAnswers && state.chatAnswers.budget) || 'mid';
@@ -8013,7 +8269,7 @@
             // Byudjetga qarab joylar sonini aniqlash
             const budgetMultiplier = budget === 'high' ? 1.5 : budget === 'low' ? 0.7 : 1;
             const maxStops = Math.max(2, Math.min(12, Math.round((parseInt(hours) || 6) * budgetMultiplier)));
-            
+
             // Transportga qarab yurish vaqtini aniqlash
             const travelTime = transport === 'car' ? 5 : transport === 'bus' ? 10 : 15; // minut
             const travelKm = transport === 'car' ? 3 : transport === 'bus' ? 2 : 1; // km
@@ -8049,7 +8305,7 @@
             }
 
             // AI tomonidan viloyat diqqatga sazovor joylarini qo'shish
-            const aiStops = generateAIItinerary(city, hours);
+            const aiStops = generateAIItinerary(city, hours, budget, transport);
             const existingNames = new Set(stops.map(s => normalize(s.name)));
             aiStops.forEach(ai => {
                 if (!existingNames.has(normalize(ai.name)) && stops.length < maxStops) {
@@ -8100,12 +8356,16 @@
         function showScreen(name) {
             document.querySelectorAll('.screen').forEach(s => s.classList.remove('active', 'slide-in'));
             const target = document.querySelector(`.screen[data-screen="${name}"]`);
+            if (!target) return;
             target.classList.add('active');
             // Trigger slide animation
             void target.offsetWidth;
             target.classList.add('slide-in');
             const tabScreens = ['home', 'discover', 'scheduler', 'shop', 'trips', 'profile'];
-            document.getElementById('bottomNav').style.display = tabScreens.includes(name) ? 'flex' : 'none';
+            const bottomNav = document.getElementById('bottomNav');
+            if (bottomNav) {
+                bottomNav.style.display = tabScreens.includes(name) ? 'flex' : 'none';
+            }
             if (tabScreens.includes(name)) {
                 document.querySelectorAll('.bottom-nav button').forEach(b => b.classList.toggle('active', b.dataset.tab === name));
                 moveNavIndicator(name);
@@ -8113,6 +8373,20 @@
             // Initialize scheduler when showing scheduler screen
             if (name === 'scheduler') {
                 setTimeout(() => initScheduler('aiSchedulerContainer'), 200);
+            }
+            // Render admin login form dynamically (not in page source)
+            if (name === 'admin') {
+                setTimeout(() => {
+                    renderAdminLogin();
+                    // Check if already authenticated
+                    if (localStorage.getItem('yolchi_admin_authed') === 'true') {
+                        document.getElementById('adminLogin').innerHTML = '';
+                        document.getElementById('adminDashboard').style.display = 'block';
+                        updateCitySelects();
+                        renderAdminCities();
+                        renderAdmin();
+                    }
+                }, 200);
             }
             // Show/hide chat input bar
             const chatInputBar = document.getElementById('chatInputBar');
@@ -8358,13 +8632,13 @@
 
         function createTrip(city, options = {}) {
             const stops = getCityItinerary(city, options);
-            const trip = { 
-                id: uid(), 
-                city, 
-                stops, 
-                currentIndex: 0, 
-                started: false, 
-                completed: false, 
+            const trip = {
+                id: uid(),
+                city,
+                stops,
+                currentIndex: 0,
+                started: false,
+                completed: false,
                 createdAt: new Date(),
                 budget: options.budget || (state.chatAnswers && state.chatAnswers.budget) || 'mid',
                 transport: options.transport || (state.chatAnswers && state.chatAnswers.transport) || 'walk',
@@ -8432,7 +8706,7 @@
                         const emoji = cityData ? cityData.emoji : '<i class="fa-solid fa-city"></i>';
                         return `<div class="option-chip city-chip" data-val="${o.value}" style="display:flex;flex-direction:column;align-items:center;justify-content:center;padding:14px 10px;border-radius:14px;background:${gradColor};color:#fff;border:none;min-height:80px;gap:6px;text-align:center;cursor:pointer;transition:transform 0.2s ease,box-shadow 0.2s ease;">
                             <span style="font-size:32px;line-height:1;">${emoji}</span>
-                            <span style="font-size:13px;font-weight:700;">${o.label.replace(/<[^>]*>/g,'').trim()}</span>
+                            <span style="font-size:13px;font-weight:700;">${o.label.replace(/<[^>]*>/g, '').trim()}</span>
                         </div>`;
                     }).join('')}</div>`;
                 } else if (step.type === 'multi') {
@@ -8932,7 +9206,7 @@
             { id: 'sub_vip', name: '<i class="fa-solid fa-crown"></i> VIP obuna', desc: 'Cheksiz joylar, barcha imkoniyatlar', icon: '<i class="fa-solid fa-crown"></i>', color: '#a86b1f', price: 60, type: 'subscription', value: 'vip', dur: 30, image: 'https://picsum.photos/id/30/400/250' },
             { id: 'boost', name: '<i class="fa-solid fa-rocket"></i> Tezlatkich', desc: '2x yulduz yig\'ish (7 kun)', icon: '<i class="fa-solid fa-rocket"></i>', color: '#c96b3e', price: 20, type: 'boost', dur: 7, image: 'https://picsum.photos/id/40/400/250' },
             { id: 'theme_dark', name: '<i class="fa-solid fa-crystal-ball"></i> Glassmorphism dizayn', desc: 'Shishasimon premium dizayn — barcha kartalar shaffof oyna effektida', icon: '<i class="fa-solid fa-crystal-ball"></i>', color: '#667eea', price: 10, type: 'theme', value: 'glass', image: 'https://picsum.photos/id/50/400/250' },
-            { id: 'guide', name: '<i class="fa-solid fa-book"></i> Shahar qo\"llanmasi', desc: 'Shaharlar bo\'ylab to\'liq ma\'lumotnoma', icon: '<i class="fa-solid fa-book"></i>', color: '#2f8f6a', price: 25, type: 'guide', image: 'https://picsum.photos/id/60/400/250' }
+            { id: 'guide', name: '<i class="fa-solid fa-book"></i> Shahar qo\'llanmasi', desc: 'Shaharlar bo\'ylab to\'liq ma\'lumotnoma', icon: '<i class="fa-solid fa-book"></i>', color: '#2f8f6a', price: 25, type: 'guide', image: 'https://picsum.photos/id/60/400/250' }
         ];
         cleanExpired();
 
@@ -9108,57 +9382,166 @@
         function updateCitySelects() {
             const sel = document.getElementById('placeCity');
             if (!sel) return;
-            const allCities = [...adminCities, ...CITIES];
-            const unique = [];
-            const seen = new Set();
-            const normalize = (s) => String(s || '').trim().toLowerCase();
-            allCities.forEach(c => {
-                const key = normalize(c.name);
-                if (!seen.has(key)) { seen.add(key); unique.push(c); }
-            });
+            const allCities = getAllCities();
             sel.innerHTML = '<option value="">Shaharni tanlang</option>' +
-                unique.map(c => `<option value="${c.name}">${c.emoji || '<i class="fa-solid fa-city"></i>'} ${c.name}</option>`).join('');
+                allCities.map(c => `<option value="${c.name}">${c.emoji || '<i class="fa-solid fa-city"></i>'} ${c.name}</option>`).join('');
         }
 
         let adminPlaces = JSON.parse(localStorage.getItem("adminPlaces")) || [];
 
-        function adminLogin() {
-            const u = document.getElementById('adminUser').value.trim();
-            const p = document.getElementById('adminPass').value.trim();
+        function renderAdminLogin() {
+            const container = document.getElementById('adminLogin');
+            if (!container) return;
+            // Check if admin credentials already exist in localStorage
+            const hasCredentials = localStorage.getItem('yolchi_admin_hash') !== null;
+
+            if (!hasCredentials) {
+                // First-time setup: admin must create credentials
+                container.innerHTML = `
+                    <div style="font-size:13px;color:var(--ink-soft);margin-bottom:15px;text-align:center;padding:10px;background:var(--surface-2);border-radius:12px;">
+                        <i class="fa-solid fa-shield-halved"></i> 
+                        Admin panelni sozlash — login va parolni kiriting
+                    </div>
+                    <div id="adminLoginForm">
+                        <input id="adminUser" placeholder="Login" data-tr="admin_login"
+                            style="width:100%;padding:15px;margin-bottom:15px;border-radius:12px;border:1.5px solid var(--line);background:var(--surface);font-size:14px;color:var(--ink);">
+                        <input id="adminPass" type="password" placeholder="Parol" data-tr="admin_pass"
+                            style="width:100%;padding:15px;margin-bottom:15px;border-radius:12px;border:1.5px solid var(--line);background:var(--surface);font-size:14px;color:var(--ink);">
+                        <input id="adminPassConfirm" type="password" placeholder="Parolni takrorlang"
+                            style="width:100%;padding:15px;margin-bottom:15px;border-radius:12px;border:1.5px solid var(--line);background:var(--surface);font-size:14px;color:var(--ink);">
+                        <button class="cta-btn ripple-btn" onclick="adminSetup()" data-tr="admin_enter">
+                            Sozlash
+                        </button>
+                        <div id="adminLoginError" style="display:none;margin-top:10px;padding:10px;background:var(--danger-glow);border-radius:10px;text-align:center;font-size:13px;color:var(--danger);"></div>
+                    </div>
+                `;
+            } else {
+                // Normal login form
+                container.innerHTML = `
+                    <div style="font-size:13px;color:var(--ink-soft);margin-bottom:15px;text-align:center;padding:10px;background:var(--surface-2);border-radius:12px;">
+                        <i class="fa-solid fa-shield-halved"></i> 
+                        Admin panelga kirish
+                    </div>
+                    <div id="adminLoginForm">
+                        <input id="adminUser" placeholder="Login" data-tr="admin_login"
+                            style="width:100%;padding:15px;margin-bottom:15px;border-radius:12px;border:1.5px solid var(--line);background:var(--surface);font-size:14px;color:var(--ink);">
+                        <input id="adminPass" type="password" placeholder="Parol" data-tr="admin_pass"
+                            style="width:100%;padding:15px;margin-bottom:15px;border-radius:12px;border:1.5px solid var(--line);background:var(--surface);font-size:14px;color:var(--ink);">
+                        <button class="cta-btn ripple-btn" onclick="adminLogin()" data-tr="admin_enter">
+                            Kirish
+                        </button>
+                        <div id="adminLoginError" style="display:none;margin-top:10px;padding:10px;background:var(--danger-glow);border-radius:10px;text-align:center;font-size:13px;color:var(--danger);"></div>
+                    </div>
+                `;
+            }
+            // Apply translations to newly created elements
+            container.querySelectorAll('[data-tr]').forEach(el => {
+                const key = el.dataset.tr;
+                const translated = t(key);
+                if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') {
+                    el.placeholder = translated;
+                } else {
+                    el.innerHTML = translated;
+                }
+            });
+            setTimeout(() => {
+                const u = document.getElementById('adminUser');
+                if (u) u.focus();
+            }, 300);
+        }
+
+        // First-time admin setup — parol ochiq matnda kodda saqlanmaydi
+        function adminSetup() {
+            const u = document.getElementById('adminUser')?.value?.trim();
+            const p = document.getElementById('adminPass')?.value;
+            const pc = document.getElementById('adminPassConfirm')?.value;
             const errorEl = document.getElementById('adminLoginError');
-            
-            if (!u || !p) {
-                errorEl.textContent = 'Iltimos, login va parolni kiriting!';
-                errorEl.style.display = 'block';
+
+            if (!u || !p || !pc) {
+                if (errorEl) { errorEl.textContent = 'Iltimos, barcha maydonlarni to\'ldiring!'; errorEl.style.display = 'block'; }
+                return;
+            }
+            if (p !== pc) {
+                if (errorEl) { errorEl.textContent = 'Parollar bir-biriga mos kelmadi!'; errorEl.style.display = 'block'; }
+                return;
+            }
+            if (p.length < 4) {
+                if (errorEl) { errorEl.textContent = 'Parol kamida 4 belgidan iborat bo\'lishi kerak!'; errorEl.style.display = 'block'; }
                 return;
             }
 
-            // Backend API orqali autentifikatsiya
+            if (errorEl) errorEl.style.display = 'none';
+            // Store only the hash — password is never saved in plain text
+            localStorage.setItem('yolchi_admin_hash', btoa(u + ':' + p));
+            localStorage.setItem('yolchi_admin_authed', 'true');
+            document.getElementById('adminLogin').innerHTML = '';
+            document.getElementById('adminDashboard').style.display = 'block';
+            updateCitySelects();
+            renderAdminCities();
+            renderAdmin();
+        }
+
+        function adminLogin() {
+            const u = document.getElementById('adminUser')?.value?.trim();
+            const p = document.getElementById('adminPass')?.value?.trim();
+            const errorEl = document.getElementById('adminLoginError');
+
+            if (!u || !p) {
+                if (errorEl) { errorEl.textContent = 'Iltimos, login va parolni kiriting!'; errorEl.style.display = 'block'; }
+                return;
+            }
+
+            if (errorEl) errorEl.style.display = 'none';
+
+            // Backend API orqali autentifikatsiya (asosiy usul)
             fetch('/api/admin/login', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ login: u, password: p })
             })
-            .then(res => {
-                if (!res.ok) throw new Error('Login yoki parol xato');
-                return res.json();
-            })
-            .then(data => {
-                if (data.success) {
-                    document.getElementById('adminLogin').style.display = 'none';
-                    document.getElementById('adminDashboard').style.display = 'block';
-                    updateCitySelects();
-                    renderAdminCities();
-                    renderAdmin();
-                    errorEl.style.display = 'none';
-                } else {
-                    throw new Error(data.message || 'Login yoki parol xato');
-                }
-            })
-            .catch(err => {
-                errorEl.textContent = err.message || 'Serverga ulanishda xatolik';
-                errorEl.style.display = 'block';
-            });
+                .then(res => {
+                    if (!res.ok) throw new Error('Backend xatosi');
+                    return res.json();
+                })
+                .then(data => {
+                    if (data.success) {
+                        onAdminLoginSuccess();
+                    } else {
+                        throw new Error(data.message || 'Login yoki parol xato');
+                    }
+                })
+                .catch(err => {
+                    // Fallback: localStorage dagi hash bo'yicha tekshirish
+                    const storedHash = localStorage.getItem('yolchi_admin_hash');
+                    if (storedHash && btoa(u + ':' + p) === storedHash) {
+                        onAdminLoginSuccess();
+                    } else {
+                        if (errorEl) {
+                            errorEl.textContent = 'Login yoki parol xato. Serverga ulanish ham muvaffaqiyatsiz.';
+                            errorEl.style.display = 'block';
+                        }
+                    }
+                });
+        }
+
+        function onAdminLoginSuccess() {
+            localStorage.setItem('yolchi_admin_authed', 'true');
+            document.getElementById('adminLogin').innerHTML = '';
+            document.getElementById('adminDashboard').style.display = 'block';
+            updateCitySelects();
+            renderAdminCities();
+            renderAdmin();
+            const errorEl = document.getElementById('adminLoginError');
+            if (errorEl) errorEl.style.display = 'none';
+        }
+
+        function adminLogout() {
+            if (!confirm('Admin paneldan chiqishni tasdiqlaysizmi?')) return;
+            localStorage.removeItem('yolchi_admin_authed');
+            document.getElementById('adminDashboard').style.display = 'none';
+            document.getElementById('adminLogin').innerHTML = '';
+            renderAdminLogin();
+            goHome();
         }
 
         function addPlace() {
@@ -9301,10 +9684,11 @@
                 return;
             }
             adminPlaces.forEach((p, index) => {
-                const imgStyle = p.image
+                const hasImage = p.image && typeof p.image === 'string' && p.image.startsWith('data:');
+                const imgStyle = hasImage
                     ? `background:url('${p.image}') center/cover`
                     : `background:${grad(index)};display:flex;align-items:center;justify-content:center;font-size:32px;`;
-                const imgContent = p.image ? '' : '<span><i class="fa-solid fa-location-dot"></i></span>';
+                const imgContent = hasImage ? '' : '<span><i class="fa-solid fa-location-dot"></i></span>';
                 const coordsStr = (p.lat && p.lng) ? `<span style="font-size:11px;color:var(--ink-soft);"><i class='fa-solid fa-location-dot'></i> ${p.lat}, ${p.lng}</span>` : '';
                 html += `
       <div class="reveal" style="background:var(--surface);padding:18px;border-radius:16px;margin-bottom:16px;border:1px solid var(--line);">

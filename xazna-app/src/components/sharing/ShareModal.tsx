@@ -87,7 +87,7 @@ const ShareModal: React.FC<ShareModalProps> = ({ isOpen, onClose, shareData }) =
             onClick={handleCopyLink}
             className="flex flex-col items-center gap-1.5 p-3 rounded-2xl bg-gray-50 dark:bg-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors group"
           >
-            <span className="text-2xl group-hover:scale-110 transition-transform">{copied ? '<i className="fa-solid fa-check"></i>' : '<i className="fa-solid fa-link"></i>'}</span>
+            <span className="text-2xl group-hover:scale-110 transition-transform">{copied ? <i className="fa-solid fa-check"></i> : <i className="fa-solid fa-link"></i>}</span>
             <span className="text-xs text-gray-600 dark:text-gray-400 font-medium">{copied ? 'Nusxalandi' : 'Havola'}</span>
           </button>
 

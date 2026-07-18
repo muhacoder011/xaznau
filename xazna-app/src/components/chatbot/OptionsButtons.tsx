@@ -35,7 +35,7 @@ export const OptionsButtons: React.FC<Props> = ({
             `}
           >
             <span className="flex items-center gap-2">
-              {opt.icon && <span className="text-lg">{opt.icon}</span>}
+              {opt.icon ? <span className="text-lg" dangerouslySetInnerHTML={{ __html: opt.icon }} /> : null}
               {opt.label}
             </span>
           </button>

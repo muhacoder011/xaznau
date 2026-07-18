@@ -42,7 +42,7 @@ const Shop: React.FC = () => {
     const totalPrice = item.price * qty
 
     if (user.coins < totalPrice) {
-      setPurchaseMessage({ type: 'error', text: `Tangalar yetarli emas! ${totalPrice} <i className="fa-solid fa-coins"></i> kerak. Sizda: ${user.coins} <i className="fa-solid fa-coins"></i>` })
+      setPurchaseMessage({ type: 'error', text: `Tangalar yetarli emas! ${totalPrice} <i class="fa-solid fa-coins"></i> kerak. Sizda: ${user.coins} <i class="fa-solid fa-coins"></i>` })
       setTimeout(() => setPurchaseMessage(null), 3000)
       return
     }
@@ -53,7 +53,7 @@ const Shop: React.FC = () => {
     }
 
     if (successCount > 0) {
-      setPurchaseMessage({ type: 'success', text: `"${item.name}" x${successCount} muvaffaqiyatli sotib olindi! <i className="fa-solid fa-check"></i>` })
+      setPurchaseMessage({ type: 'success', text: `"${item.name}" x${successCount} muvaffaqiyatli sotib olindi! <i class="fa-solid fa-check"></i>` })
       setSelectedItem(null)
       setQuantity(1)
     } else {
@@ -101,8 +101,11 @@ const Shop: React.FC = () => {
                 onClick={() => { setSelectedCategory('all'); openBuyModal(deal) }}
                 className="flex-shrink-0 bg-white dark:bg-gray-800 rounded-xl p-3 shadow-sm hover:shadow-md transition-all border border-red-100 dark:border-gray-700 flex items-center gap-3 min-w-[200px]"
               >
-                <div className={`w-10 h-10 rounded-lg bg-gradient-to-br ${deal.color} flex items-center justify-center text-xl`}>
-                  {deal.icon}
+                <div className={`w-10 h-10 rounded-lg bg-gradient-to-br ${deal.color} flex items-center justify-center text-xl flex-shrink-0 relative overflow-hidden`}>
+                  {deal.image && (
+                    <img src={deal.image} alt="" className="absolute inset-0 w-full h-full object-cover opacity-40" loading="lazy" />
+                  )}
+                  <span className="relative z-10" dangerouslySetInnerHTML={{ __html: deal.icon }} />
                 </div>
                 <div className="text-left">
                   <p className="text-sm font-semibold text-gray-800 dark:text-white">{deal.name}</p>
@@ -131,7 +134,7 @@ const Shop: React.FC = () => {
                   : 'bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
               }`}
             >
-              {cat === 'all' ? '<i className="fa-solid fa-tag"></i> Barchasi' : SHOP_ITEM_CATEGORY_LABELS[cat]}
+              {cat === 'all' ? <span dangerouslySetInnerHTML={{ __html: '<i class="fa-solid fa-tag"></i> Barchasi' }} /> : <span dangerouslySetInnerHTML={{ __html: SHOP_ITEM_CATEGORY_LABELS[cat] }} />}
             </button>
           ))}
         </div>
@@ -140,9 +143,9 @@ const Shop: React.FC = () => {
           onChange={(e) => setSortBy(e.target.value as SortOption)}
           className="px-3 py-2 rounded-xl border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 text-sm text-gray-600 dark:text-gray-300 outline-none focus:ring-2 focus:ring-emerald-500"
         >
-          <option value="default"><i className="fa-solid fa-thumbtack"></i> Standart</option>
-          <option value="price-asc"><i className="fa-solid fa-dollar-sign"></i> Narx: arzondan qimmatga</option>
-          <option value="price-desc"><i className="fa-solid fa-dollar-sign"></i> Narx: qimmatdan arzonga</option>
+          <option value="default">✦ Standart</option>
+          <option value="price-asc">↑ Narx: arzondan qimmatga</option>
+          <option value="price-desc">↓ Narx: qimmatdan arzonga</option>
         </select>
       </div>
 
@@ -155,28 +158,41 @@ const Shop: React.FC = () => {
               : 'bg-red-50 dark:bg-red-900/30 text-red-700 dark:text-red-300 border border-red-200 dark:border-red-800'
           }`}
         >
-          {purchaseMessage.text}
+          <span dangerouslySetInnerHTML={{ __html: purchaseMessage.text }} />
         </div>
       )}
 
       {/* Mahsulotlar grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
         {filteredItems.map(item => (
           <div
             key={item.id}
             className="group bg-white dark:bg-gray-800 rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden border border-gray-100 dark:border-gray-700 hover:scale-[1.02] animate-fade-in"
           >
-            {/* Gradient header */}
-            <div className={`h-28 bg-gradient-to-br ${item.color} flex items-center justify-center relative overflow-hidden`}>
-              {/* Background pattern */}
-              <div className="absolute inset-0 opacity-20">
-                <div className="absolute -top-4 -right-4 w-20 h-20 bg-white/30 rounded-full" />
-                <div className="absolute -bottom-4 -left-4 w-16 h-16 bg-white/20 rounded-full" />
-              </div>
-              <span className="text-5xl filter drop-shadow-lg relative z-10 group-hover:scale-110 transition-transform">{item.icon}</span>
+            {/* Image header */}
+            <div className="h-28 bg-gradient-to-br relative overflow-hidden">
+              {item.image ? (
+                <>
+                  <img
+                    src={item.image}
+                    alt={item.name}
+                    className="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                    loading="lazy"
+                  />
+                  <div className={`absolute inset-0 bg-gradient-to-t ${item.color} opacity-60`} />
+                </>
+              ) : (
+                <div className={`absolute inset-0 bg-gradient-to-br ${item.color} flex items-center justify-center`}>
+                  <div className="absolute inset-0 opacity-20">
+                    <div className="absolute -top-4 -right-4 w-20 h-20 bg-white/30 rounded-full" />
+                    <div className="absolute -bottom-4 -left-4 w-16 h-16 bg-white/20 rounded-full" />
+                  </div>
+                </div>
+              )}
+              <span className="absolute inset-0 flex items-center justify-center text-4xl filter drop-shadow-lg z-10 group-hover:scale-110 transition-transform" dangerouslySetInnerHTML={{ __html: item.icon }} />
               
               {/* Badges */}
-              <div className="absolute top-2 right-2 flex flex-col gap-1">
+              <div className="absolute top-2 right-2 flex flex-col gap-1 z-20">
                 {item.isPopular && (
                   <span className="bg-amber-400 text-amber-900 text-xs font-bold px-2 py-0.5 rounded-full shadow-lg">
                     <i className="fa-solid fa-star"></i> Top
@@ -258,10 +274,21 @@ const Shop: React.FC = () => {
             className="bg-white dark:bg-gray-800 rounded-3xl p-6 max-w-sm w-full shadow-2xl animate-scale-in"
             onClick={e => e.stopPropagation()}
           >
-            <div className={`h-24 bg-gradient-to-br ${selectedItem.color} rounded-2xl flex items-center justify-center mb-4 relative overflow-hidden`}>
-              <span className="text-5xl">{selectedItem.icon}</span>
+            <div className={`h-32 bg-gradient-to-br ${selectedItem.color} rounded-2xl flex items-center justify-center mb-4 relative overflow-hidden`}>
+              {selectedItem.image && (
+                <>
+                  <img
+                    src={selectedItem.image}
+                    alt={selectedItem.name}
+                    className="absolute inset-0 w-full h-full object-cover"
+                    loading="lazy"
+                  />
+                  <div className={`absolute inset-0 bg-gradient-to-t ${selectedItem.color} opacity-50`} />
+                </>
+              )}
+              <span className="text-5xl relative z-10" dangerouslySetInnerHTML={{ __html: selectedItem.icon }} />
               {selectedItem.originalPrice && (
-                <span className="absolute top-2 right-2 bg-red-500 text-white text-xs font-bold px-2 py-0.5 rounded-full animate-pulse">
+                <span className="absolute top-2 right-2 bg-red-500 text-white text-xs font-bold px-2 py-0.5 rounded-full animate-pulse z-20">
                   -{discountPercent(selectedItem)}%
                 </span>
               )}
@@ -319,8 +346,8 @@ const Shop: React.FC = () => {
                 className="flex-1 px-4 py-3 bg-emerald-500 hover:bg-emerald-600 disabled:bg-gray-300 dark:disabled:bg-gray-600 text-white rounded-xl font-medium transition-all disabled:cursor-not-allowed shadow-md hover:shadow-lg active:scale-95"
               >
                 {user.coins >= selectedItem.price * quantity
-                  ? `<i className="fa-solid fa-check"></i> Sotib olish (${quantity} dona)`
-                  : '<i className="fa-solid fa-xmark"></i> Yetarli emas'}
+                  ? <><i className="fa-solid fa-check"></i> Sotib olish ({quantity} dona)</>
+                  : <><i className="fa-solid fa-xmark"></i> Yetarli emas</>}
               </button>
             </div>
           </div>

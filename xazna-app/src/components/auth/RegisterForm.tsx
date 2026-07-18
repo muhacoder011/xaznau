@@ -171,16 +171,16 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({
                 </div>
                 <ul className="text-xs text-gray-500 dark:text-gray-400 space-y-0.5">
                   <li className={password.length >= 8 ? 'text-emerald-500' : ''}>
-                    {password.length >= 8 ? '<i className="fa-solid fa-check"></i>' : '<i className="fa-solid fa-xmark"></i>'} Kamida 8 ta belgi
+                    {password.length >= 8 ? <i className="fa-solid fa-check"></i> : <i className="fa-solid fa-xmark"></i>} Kamida 8 ta belgi
                   </li>
                   <li className={/[A-Z]/.test(password) ? 'text-emerald-500' : ''}>
-                    {/[A-Z]/.test(password) ? '<i className="fa-solid fa-check"></i>' : '<i className="fa-solid fa-xmark"></i>'} Katta harf (A-Z)
+                    {/[A-Z]/.test(password) ? <i className="fa-solid fa-check"></i> : <i className="fa-solid fa-xmark"></i>} Katta harf (A-Z)
                   </li>
                   <li className={/[a-z]/.test(password) ? 'text-emerald-500' : ''}>
-                    {/[a-z]/.test(password) ? '<i className="fa-solid fa-check"></i>' : '<i className="fa-solid fa-xmark"></i>'} Kichik harf (a-z)
+                    {/[a-z]/.test(password) ? <i className="fa-solid fa-check"></i> : <i className="fa-solid fa-xmark"></i>} Kichik harf (a-z)
                   </li>
                   <li className={/[0-9]/.test(password) ? 'text-emerald-500' : ''}>
-                    {/[0-9]/.test(password) ? '<i className="fa-solid fa-check"></i>' : '<i className="fa-solid fa-xmark"></i>'} Raqam (0-9)
+                    {/[0-9]/.test(password) ? <i className="fa-solid fa-check"></i> : <i className="fa-solid fa-xmark"></i>} Raqam (0-9)
                   </li>
                 </ul>
               </div>

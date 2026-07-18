@@ -100,11 +100,11 @@ export interface LocationFormData {
 // --- Kategoriya konfiguratsiyasi ---
 
 export const CATEGORY_LABELS: Record<LocationCategory, string> = {
-  masjid: '<i className="fa-solid fa-mosque"></i> Masjid',
-  museum: '<i className="fa-solid fa-landmark"></i> Muzey',
-  park: '<i className="fa-solid fa-tree"></i> Park',
-  restaurant: '<i className="fa-solid fa-utensils"></i> Oshxona',
-  historical: '<i className="fa-solid fa-chess-rook"></i> Tarixiy',
+  masjid: '<i class="fa-solid fa-mosque"></i> Masjid',
+  museum: '<i class="fa-solid fa-landmark"></i> Muzey',
+  park: '<i class="fa-solid fa-tree"></i> Park',
+  restaurant: '<i class="fa-solid fa-utensils"></i> Oshxona',
+  historical: '<i class="fa-solid fa-chess-rook"></i> Tarixiy',
 }
 
 export const CATEGORY_COLORS: Record<LocationCategory, string> = {
@@ -152,6 +152,7 @@ export interface ShopItem {
   originalPrice?: number // Chegirma uchun asl narx
   stock?: number // Qancha dona qolgan (limited)
   isNew?: boolean // Yangi mahsulot
+  image?: string // Mahsulot rasmi URL
 }
 
 // --- Inventory (Sotib olingan narsalar) ---
@@ -166,6 +167,7 @@ export interface InventoryItem {
   purchasedAt: Date
   isUsed: boolean
   quantity: number
+  image?: string // Mahsulot rasmi URL
 }
 
 // --- Missiyalar (Missions/Quests) ---
@@ -204,7 +206,7 @@ export interface ShareData {
 }
 
 export const SHOP_ITEM_CATEGORY_LABELS: Record<ShopItemCategory, string> = {
-  guide: '<i className="fa-solid fa-compass"></i> Gid xizmati',
-  souvenir: '<i className="fa-solid fa-gift"></i> Suvenir',
-  boost: '<i className="fa-solid fa-bolt"></i> Kuchaytirish',
+  guide: '<i class="fa-solid fa-compass"></i> Gid xizmati',
+  souvenir: '<i class="fa-solid fa-gift"></i> Suvenir',
+  boost: '<i class="fa-solid fa-bolt"></i> Kuchaytirish',
 }

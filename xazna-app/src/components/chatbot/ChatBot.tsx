@@ -7,37 +7,37 @@ import { Button } from '../ui/Button'
 // Tezkor javoblar — qadamga qarab
 const QUICK_REPLIES: Record<string, { label: string; icon: string }[]> = {
   city: [
-    { label: 'Toshkent', icon: '<i className="fa-solid fa-city"></i>' },
-    { label: 'Samarqand', icon: '<i className="fa-solid fa-landmark"></i>' },
-    { label: 'Buxoro', icon: '<i className="fa-solid fa-mosque"></i>' },
-    { label: 'Xiva', icon: '<i className="fa-solid fa-chess-rook"></i>' },
-    { label: 'Namangan', icon: '<i className="fa-solid fa-sunrise"></i>' },
-    { label: "Farg'ona", icon: '<i className="fa-solid fa-flower"></i>' },
+    { label: 'Toshkent', icon: '<i class="fa-solid fa-city"></i>' },
+    { label: 'Samarqand', icon: '<i class="fa-solid fa-landmark"></i>' },
+    { label: 'Buxoro', icon: '<i class="fa-solid fa-mosque"></i>' },
+    { label: 'Xiva', icon: '<i class="fa-solid fa-chess-rook"></i>' },
+    { label: 'Namangan', icon: '<i class="fa-solid fa-sunrise"></i>' },
+    { label: "Farg'ona", icon: '<i class="fa-solid fa-flower"></i>' },
   ],
   duration: [
-    { label: '2 soat', icon: '<i className="fa-solid fa-bolt"></i>' },
-    { label: '4 soat', icon: '<i className="fa-solid fa-clock"></i>' },
-    { label: '6 soat', icon: '<i className="fa-solid fa-cloud-sun"></i>' },
-    { label: '8 soat', icon: '<i className="fa-solid fa-circle-check"></i>' },
-    { label: '2 kun', icon: '<i className="fa-solid fa-calendar-check"></i>' },
+    { label: '2 soat', icon: '<i class="fa-solid fa-bolt"></i>' },
+    { label: '4 soat', icon: '<i class="fa-solid fa-clock"></i>' },
+    { label: '6 soat', icon: '<i class="fa-solid fa-cloud-sun"></i>' },
+    { label: '8 soat', icon: '<i class="fa-solid fa-circle-check"></i>' },
+    { label: '2 kun', icon: '<i class="fa-solid fa-calendar-check"></i>' },
   ],
   budget: [
-    { label: "O'rtacha", icon: '<i className="fa-solid fa-coins"></i>' },
-    { label: 'Premium', icon: '<i className="fa-solid fa-gem"></i>' },
+    { label: "O'rtacha", icon: '<i class="fa-solid fa-coins"></i>' },
+    { label: 'Premium', icon: '<i class="fa-solid fa-gem"></i>' },
   ],
   transport: [
-    { label: 'Piyoda', icon: '<i className="fa-solid fa-person-walking"></i>' },
-    { label: 'Taksi', icon: '<i className="fa-solid fa-car"></i>' },
-    { label: 'Aralash', icon: '<i className="fa-solid fa-rotate"></i>' },
+    { label: 'Piyoda', icon: '<i class="fa-solid fa-person-walking"></i>' },
+    { label: 'Taksi', icon: '<i class="fa-solid fa-car"></i>' },
+    { label: 'Aralash', icon: '<i class="fa-solid fa-rotate"></i>' },
   ],
   prayer: [
-    { label: 'Ha', icon: '<i className="fa-solid fa-mosque"></i>' },
-    { label: "Yo'q", icon: '<i className="fa-solid fa-clock"></i>' },
+    { label: 'Ha', icon: '<i class="fa-solid fa-mosque"></i>' },
+    { label: "Yo'q", icon: '<i class="fa-solid fa-clock"></i>' },
   ],
   food: [
-    { label: 'Halol', icon: '<i className="fa-solid fa-drumstick-bite"></i>' },
-    { label: 'Vegetarian', icon: '<i className="fa-solid fa-leaf"></i>' },
-    { label: 'Har qanday', icon: '<i className="fa-solid fa-utensils"></i>' },
+    { label: 'Halol', icon: '<i class="fa-solid fa-drumstick-bite"></i>' },
+    { label: 'Vegetarian', icon: '<i class="fa-solid fa-leaf"></i>' },
+    { label: 'Har qanday', icon: '<i class="fa-solid fa-utensils"></i>' },
   ],
 }
 
@@ -115,7 +115,7 @@ export const ChatBot: React.FC = () => {
       {/* Messages */}
       <div
         ref={chatContainerRef}
-        className="flex-1 overflow-y-auto px-4 py-5 space-y-4 scroll-smooth"
+        className="flex-1 overflow-y-auto px-4 lg:px-6 py-5 space-y-4 scroll-smooth"
         style={{ maxHeight: 'calc(100vh - 380px)' }}
       >
         {messages.map((msg, idx) => (
@@ -147,7 +147,7 @@ export const ChatBot: React.FC = () => {
 
         {/* Tezkor javoblar */}
         {quickReplies.length > 0 && !isLoading && (
-          <div className="flex flex-wrap gap-2 justify-center animate-slide-up">
+          <div className="flex flex-wrap gap-2 justify-center lg:grid lg:grid-cols-3 lg:gap-2 animate-slide-up">
             {quickReplies.map((reply) => (
               <button
                 key={reply.label}
@@ -158,7 +158,7 @@ export const ChatBot: React.FC = () => {
                            hover:shadow-md active:scale-95 transition-all duration-200
                            flex items-center gap-2 shadow-sm"
               >
-                <span className="text-lg">{reply.icon}</span>
+                <span className="text-lg" dangerouslySetInnerHTML={{ __html: reply.icon }} />
                 {reply.label}
               </button>
             ))}
@@ -182,8 +182,8 @@ export const ChatBot: React.FC = () => {
       </div>
 
       {/* Keyboard Input */}
-      <div className="border-t border-gray-100 dark:border-gray-700 bg-white dark:bg-gray-800 px-4 py-3">
-        <form onSubmit={handleSubmit} className="flex items-center gap-2">
+      <div className="border-t border-gray-200 dark:border-gray-700 bg-white/95 dark:bg-gray-800/95 backdrop-blur-sm px-4 py-3 md:px-6">
+        <form onSubmit={handleSubmit} className="flex items-end gap-2">
           <div className="flex-1 relative">
             <input
               ref={inputRef}
@@ -191,35 +191,38 @@ export const ChatBot: React.FC = () => {
               value={inputValue}
               onChange={(e) => setInputValue(e.target.value)}
               placeholder="Xabaringizni yozing..."
-              className="w-full px-4 py-2.5 pr-10 rounded-xl border border-gray-200 dark:border-gray-600 
+              className="w-full px-4 py-3 pr-12 rounded-2xl border-2 border-gray-200 dark:border-gray-600 
                          bg-gray-50 dark:bg-gray-700 text-sm text-gray-800 dark:text-gray-200
-                         focus:outline-none focus:ring-2 focus:ring-primary-400 focus:border-transparent
-                         placeholder:text-gray-400 dark:placeholder:text-gray-500 transition-all"
+                         focus:outline-none focus:border-primary-400 dark:focus:border-primary-500
+                         focus:ring-2 focus:ring-primary-100 dark:focus:ring-primary-900/30
+                         placeholder:text-gray-400 dark:placeholder:text-gray-500 transition-all duration-200
+                         disabled:opacity-50 disabled:cursor-not-allowed"
               disabled={isLoading}
+              rows={1}
             />
             {inputValue && (
               <button
                 type="button"
                 onClick={() => setInputValue('')}
-                className="absolute right-2.5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
+                className="absolute right-3 top-1/2 -translate-y-1/2 w-6 h-6 flex items-center justify-center rounded-full
+                           text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600
+                           transition-all duration-150"
               >
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                </svg>
+                <i className="fa-solid fa-xmark"></i>
               </button>
             )}
           </div>
           <button
             type="submit"
             disabled={!inputValue.trim() || isLoading}
-            className="p-2.5 rounded-xl bg-primary-600 text-white hover:bg-primary-700 
+            className="w-11 h-11 flex-shrink-0 rounded-2xl bg-primary-600 text-white hover:bg-primary-700 
                        transition-all duration-200 disabled:opacity-40 disabled:cursor-not-allowed
-                       active:scale-95 focus:outline-none focus:ring-2 focus:ring-primary-300
-                       shadow-md hover:shadow-lg"
+                       active:scale-90 focus:outline-none focus:ring-2 focus:ring-primary-300 focus:ring-offset-2
+                       dark:focus:ring-offset-gray-800 shadow-md hover:shadow-lg flex items-center justify-center
+                       disabled:hover:shadow-md disabled:active:scale-100"
+            title="Yuborish"
           >
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19V5m0 0l-7 7m7-7l7 7" />
-            </svg>
+            <i className="fa-solid fa-paper-plane text-sm"></i>
           </button>
         </form>
       </div>
